@@ -18,6 +18,11 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     ></script>
+    <!-- EmailJS -->
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"
+    ></script>
 
     <style>
       body {
@@ -226,6 +231,20 @@
         letter-spacing: 1px;
         font-weight: 400;
       }
+
+      /* Mobile modal fixes */
+      @media (max-width: 640px) {
+        .project-modal {
+          max-height: 90vh;
+          overflow-y: auto;
+          margin: 1rem;
+        }
+
+        .project-modal-content {
+          max-height: calc(90vh - 4rem);
+          overflow-y: auto;
+        }
+      }
     </style>
   </head>
   <body class="relative bg-[#0e1627] text-white font-[Inter] overflow-x-hidden">
@@ -331,15 +350,10 @@
               >
               with a passion for AI and innovative technology. I love building
               solutions that bridge the gap between complex problems and elegant
-              code, whether that's creating intelligent recommendation systems
-              or developing
-              <span class="text-[#90caf9] font-medium"
-                >hardware-software interfaces</span
-              >
-              with Raspberry Pi.
+              code.
             </p>
             <div class="glow-line w-full"></div>
-            <div class="grid grid-cols-2 gap-x-6 gap-y-5 mb-7">
+            <div class="grid grid-cols-2 gap-x-6 gap-y-5 mb-7 pl-4">
               <div class="flex items-center gap-3">
                 <i
                   class="fa-solid fa-graduation-cap text-[#4fc3f7] text-xl"
@@ -359,33 +373,31 @@
                 </div>
               </div>
               <div class="flex items-center gap-3">
-                <i class="fa-brands fa-react text-[#4fc3f7] text-xl"></i>
+                <i class="fa-brands fa-python text-[#4fc3f7] text-xl"></i>
                 <div>
                   <span class="block text-white font-medium">Tech Stack</span>
-                  <span class="text-[#b1c9e7] text-sm"
-                    >React, TypeScript, Python, C#</span
-                  >
+                  <span class="text-[#b1c9e7] text-sm">Python</span>
                 </div>
               </div>
               <div class="flex items-center gap-3">
                 <i class="fa-solid fa-lightbulb text-[#4fc3f7] text-xl"></i>
                 <div>
                   <span class="block text-white font-medium">Interests</span>
-                  <span class="text-[#b1c9e7] text-sm"
-                    >AI, Development, Hardware</span
-                  >
+                  <span class="text-[#b1c9e7] text-sm">AI, Development</span>
                 </div>
               </div>
             </div>
             <div class="glow-line w-full mb-5"></div>
-            <a
-              href="documents/andrew-ponder-resume.pdf"
-              download="Andrew_Ponder_Resume.pdf"
-              class="inline-flex items-center gap-2 rounded-full bg-[#4fc3f7] text-[#0e1627] font-semibold px-7 py-3 shadow-lg transition hover:bg-[#90caf9] w-fit cursor-pointer"
-            >
-              <i class="fa-solid fa-file-arrow-down"></i>
-              Download Resume
-            </a>
+            <div class="text-center md:text-left">
+              <a
+                href="documents/andrew-ponder-resume.pdf"
+                download="Andrew_Ponder_Resume.pdf"
+                class="inline-flex items-center gap-2 rounded-full bg-[#4fc3f7] text-[#0e1627] font-semibold px-7 py-3 shadow-lg transition hover:bg-[#90caf9] cursor-pointer"
+              >
+                <i class="fa-solid fa-file-arrow-down"></i>
+                Download Resume
+              </a>
+            </div>
           </div>
         </section>
       </section>
@@ -614,31 +626,58 @@
             class="hidden rounded-xl px-6 py-3 mt-3 mx-auto bg-[#25375d] text-[#4fc3f7] font-semibold text-base shadow-2xl text-center"
           ></div>
         </form>
+
+        <!-- Contact Info Alternative -->
+        <div class="text-center border-t border-[#25375d] pt-6">
+          <p class="text-[#b1c9e7] mb-4">Or reach out directly:</p>
+          <div class="flex flex-wrap gap-4 justify-center">
+            <a
+              href="mailto:andrew.ponderrr@icloud.com"
+              class="flex items-center gap-2 text-[#4fc3f7] hover:text-[#90caf9] transition"
+            >
+              <i class="fa-regular fa-envelope"></i>
+              <span>andrew.ponderrr@icloud.com</span>
+            </a>
+            <a
+              href="https://www.linkedin.com/in/robertponder/"
+              target="_blank"
+              class="flex items-center gap-2 text-[#4fc3f7] hover:text-[#90caf9] transition"
+            >
+              <i class="fa-brands fa-linkedin"></i>
+              <span>LinkedIn</span>
+            </a>
+          </div>
+        </div>
       </section>
     </main>
 
     <!-- Modal -->
     <div
       id="project-modal-overlay"
-      class="fixed inset-0 z-50 flex items-center justify-center project-modal-bg hidden"
+      class="fixed inset-0 z-50 flex items-center justify-center project-modal-bg hidden p-4"
       onclick="closeProjectModal()"
     >
       <div
         id="project-modal"
-        class="project-modal bg-[#17243b] rounded-3xl shadow-xl border-2 border-[#4fc3f7] max-w-2xl w-full mx-4 p-7 pt-5 relative"
+        class="project-modal bg-[#17243b] rounded-3xl shadow-xl border-2 border-[#4fc3f7] max-w-2xl w-full mx-4 p-7 pt-5 relative max-h-[90vh] overflow-y-auto"
         onclick="event.stopPropagation();"
       >
         <button
           onclick="closeProjectModal()"
-          class="absolute top-4 right-5 text-[#b1c9e7] hover:text-[#4fc3f7] p-2 text-xl"
+          class="absolute top-4 right-5 text-[#b1c9e7] hover:text-[#4fc3f7] p-2 text-xl z-10"
         >
           <i class="fa-solid fa-xmark"></i>
         </button>
-        <div id="project-modal-content" class="flex flex-col gap-5"></div>
+        <div id="project-modal-content" class="flex flex-col gap-5 pr-8"></div>
       </div>
     </div>
 
     <script>
+      // Initialize EmailJS
+      (function () {
+        emailjs.init("tmieiu124Ber32QOE"); // Your Public Key
+      })();
+
       // Particle effect
       function createParticles(id, count, animationPrefix = "floatDot") {
         const container = document.getElementById(id);
@@ -706,8 +745,6 @@
               url: "https://github.com/ponderrr/smart-advisor",
             },
           ],
-          screenshots: [],
-          video: "",
         },
         {
           title: "Lion's Den Cinema",
@@ -733,8 +770,6 @@
               url: "https://github.com/Southeastern-Louisiana-University/cmps383-2025-sp-p03-g04",
             },
           ],
-          screenshots: [],
-          video: "",
         },
         {
           title: "Pao'er Ship",
@@ -751,8 +786,6 @@
             { type: "demo", url: "#" },
             { type: "github", url: "https://github.com/ponderrr/paoer_ship" },
           ],
-          screenshots: [],
-          video: "",
         },
       ];
 
@@ -786,7 +819,7 @@
           <div class="mb-2 flex flex-wrap gap-y-1">${techHTML}</div>
           <div class="mb-3 text-[#b1c9e7] text-base">${data.desc}</div>
           <div class="text-sm text-[#aadcf2] leading-relaxed mb-2">${data.longDesc}</div>
-          <div class="flex gap-4 mt-5">${linksHTML}</div>
+          <div class="flex flex-wrap gap-4 mt-5">${linksHTML}</div>
         `;
 
         modal.classList.remove("hidden");
@@ -804,7 +837,7 @@
         if (e.key === "Escape") closeProjectModal();
       });
 
-      // Contact form
+      // EmailJS Contact Form Handler
       const contactForm = document.getElementById("contact-form");
       if (contactForm) {
         contactForm.addEventListener("submit", async (e) => {
@@ -817,43 +850,44 @@
           submitBtn.disabled = true;
           toast.classList.add("hidden");
 
-          const endpoint = "https://formspree.io/f/mwkgnwzq";
-          const data = {
-            name: contactForm.name.value,
-            email: contactForm.email.value,
+          // Prepare template parameters
+          const templateParams = {
+            from_name: contactForm.name.value,
+            from_email: contactForm.email.value,
             message: contactForm.message.value,
           };
 
           try {
-            const res = await fetch(endpoint, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Accept: "application/json",
-              },
-              body: JSON.stringify(data),
-            });
+            // Send email using EmailJS
+            const response = await emailjs.send(
+              "service_ih3qyzo", // Your Service ID
+              "template_x10or9k", // Your Template ID
+              templateParams
+            );
+
+            console.log("SUCCESS!", response.status, response.text);
 
             spinner.classList.add("hidden");
             submitBtn.disabled = false;
 
-            if (res.ok) {
-              toast.textContent = "Message sent! I'll be in touch 👋";
-              toast.classList.remove("hidden");
-              toast.classList.remove("text-red-400");
-              toast.classList.add("text-[#4fc3f7]");
-              contactForm.reset();
-            } else {
-              throw new Error("Failed");
-            }
-          } catch {
+            toast.textContent = "Message sent! I'll be in touch 👋";
+            toast.classList.remove("hidden");
+            toast.classList.remove("text-red-400");
+            toast.classList.add("text-[#4fc3f7]");
+            contactForm.reset();
+          } catch (error) {
+            console.log("FAILED...", error);
+
+            spinner.classList.add("hidden");
+            submitBtn.disabled = false;
+
             toast.textContent = "Something went wrong. Please try again!";
             toast.classList.remove("hidden");
             toast.classList.remove("text-[#4fc3f7]");
             toast.classList.add("text-red-400");
           }
 
-          setTimeout(() => toast.classList.add("hidden"), 3000);
+          setTimeout(() => toast.classList.add("hidden"), 4000);
         });
       }
 

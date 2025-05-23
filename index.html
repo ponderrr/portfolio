@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Andrew's Portfolio</title>
+    <title>Andrew Ponder's Portfolio</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -19,25 +19,232 @@
       referrerpolicy="no-referrer"
     ></script>
 
-    <link rel="stylesheet" href="css/styles.css" />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background: #0e1627;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+
+      ::-webkit-scrollbar {
+        display: none;
+      }
+
+      .particle-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        pointer-events: none;
+        overflow: hidden;
+      }
+
+      .glow-portrait {
+        box-shadow: 0 0 64px 12px #4fc3f7, 0 2px 12px #021021;
+        animation: softGlow 2.5s alternate infinite;
+        border-radius: 2.5rem;
+      }
+
+      @keyframes softGlow {
+        0% {
+          box-shadow: 0 0 48px 8px #4fc3f7, 0 2px 12px #021021;
+        }
+        100% {
+          box-shadow: 0 0 72px 16px #4fc3f7, 0 2px 20px #021021;
+        }
+      }
+
+      .glow-line {
+        background: linear-gradient(90deg, #4fc3f7 0%, #90caf9 100%);
+        height: 2px;
+        border-radius: 2px;
+        margin: 1.5rem 0;
+        opacity: 0.7;
+      }
+
+      .glow-line-vert {
+        background: linear-gradient(180deg, #4fc3f7 0%, #90caf9 100%);
+        width: 2px;
+        border-radius: 2px;
+        opacity: 0.7;
+      }
+
+      .card-glass {
+        background: rgba(30, 41, 59, 0.93);
+        backdrop-filter: blur(8px);
+      }
+
+      .card-neon-glow {
+        transition: box-shadow 0.3s, border-color 0.3s;
+        box-shadow: 0 2px 16px rgba(79, 195, 247, 0.1);
+        border: 2px solid transparent;
+      }
+
+      .card-neon-glow:hover,
+      .card-neon-glow:focus-within {
+        box-shadow: 0 0 0 3px #7f5cf9, 0 2px 36px #4fc3f7cc;
+        border-color: #7fbcff;
+      }
+
+      .tag-chip {
+        background: rgba(79, 195, 247, 0.11);
+        color: #4fc3f7;
+        font-size: 0.85rem;
+        padding: 0.12rem 0.8rem;
+        border-radius: 1.1rem;
+        margin-right: 0.5rem;
+        line-height: 1.6;
+        font-weight: 500;
+        display: inline-block;
+      }
+
+      .fadeInUp {
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeInUpAnim 0.7s forwards
+          cubic-bezier(0.48, 1.54, 0.49, 0.97);
+      }
+
+      @keyframes fadeInUpAnim {
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+
+      .zoom-img {
+        transition: transform 0.5s, filter 0.4s;
+      }
+
+      .card-neon-glow:hover .zoom-img,
+      .card-neon-glow:focus-within .zoom-img {
+        transform: scale(1.05);
+        filter: blur(1.2px) brightness(1.1);
+      }
+
+      .project-actions-fade {
+        opacity: 0;
+        transform: translateY(16px);
+        pointer-events: none;
+        transition: all 0.28s cubic-bezier(0.23, 1.01, 0.72, 0.96);
+      }
+
+      .card-neon-glow:hover .project-actions-fade,
+      .card-neon-glow:focus-within .project-actions-fade {
+        opacity: 1;
+        transform: none;
+        pointer-events: auto;
+      }
+
+      .project-modal-bg {
+        background: rgba(10, 18, 32, 0.82);
+        backdrop-filter: blur(6px);
+      }
+
+      .project-modal {
+        animation: modalPopIn 0.7s cubic-bezier(0.68, -0.55, 0.27, 1.55) both;
+      }
+
+      @keyframes modalPopIn {
+        0% {
+          opacity: 0;
+          transform: scale(0.89) translateY(40px);
+        }
+        100% {
+          opacity: 1;
+          transform: none;
+        }
+      }
+
+      .glow-input:focus {
+        box-shadow: 0 0 0 3px #4fc3f766, 0 2px 12px #223050;
+        border-color: #4fc3f7;
+      }
+
+      .input-shadow {
+        box-shadow: 0 2px 18px #10254233 inset, 0 1px 1.5px #4fc3f740;
+      }
+
+      .glow-button {
+        transition: box-shadow 0.23s, transform 0.18s, background 0.2s;
+        box-shadow: 0 2px 14px #4fc3f7a6;
+      }
+
+      .glow-button:hover {
+        background: #90caf9;
+        color: #0e1627;
+        box-shadow: 0 4px 24px #4fc3f7cc, 0 1px 4px #021021;
+        transform: translateY(-2px) scale(1.04);
+      }
+
+      .slide-in {
+        animation: slideInAnim 0.7s cubic-bezier(0.55, 0.01, 0.45, 1.2);
+      }
+
+      @keyframes slideInAnim {
+        0% {
+          opacity: 0;
+          transform: translateY(32px);
+        }
+        100% {
+          opacity: 1;
+          transform: none;
+        }
+      }
+
+      .shake {
+        animation: shakeAnim 0.42s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+      }
+
+      @keyframes shakeAnim {
+        10%,
+        90% {
+          transform: translateX(-2px);
+        }
+        20%,
+        80% {
+          transform: translateX(4px);
+        }
+        30%,
+        50%,
+        70% {
+          transform: translateX(-10px);
+        }
+        40%,
+        60% {
+          transform: translateX(10px);
+        }
+      }
+
+      .signature {
+        font-family: "Pacifico", cursive;
+        color: #4fc3f7;
+        font-size: 1.35rem;
+        letter-spacing: 1px;
+        font-weight: 400;
+      }
+    </style>
   </head>
   <body class="relative bg-[#0e1627] text-white font-[Inter] overflow-x-hidden">
     <!-- Fixed Social Icons -->
     <div class="fixed top-7 right-8 z-30 flex gap-4">
       <a
-        href="#"
+        href="https://github.com/ponderrr"
         target="_blank"
         class="text-[#b1c9e7] hover:text-[#4fc3f7] transition"
         ><i class="fa-brands fa-github text-2xl"></i
       ></a>
       <a
-        href="#"
+        href="https://www.linkedin.com/in/robertponder/"
         target="_blank"
         class="text-[#b1c9e7] hover:text-[#4fc3f7] transition"
         ><i class="fa-brands fa-linkedin text-2xl"></i
       ></a>
       <a
-        href="mailto:andrew@email.com"
+        href="mailto:andrew.ponderrr@icloud.com"
         class="text-[#b1c9e7] hover:text-[#4fc3f7] transition"
         ><i class="fa-regular fa-envelope text-2xl"></i
       ></a>
@@ -60,17 +267,17 @@
             <h1
               class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6"
             >
-              Hi, I’m Andrew —<br /><span class="text-[#4fc3f7]"
-                >Full Stack Developer</span
-              >
+              Hi, I'm Andrew —<br /><span class="text-[#4fc3f7]">Student</span>
               &amp; <span class="text-[#90caf9]">AI Enthusiast</span>
             </h1>
             <div class="flex gap-5 mb-7">
               <a
+                href="#projects-wrapper"
                 class="rounded-full px-7 py-3 text-base font-semibold bg-[#4fc3f7] text-[#0e1627] hover:bg-[#90caf9] shadow-xl transition cursor-pointer"
                 >View Portfolio</a
               >
               <a
+                href="#contact-wrapper"
                 class="rounded-full px-7 py-3 text-base font-semibold border border-[#4fc3f7] text-[#4fc3f7] bg-transparent hover:bg-[#192848] shadow-lg transition cursor-pointer"
                 >Contact Me</a
               >
@@ -83,8 +290,8 @@
             <div class="relative">
               <img
                 class="glow-portrait w-[270px] h-[270px] object-cover object-center bg-[#192848] border-[6px] border-[#032144] shadow-2xl"
-                src="https://storage.googleapis.com/uxpilot-auth.appspot.com/d026d12192-12b4b08e791e9608722c.png"
-                alt="Andrew Portrait"
+                src="images/headshot-main.jpg"
+                alt="Andrew Ponder Portrait"
               />
             </div>
           </div>
@@ -104,8 +311,8 @@
             >
               <img
                 class="glow-portrait w-[210px] h-[210px] object-cover object-center bg-[#223050] border-[3px] border-[#25375d] shadow-2xl"
-                src="https://storage.googleapis.com/uxpilot-auth.appspot.com/b9b25a799c-f5fb3ba324973147dabe.png"
-                alt="Second Portrait"
+                src="images/headshot-about.jpg"
+                alt="Andrew Ponder"
               />
             </div>
           </div>
@@ -118,16 +325,18 @@
             <p
               class="text-white/90 text-base sm:text-lg md:pr-6 mb-7 leading-relaxed"
             >
-              I'm an IT student passionate about
+              I'm an Information Technology student at
               <span class="text-[#4fc3f7] font-medium"
-                >Full Stack Development</span
+                >Southeastern Louisiana University</span
               >
-              and
+              with a passion for AI and innovative technology. I love building
+              solutions that bridge the gap between complex problems and elegant
+              code, whether that's creating intelligent recommendation systems
+              or developing
               <span class="text-[#90caf9] font-medium"
-                >Artificial Intelligence</span
-              >. I love building elegant, high-impact web applications and
-              exploring the future of human–AI collaboration. Always curious,
-              always building.
+                >hardware-software interfaces</span
+              >
+              with Raspberry Pi.
             </p>
             <div class="glow-line w-full"></div>
             <div class="grid grid-cols-2 gap-x-6 gap-y-5 mb-7">
@@ -138,7 +347,7 @@
                 <div>
                   <span class="block text-white font-medium">Education</span>
                   <span class="text-[#b1c9e7] text-sm"
-                    >BSc in IT (Ongoing)</span
+                    >B.S. in IT (May 2026)</span
                   >
                 </div>
               </div>
@@ -146,15 +355,15 @@
                 <i class="fa-solid fa-language text-[#4fc3f7] text-xl"></i>
                 <div>
                   <span class="block text-white font-medium">Languages</span>
-                  <span class="text-[#b1c9e7] text-sm">English, Spanish</span>
+                  <span class="text-[#b1c9e7] text-sm">English</span>
                 </div>
               </div>
               <div class="flex items-center gap-3">
                 <i class="fa-brands fa-react text-[#4fc3f7] text-xl"></i>
                 <div>
-                  <span class="block text-white font-medium">Frameworks</span>
+                  <span class="block text-white font-medium">Tech Stack</span>
                   <span class="text-[#b1c9e7] text-sm"
-                    >React, Next.js, Node.js</span
+                    >React, TypeScript, Python, C#</span
                   >
                 </div>
               </div>
@@ -163,13 +372,15 @@
                 <div>
                   <span class="block text-white font-medium">Interests</span>
                   <span class="text-[#b1c9e7] text-sm"
-                    >AI, Coding, Cycling</span
+                    >AI, Development, Hardware</span
                   >
                 </div>
               </div>
             </div>
             <div class="glow-line w-full mb-5"></div>
             <a
+              href="documents/andrew-ponder-resume.pdf"
+              download="Andrew_Ponder_Resume.pdf"
               class="inline-flex items-center gap-2 rounded-full bg-[#4fc3f7] text-[#0e1627] font-semibold px-7 py-3 shadow-lg transition hover:bg-[#90caf9] w-fit cursor-pointer"
             >
               <i class="fa-solid fa-file-arrow-down"></i>
@@ -186,7 +397,7 @@
       >
         <section class="text-center max-w-3xl mx-auto mb-12">
           <h2 class="text-4xl sm:text-5xl font-bold mb-4">Projects</h2>
-          <p class="text-lg text-[#b1c9e7]">Some things I’ve built recently.</p>
+          <p class="text-lg text-[#b1c9e7]">Some things I've built recently.</p>
           <div class="text-xs text-[#6ea2d8] tracking-wide mt-1">
             Click on any project for details
           </div>
@@ -204,20 +415,21 @@
           >
             <img
               class="zoom-img w-full h-[220px] object-cover object-top bg-[#263d5c]"
-              src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80"
-              alt="AI Academic Advisor"
+              src="images/smart-advisor.jpg"
+              alt="Smart Advisor - AI-powered recommendation platform"
             />
             <div class="flex-1 flex flex-col px-6 py-5">
-              <h3 class="text-xl font-bold mb-1">AI Academic Advisor</h3>
+              <h3 class="text-xl font-bold mb-1">Smart Advisor</h3>
               <div class="mb-2 flex flex-wrap gap-y-1">
-                <span class="tag-chip">Next.js</span>
-                <span class="tag-chip">Tailwind</span>
+                <span class="tag-chip">React</span>
                 <span class="tag-chip">Firebase</span>
-                <span class="tag-chip">UX Pilot AI API</span>
+                <span class="tag-chip">Supabase</span>
+                <span class="tag-chip">OpenAI API</span>
               </div>
               <p class="text-[#b1c9e7] text-sm leading-relaxed mb-2">
-                A chatbot trained on university data that helps students with
-                degree planning and course selection.
+                A personalized recommendation engine that suggests books and
+                movies based on user preferences, with secure backend and API
+                integrations.
               </p>
               <div class="flex gap-3 mt-auto pt-2">
                 <button
@@ -237,21 +449,21 @@
           >
             <img
               class="zoom-img w-full h-[220px] object-cover object-center bg-[#263d5c]"
-              src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=600&q=80"
-              alt="Modern Portfolio Site"
+              src="images/lions-den-cinema.jpg"
+              alt="Lion's Den Cinema - Mobile cinema booking app"
             />
             <div class="flex-1 flex flex-col px-6 py-5">
-              <h3 class="text-xl font-bold mb-1">Modern Portfolio Site</h3>
+              <h3 class="text-xl font-bold mb-1">Lion's Den Cinema</h3>
               <div class="mb-2 flex flex-wrap gap-y-1">
-                <span class="tag-chip">React</span>
-                <span class="tag-chip">Next.js</span>
-                <span class="tag-chip">Tailwind</span>
-                <span class="tag-chip">Framer Motion</span>
+                <span class="tag-chip">React Native</span>
+                <span class="tag-chip">TypeScript</span>
+                <span class="tag-chip">.NET</span>
+                <span class="tag-chip">Expo</span>
               </div>
               <p class="text-[#b1c9e7] text-sm leading-relaxed mb-2">
-                A personal website and portfolio built for performance,
-                accessibility, and modern design. Includes blog, portfolio, and
-                testimonials.
+                Mobile cinema app with ticket booking, interactive seat
+                selection, and concession ordering. Built with React Native and
+                .NET backend.
               </p>
               <div class="flex gap-3 mt-auto pt-2">
                 <button
@@ -271,20 +483,21 @@
           >
             <img
               class="zoom-img w-full h-[220px] object-cover object-center bg-[#263d5c]"
-              src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=600&q=80"
-              alt="AI Image Generator"
+              src="images/paoer-ship.jpg"
+              alt="Pao'er Ship - Raspberry Pi Battleship game"
             />
             <div class="flex-1 flex flex-col px-6 py-5">
-              <h3 class="text-xl font-bold mb-1">AI Image Generator</h3>
+              <h3 class="text-xl font-bold mb-1">Pao'er Ship</h3>
               <div class="mb-2 flex flex-wrap gap-y-1">
-                <span class="tag-chip">Vercel AI</span>
-                <span class="tag-chip">Next.js</span>
-                <span class="tag-chip">Tailwind</span>
-                <span class="tag-chip">TypeScript</span>
+                <span class="tag-chip">Python</span>
+                <span class="tag-chip">Pygame</span>
+                <span class="tag-chip">Raspberry Pi</span>
+                <span class="tag-chip">GPIO</span>
               </div>
               <p class="text-[#b1c9e7] text-sm leading-relaxed mb-2">
-                Generate photorealistic images from prompts using cutting-edge
-                diffusion models. Includes gallery and favorites.
+                Battleship-style game for Raspberry Pi with multiple AI
+                difficulty levels, hardware controls, and advanced targeting
+                algorithms.
               </p>
               <div class="flex gap-3 mt-auto pt-2">
                 <button
@@ -305,24 +518,26 @@
         class="w-full max-w-3xl mx-auto bg-[#162649]/[0.98] rounded-3xl shadow-2xl border border-[#223050] px-7 py-14 sm:py-20 mt-20 slide-in"
       >
         <div class="flex flex-col items-center mb-9">
-          <span class="text-4xl md:text-5xl font-bold mb-3"
-            ><i class="fa-regular fa-handshake text-[#4fc3f7] mr-2"></i>Let’s
+          <span class="text-4xl md:text-5xl font-bold mb-3 text-center"
+            ><i class="fa-regular fa-handshake text-[#4fc3f7] mr-2"></i>Let's
             Connect</span
           >
           <span
-            class="text-lg sm:text-xl text-[#b1c9e7] font-medium text-center"
-            >Have a project or just want to say hi? I’d love to hear from
-            you.</span
+            class="text-lg sm:text-xl text-[#b1c9e7] font-medium text-center max-w-lg"
+            >Have a project or just want to chat about AI and development? I'd
+            love to hear from you.</span
           >
         </div>
 
         <form
           id="contact-form"
-          class="w-full max-w-lg flex flex-col gap-6 mb-8"
+          class="w-full max-w-lg mx-auto flex flex-col gap-6 mb-8"
           autocomplete="off"
         >
           <div>
-            <label for="name" class="text-[#b1c9e7] text-md font-medium mb-1"
+            <label
+              for="name"
+              class="block text-[#b1c9e7] text-md font-medium mb-2"
               >Name</label
             >
             <input
@@ -330,12 +545,14 @@
               name="name"
               type="text"
               required
-              class="rounded-xl input-shadow bg-[#101c36] border border-[#25375d] text-white placeholder-[#b1c9e7] px-5 py-3 glow-input"
+              class="w-full rounded-xl input-shadow bg-[#101c36] border border-[#25375d] text-white placeholder-[#b1c9e7] px-5 py-3 glow-input focus:outline-none"
               placeholder="Your name"
             />
           </div>
           <div>
-            <label for="email" class="text-[#b1c9e7] text-md font-medium mb-1"
+            <label
+              for="email"
+              class="block text-[#b1c9e7] text-md font-medium mb-2"
               >Email</label
             >
             <input
@@ -343,12 +560,14 @@
               name="email"
               type="email"
               required
-              class="rounded-xl input-shadow bg-[#101c36] border border-[#25375d] text-white placeholder-[#b1c9e7] px-5 py-3 glow-input"
+              class="w-full rounded-xl input-shadow bg-[#101c36] border border-[#25375d] text-white placeholder-[#b1c9e7] px-5 py-3 glow-input focus:outline-none"
               placeholder="you@email.com"
             />
           </div>
           <div>
-            <label for="message" class="text-[#b1c9e7] text-md font-medium mb-1"
+            <label
+              for="message"
+              class="block text-[#b1c9e7] text-md font-medium mb-2"
               >Message</label
             >
             <textarea
@@ -356,14 +575,14 @@
               name="message"
               rows="5"
               required
-              class="rounded-xl input-shadow bg-[#101c36] border border-[#25375d] text-white placeholder-[#b1c9e7] px-5 py-3 glow-input resize-none"
+              class="w-full rounded-xl input-shadow bg-[#101c36] border border-[#25375d] text-white placeholder-[#b1c9e7] px-5 py-3 glow-input resize-none focus:outline-none"
               placeholder="Tell me about your project or just say hi!"
             ></textarea>
           </div>
           <button
             id="contact-submit"
             type="submit"
-            class="glow-button mt-2 rounded-full bg-[#4fc3f7] text-[#0e1627] font-bold text-lg px-8 py-3 hover:bg-[#90caf9] focus:outline-none transition flex items-center gap-3 mx-auto"
+            class="glow-button mt-2 rounded-full bg-[#4fc3f7] text-[#0e1627] font-bold text-lg px-8 py-3 hover:bg-[#90caf9] focus:outline-none transition flex items-center justify-center gap-3 mx-auto"
           >
             <span>Send Message</span>
             <i class="fa-solid fa-paper-plane text-lg"></i>
@@ -392,7 +611,7 @@
           </button>
           <div
             id="contact-toast"
-            class="hidden rounded-xl px-6 py-3 mt-3 mx-auto bg-[#25375d] text-[#4fc3f7] font-semibold text-base shadow-2xl"
+            class="hidden rounded-xl px-6 py-3 mt-3 mx-auto bg-[#25375d] text-[#4fc3f7] font-semibold text-base shadow-2xl text-center"
           ></div>
         </form>
       </section>
@@ -406,7 +625,7 @@
     >
       <div
         id="project-modal"
-        class="project-modal bg-[#17243b] rounded-3xl shadow-xl border-2 border-[#4fc3f7] max-w-2xl w-full mx-4 p-7 pt-5"
+        class="project-modal bg-[#17243b] rounded-3xl shadow-xl border-2 border-[#4fc3f7] max-w-2xl w-full mx-4 p-7 pt-5 relative"
         onclick="event.stopPropagation();"
       >
         <button
@@ -419,6 +638,238 @@
       </div>
     </div>
 
-    <script src="js/main.js"></script>
+    <script>
+      // Particle effect
+      function createParticles(id, count, animationPrefix = "floatDot") {
+        const container = document.getElementById(id);
+        if (!container) return;
+
+        for (let i = 0; i < count; i++) {
+          const dot = document.createElement("div");
+          dot.style.position = "absolute";
+          dot.style.left = `${Math.random() * 100}%`;
+          dot.style.top = `${Math.random() * 100}%`;
+          const size = 4 + Math.random() * 6;
+          dot.style.width = `${size}px`;
+          dot.style.height = `${size}px`;
+          dot.style.borderRadius = "50%";
+          dot.style.background = "rgba(79,195,247,0.13)";
+          dot.style.filter = "blur(1.5px)";
+          const animName = `${animationPrefix}${i}`;
+          dot.style.animation = `${animName} ${
+            5 + Math.random() * 6
+          }s ease-in-out ${Math.random() * 6}s infinite alternate`;
+          container.appendChild(dot);
+
+          const styleSheet =
+            document.styleSheets[document.styleSheets.length - 1];
+          const moveY = -25 + Math.random() * 50;
+          styleSheet.insertRule(
+            `@keyframes ${animName} {
+              0% { transform: translateY(0px); }
+              100% { transform: translateY(${moveY}px); }
+            }`,
+            styleSheet.cssRules.length
+          );
+        }
+      }
+
+      // Run particles on load
+      window.addEventListener("DOMContentLoaded", () => {
+        createParticles("particle-background", 32);
+      });
+
+      // Project modal logic with detailed descriptions
+      const projectData = [
+        {
+          title: "Smart Advisor",
+          tech: [
+            "React",
+            "Python",
+            "OpenAI API",
+            "Supabase",
+            "TMDB",
+            "Google Books",
+          ],
+          desc: "AI-powered recommendation platform that generates personalized book and movie suggestions through dynamic questionnaires and intelligent content matching.",
+          longDesc: `<b>Role:</b> Team Leader, Full-Stack Developer & AI Integration Specialist<br>
+            <b>Course:</b> Human-Computer Interaction<br>
+            <b>Problem:</b> Users struggle to discover personalized content that matches their specific preferences, age-appropriateness, and accessibility needs, leading to poor satisfaction with generic recommendations.<br>
+            <b>Solution:</b> Architected an AI-powered platform using OpenAI's GPT models to generate dynamic questionnaires (3-15 questions) and provide intelligent recommendations with tiered subscription features.<br>
+            <b>Key Features:</b> Dynamic AI questionnaires, personalized recommendations with rich metadata, user profiles with history tracking, tiered subscription system, accessibility options, and responsive design with dark/light themes.<br>
+            <b>Technical Highlights:</b> Built scalable backend with API rate limiting and intelligent caching, implemented secure authentication and subscription management, integrated multiple third-party APIs while maintaining security.<br>
+            <b>Current Status:</b> <em>Currently rebuilding with React frontend and Python backend - in active development</em>`,
+          links: [
+            { type: "demo", url: "#" },
+            {
+              type: "github",
+              url: "https://github.com/ponderrr/smart-advisor",
+            },
+          ],
+          screenshots: [],
+          video: "",
+        },
+        {
+          title: "Lion's Den Cinema",
+          tech: [
+            "React Native",
+            "TypeScript",
+            ".NET Core",
+            "Expo",
+            "Entity Framework",
+          ],
+          desc: "Comprehensive cinema booking platform with cross-platform mobile and web apps, featuring real-time seat selection, concessions ordering, and seamless user experience.",
+          longDesc: `<b>Role:</b> Team Leader, Mobile Developer & Backend Developer<br>
+            <b>Course:</b> Information Systems<br>
+            <b>Problem:</b> Traditional theater booking systems lack modern UX features like real-time seat selection, integrated concessions, and cross-platform consistency, requiring a comprehensive digital solution.<br>
+            <b>Solution:</b> Designed complete system architecture with .NET Core Web API backend, React Native mobile app, and React TypeScript web frontend, ensuring unified experience across all platforms.<br>
+            <b>Key Features:</b> Interactive seat maps with real-time availability, sophisticated state management for booking flows, integrated concessions ordering, guest & authenticated workflows, QR code ticketing, and dynamic theming.<br>
+            <b>Technical Highlights:</b> Cross-platform state synchronization, complex interactive components, concurrent seat reservation handling with race condition solutions, comprehensive TypeScript integration across large codebase.<br>
+            <b>Achievement:</b> Delivered production-ready cinema management system with <2 second booking completion times and scalable architecture supporting multiple theaters.`,
+          links: [
+            { type: "demo", url: "#" },
+            {
+              type: "github",
+              url: "https://github.com/Southeastern-Louisiana-University/cmps383-2025-sp-p03-g04",
+            },
+          ],
+          screenshots: [],
+          video: "",
+        },
+        {
+          title: "Pao'er Ship",
+          tech: ["Python", "Pygame", "Raspberry Pi", "GPIO", "NumPy"],
+          desc: "Hardware-integrated Battleship game for Raspberry Pi featuring multiple AI difficulty levels, GPIO controls, and innovative 'Pao Mode' for high-stakes gameplay.",
+          longDesc: `<b>Role:</b> Team Leader, Game Developer & Hardware Integration Specialist<br>
+            <b>Course:</b> Computer Architecture<br>
+            <b>Problem:</b> Traditional Battleship games lack physical interaction and modern hardware integration, needing an engaging tactile experience for embedded systems.<br>
+            <b>Solution:</b> Built complete game architecture with object-oriented design, hardware abstraction layer for GPIO controls, and sophisticated AI opponents with varying difficulty algorithms.<br>
+            <b>Key Features:</b> Multiple game modes (Player vs AI, Player vs Player), special "Pao Mode" where missing a single shot results in defeat, full GPIO button support, interactive ship placement, dynamic sound system, and customizable settings.<br>
+            <b>Technical Highlights:</b> Hardware abstraction supporting both GPIO and keyboard input with proper debouncing, probability-based AI targeting algorithms, cross-platform compatibility (Pi vs desktop), memory optimization for embedded systems.<br>
+            <b>Achievement:</b> Successfully deployed on Raspberry Pi 4/5 with smooth 30fps gameplay at 1920x1080 resolution, creating engaging AI that provides genuine challenge across skill levels.`,
+          links: [
+            { type: "demo", url: "#" },
+            { type: "github", url: "https://github.com/ponderrr/paoer_ship" },
+          ],
+          screenshots: [],
+          video: "",
+        },
+      ];
+
+      function openProjectModal(idx) {
+        const modal = document.getElementById("project-modal-overlay");
+        const content = document.getElementById("project-modal-content");
+        const data = projectData[idx];
+        if (!content) return;
+
+        const techHTML = data.tech
+          .map((t) => `<span class="tag-chip mb-1">${t}</span>`)
+          .join("");
+        const linksHTML = data.links
+          .map((link) => {
+            if (link.type === "demo") {
+              return `<a href="${link.url}" target="_blank" class="rounded-full bg-[#4fc3f7] px-5 py-2 text-[#0e1627] font-semibold shadow-xl hover:bg-[#90caf9] transition text-sm flex items-center gap-2 mr-3">
+                      <span>Live Demo</span><i class="fa-solid fa-arrow-up-right-from-square text-base"></i>
+                    </a>`;
+            }
+            if (link.type === "github") {
+              return `<a href="${link.url}" target="_blank" class="rounded-full bg-[#223050e6] border border-[#4fc3f7] px-4 py-2 text-[#4fc3f7] font-semibold shadow hover:bg-[#263d5c] transition flex items-center gap-2 text-sm">
+                      <i class="fa-brands fa-github"></i><span>GitHub</span>
+                    </a>`;
+            }
+            return "";
+          })
+          .join("");
+
+        content.innerHTML = `
+          <h3 class="text-2xl font-bold mb-1 text-white tracking-tight">${data.title}</h3>
+          <div class="mb-2 flex flex-wrap gap-y-1">${techHTML}</div>
+          <div class="mb-3 text-[#b1c9e7] text-base">${data.desc}</div>
+          <div class="text-sm text-[#aadcf2] leading-relaxed mb-2">${data.longDesc}</div>
+          <div class="flex gap-4 mt-5">${linksHTML}</div>
+        `;
+
+        modal.classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeProjectModal() {
+        document
+          .getElementById("project-modal-overlay")
+          .classList.add("hidden");
+        document.body.style.overflow = "";
+      }
+
+      window.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") closeProjectModal();
+      });
+
+      // Contact form
+      const contactForm = document.getElementById("contact-form");
+      if (contactForm) {
+        contactForm.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const spinner = document.getElementById("contact-spinner");
+          const toast = document.getElementById("contact-toast");
+          const submitBtn = document.getElementById("contact-submit");
+
+          spinner.classList.remove("hidden");
+          submitBtn.disabled = true;
+          toast.classList.add("hidden");
+
+          const endpoint = "https://formspree.io/f/mwkgnwzq";
+          const data = {
+            name: contactForm.name.value,
+            email: contactForm.email.value,
+            message: contactForm.message.value,
+          };
+
+          try {
+            const res = await fetch(endpoint, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+              },
+              body: JSON.stringify(data),
+            });
+
+            spinner.classList.add("hidden");
+            submitBtn.disabled = false;
+
+            if (res.ok) {
+              toast.textContent = "Message sent! I'll be in touch 👋";
+              toast.classList.remove("hidden");
+              toast.classList.remove("text-red-400");
+              toast.classList.add("text-[#4fc3f7]");
+              contactForm.reset();
+            } else {
+              throw new Error("Failed");
+            }
+          } catch {
+            toast.textContent = "Something went wrong. Please try again!";
+            toast.classList.remove("hidden");
+            toast.classList.remove("text-[#4fc3f7]");
+            toast.classList.add("text-red-400");
+          }
+
+          setTimeout(() => toast.classList.add("hidden"), 3000);
+        });
+      }
+
+      // Smooth scrolling for navigation links
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute("href"));
+          if (target) {
+            target.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+            });
+          }
+        });
+      });
+    </script>
   </body>
 </html>

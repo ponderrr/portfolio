@@ -3,7 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Andrew Ponder's Portfolio</title>
+    <title>Andrew Ponder | Developer & AI Enthusiast</title>
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💻</text></svg>"
+    />
 
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -28,12 +33,32 @@
       body {
         font-family: "Inter", sans-serif;
         background: #0e1627;
-        -ms-overflow-style: none;
-        scrollbar-width: none;
       }
 
+      /* Custom scrollbar */
       ::-webkit-scrollbar {
-        display: none;
+        width: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: #1a2a46;
+        border-radius: 4px;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: #4fc3f7;
+        border-radius: 4px;
+        border: 1px solid #223050;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: #90caf9;
+      }
+
+      /* Firefox scrollbar */
+      * {
+        scrollbar-width: thin;
+        scrollbar-color: #4fc3f7 #1a2a46;
       }
 
       .particle-bg {
@@ -348,9 +373,8 @@
               <span class="text-[#4fc3f7] font-medium"
                 >Southeastern Louisiana University</span
               >
-              with a passion for AI and innovative technology. I love building
-              solutions that bridge the gap between complex problems and elegant
-              code.
+              passionate about building applications that solve real problems
+              with AI and modern technology.
             </p>
             <div class="glow-line w-full"></div>
             <div class="grid grid-cols-2 gap-x-6 gap-y-5 mb-7 pl-4">
@@ -388,7 +412,7 @@
               </div>
             </div>
             <div class="glow-line w-full mb-5"></div>
-            <div class="text-center md:text-left">
+            <div class="text-center">
               <a
                 href="documents/andrew-ponder-resume.pdf"
                 download="Andrew_Ponder_Resume.pdf"
@@ -408,7 +432,9 @@
         class="w-full max-w-6xl mx-auto mt-20 px-2"
       >
         <section class="text-center max-w-3xl mx-auto mb-12">
-          <h2 class="text-4xl sm:text-5xl font-bold mb-4">Projects</h2>
+          <h2 class="text-4xl sm:text-5xl font-bold mb-4">
+            Completed Projects
+          </h2>
           <p class="text-lg text-[#b1c9e7]">Some things I've built recently.</p>
           <div class="text-xs text-[#6ea2d8] tracking-wide mt-1">
             Click on any project for details
@@ -536,8 +562,9 @@
           >
           <span
             class="text-lg sm:text-xl text-[#b1c9e7] font-medium text-center max-w-lg"
-            >Have a project or just want to chat about AI and development? I'd
-            love to hear from you.</span
+            >I'm always open to interesting conversations about AI, programming,
+            or collaborative projects. Whether you want to chat about the future
+            of tech or explore potential opportunities, let's connect!</span
           >
         </div>
 
@@ -718,7 +745,7 @@
         createParticles("particle-background", 32);
       });
 
-      // Project modal logic with detailed descriptions
+      // Project modal logic with updated descriptions
       const projectData = [
         {
           title: "Smart Advisor",
@@ -733,13 +760,10 @@
           desc: "AI-powered recommendation platform that generates personalized book and movie suggestions through dynamic questionnaires and intelligent content matching.",
           longDesc: `<b>Role:</b> Team Leader, Full-Stack Developer & AI Integration Specialist<br>
             <b>Course:</b> Human-Computer Interaction<br>
-            <b>Problem:</b> Users struggle to discover personalized content that matches their specific preferences, age-appropriateness, and accessibility needs, leading to poor satisfaction with generic recommendations.<br>
+            <b>Problem:</b> Users struggle to discover personalized content that matches their preferences.<br>
             <b>Solution:</b> Architected an AI-powered platform using OpenAI's GPT models to generate dynamic questionnaires (3-15 questions) and provide intelligent recommendations with tiered subscription features.<br>
-            <b>Key Features:</b> Dynamic AI questionnaires, personalized recommendations with rich metadata, user profiles with history tracking, tiered subscription system, accessibility options, and responsive design with dark/light themes.<br>
-            <b>Technical Highlights:</b> Built scalable backend with API rate limiting and intelligent caching, implemented secure authentication and subscription management, integrated multiple third-party APIs while maintaining security.<br>
-            <b>Current Status:</b> <em>Currently rebuilding with React frontend and Python backend - in active development</em>`,
+            <b>Key Features:</b> Dynamic AI questionnaires, personalized recommendations with rich metadata, user profiles with history tracking, tiered subscription system, accessibility options, and responsive design with dark/light themes.`,
           links: [
-            { type: "demo", url: "#" },
             {
               type: "github",
               url: "https://github.com/ponderrr/smart-advisor",
@@ -758,13 +782,10 @@
           desc: "Comprehensive cinema booking platform with cross-platform mobile and web apps, featuring real-time seat selection, concessions ordering, and seamless user experience.",
           longDesc: `<b>Role:</b> Team Leader, Mobile Developer & Backend Developer<br>
             <b>Course:</b> Information Systems<br>
-            <b>Problem:</b> Traditional theater booking systems lack modern UX features like real-time seat selection, integrated concessions, and cross-platform consistency, requiring a comprehensive digital solution.<br>
+            <b>Problem:</b> Traditional theater booking systems lack modern UX features like real-time seat selection and integrated concessions.<br>
             <b>Solution:</b> Designed complete system architecture with .NET Core Web API backend, React Native mobile app, and React TypeScript web frontend, ensuring unified experience across all platforms.<br>
-            <b>Key Features:</b> Interactive seat maps with real-time availability, sophisticated state management for booking flows, integrated concessions ordering, guest & authenticated workflows, QR code ticketing, and dynamic theming.<br>
-            <b>Technical Highlights:</b> Cross-platform state synchronization, complex interactive components, concurrent seat reservation handling with race condition solutions, comprehensive TypeScript integration across large codebase.<br>
-            <b>Achievement:</b> Delivered production-ready cinema management system with <2 second booking completion times and scalable architecture supporting multiple theaters.`,
+            <b>Key Features:</b> Interactive seat maps with real-time availability, sophisticated state management for booking flows, integrated concessions ordering, guest & authenticated workflows, QR code ticketing, and dynamic theming.`,
           links: [
-            { type: "demo", url: "#" },
             {
               type: "github",
               url: "https://github.com/Southeastern-Louisiana-University/cmps383-2025-sp-p03-g04",
@@ -777,13 +798,10 @@
           desc: "Hardware-integrated Battleship game for Raspberry Pi featuring multiple AI difficulty levels, GPIO controls, and innovative 'Pao Mode' for high-stakes gameplay.",
           longDesc: `<b>Role:</b> Team Leader, Game Developer & Hardware Integration Specialist<br>
             <b>Course:</b> Computer Architecture<br>
-            <b>Problem:</b> Traditional Battleship games lack physical interaction and modern hardware integration, needing an engaging tactile experience for embedded systems.<br>
+            <b>Problem:</b> Traditional Battleship games lack physical interaction and modern hardware integration.<br>
             <b>Solution:</b> Built complete game architecture with object-oriented design, hardware abstraction layer for GPIO controls, and sophisticated AI opponents with varying difficulty algorithms.<br>
-            <b>Key Features:</b> Multiple game modes (Player vs AI, Player vs Player), special "Pao Mode" where missing a single shot results in defeat, full GPIO button support, interactive ship placement, dynamic sound system, and customizable settings.<br>
-            <b>Technical Highlights:</b> Hardware abstraction supporting both GPIO and keyboard input with proper debouncing, probability-based AI targeting algorithms, cross-platform compatibility (Pi vs desktop), memory optimization for embedded systems.<br>
-            <b>Achievement:</b> Successfully deployed on Raspberry Pi 4/5 with smooth 30fps gameplay at 1920x1080 resolution, creating engaging AI that provides genuine challenge across skill levels.`,
+            <b>Key Features:</b> Multiple game modes (Player vs AI, Player vs Player), special "Pao Mode" where missing a single shot results in defeat, full GPIO button support, interactive ship placement, dynamic sound system, and customizable settings.`,
           links: [
-            { type: "demo", url: "#" },
             { type: "github", url: "https://github.com/ponderrr/paoer_ship" },
           ],
         },
@@ -800,11 +818,6 @@
           .join("");
         const linksHTML = data.links
           .map((link) => {
-            if (link.type === "demo") {
-              return `<a href="${link.url}" target="_blank" class="rounded-full bg-[#4fc3f7] px-5 py-2 text-[#0e1627] font-semibold shadow-xl hover:bg-[#90caf9] transition text-sm flex items-center gap-2 mr-3">
-                      <span>Live Demo</span><i class="fa-solid fa-arrow-up-right-from-square text-base"></i>
-                    </a>`;
-            }
             if (link.type === "github") {
               return `<a href="${link.url}" target="_blank" class="rounded-full bg-[#223050e6] border border-[#4fc3f7] px-4 py-2 text-[#4fc3f7] font-semibold shadow hover:bg-[#263d5c] transition flex items-center gap-2 text-sm">
                       <i class="fa-brands fa-github"></i><span>GitHub</span>

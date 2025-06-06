@@ -478,11 +478,42 @@
 
         <div
           id="projects-card-masonry"
-          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+          class="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-4xl mx-auto"
         >
-          <!-- PROJECT CARD 1 -->
+          <!-- PROJECT CARD 0 -->
           <div
             onclick="openProjectModal(0)"
+            class="card-glass card-neon-glow rounded-2xl overflow-hidden flex flex-col cursor-pointer fadeInUp relative"
+          >
+            <img
+              class="zoom-img w-full h-[220px] object-cover object-center bg-[#263d5c]"
+              src="images/selu-ai-advisor.jpg"
+              alt="SELU AI Advisor - AI-powered academic planning portal"
+            />
+            <div class="flex-1 flex flex-col px-6 py-5">
+              <h3 class="text-xl font-bold mb-1">SELU AI Advisor</h3>
+              <div class="mb-2 flex flex-wrap gap-2">
+                <span class="status-badge status-progress">In Progress</span>
+                <span class="course-badge">Capstone</span>
+              </div>
+              <p class="text-[#b1c9e7] text-sm leading-relaxed mb-2">
+                Full-stack AI academic advisor portal for SELU students
+                featuring personalized schedule optimization, degree planning,
+                and AI chatbot trained on university-specific data.
+              </p>
+              <div class="flex gap-3 mt-auto pt-2">
+                <button
+                  onclick="event.stopPropagation();openProjectModal(0)"
+                  class="rounded-full px-4 py-2 text-xs font-semibold border border-[#4fc3f7] text-[#4fc3f7] bg-transparent hover:bg-[#1a2a46] shadow-sm transition"
+                >
+                  Read More
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- PROJECT CARD 1 -->
+          <div
+            onclick="openProjectModal(1)"
             class="card-glass card-neon-glow rounded-2xl overflow-hidden flex flex-col cursor-pointer fadeInUp relative"
           >
             <img
@@ -514,7 +545,7 @@
 
           <!-- PROJECT CARD 2 -->
           <div
-            onclick="openProjectModal(1)"
+            onclick="openProjectModal(2)"
             class="card-glass card-neon-glow rounded-2xl overflow-hidden flex flex-col cursor-pointer fadeInUp relative"
           >
             <img
@@ -546,7 +577,7 @@
 
           <!-- PROJECT CARD 3 -->
           <div
-            onclick="openProjectModal(2)"
+            onclick="openProjectModal(3)"
             class="card-glass card-neon-glow rounded-2xl overflow-hidden flex flex-col cursor-pointer fadeInUp relative"
           >
             <img
@@ -775,6 +806,29 @@
       // Project modal logic with updated descriptions
       const projectData = [
         {
+          title: "SELU AI Advisor",
+          tech: [
+            "React",
+            "FastAPI",
+            "Mistral 7B",
+            "LangChain",
+            "ChromaDB",
+            "PostgreSQL",
+            "Ollama",
+          ],
+          desc: "Full-stack AI academic advisor portal for SELU students featuring personalized schedule optimization, degree planning, and AI chatbot trained on university-specific data.",
+          longDesc: `<b>Role:</b> Team Leader, Full-Stack Developer & AI Model Integration Specialist<br>
+      <b>Problem:</b> SELU students struggle with complex degree planning, course sequencing, and accessing up-to-date academic information scattered across multiple sources.<br>
+      <b>Solution:</b> Architected a comprehensive AI-powered academic portal using Mistral 7B LLM with RAG system, enabling personalized schedule generation, intelligent degree auditing, and instant access to SELU-specific academic policies through a conversational interface.<br>
+      <b>Key Features:</b> Secure SELU email authentication, interactive degree progress tracking, AI-powered semester-by-semester schedule optimization with custom constraints, intelligent chatbot trained on SELU catalogs and policies, onboarding flow for academic history, and scalable architecture for multi-department expansion.`,
+          links: [
+            {
+              type: "github",
+              url: "https://github.com/ponderrr/selu-ai-advisor",
+            },
+          ],
+        },
+        {
           title: "Smart Advisor",
           tech: [
             "React",
@@ -792,7 +846,7 @@
           links: [
             {
               type: "github",
-              url: "https://github.com/ponderrr/smart-advisor",
+              url: "https://github.com/ponderrr/smartadvisor-v1",
             },
           ],
         },

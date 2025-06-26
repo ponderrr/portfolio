@@ -3,298 +3,592 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Andrew Ponder | Student & AI Enthusiast</title>
+    <title>Andrew Ponder | AI Enthusiast</title>
+
+    <!-- Favicon -->
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23000000'/><text y='75' font-size='60' font-family='Inter, sans-serif' font-weight='700' fill='%233b82f6' text-anchor='middle' x='50'>AP</text></svg>"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAdgAAAHYBTnsmCAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAKESURBVFiFtZc9aBRBFMefJBcSCxtbwcJCG1sLG0uxsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQ"
+    />
+
+    <meta
+      name="description"
+      content="Andrew Ponder - AI enthusiast passionate about technology, building projects, and exploring opportunities in artificial intelligence."
+    />
+    <meta
+      name="keywords"
+      content="Andrew Ponder, AI enthusiast, artificial intelligence, technology, software development, CrystalCode, Smart Advisor"
+    />
+    <meta name="author" content="Andrew Ponder" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://andrewponder.com/" />
+    <meta property="og:title" content="Andrew Ponder | AI Enthusiast" />
+    <meta
+      property="og:description"
+      content="AI enthusiast passionate about technology, building projects, and exploring opportunities in artificial intelligence."
+    />
+    <meta
+      property="og:image"
+      content="https://andrewponder.com/images/headshot-main.jpg"
+    />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://andrewponder.com/" />
+    <meta property="twitter:title" content="Andrew Ponder | AI Enthusiast" />
+    <meta
+      property="twitter:description"
+      content="AI enthusiast passionate about technology, building projects, and exploring opportunities in artificial intelligence."
+    />
+    <meta
+      property="twitter:image"
+      content="https://andrewponder.com/images/headshot-main.jpg"
+    />
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      window.FontAwesomeConfig = { autoReplaceSvg: "nest" };
-    </script>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;500;600;700;800;900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
       rel="stylesheet"
     />
 
     <style>
       :root {
-        --bg-primary: #0a0a0a;
-        --bg-secondary: #1a1a1a;
-        --bg-card: #262626;
+        --bg-primary: #000000;
+        --bg-secondary: #0a0a0a;
+        --bg-card: rgba(30, 41, 59, 0.8);
         --text-primary: #ffffff;
-        --text-secondary: #a1a1aa;
-        --text-tertiary: #71717a;
-        --accent-indigo: #6366f1;
-        --success-green: #10b981;
-        --border-subtle: #374151;
+        --text-secondary: #e5e7eb;
+        --text-tertiary: #9ca3af;
+        --accent-primary: #1e40af;
+        --accent-secondary: #3b82f6;
+        --accent-light: #e5e7eb;
+        --border-subtle: rgba(229, 231, 235, 0.1);
+        --glow-primary: rgba(30, 64, 175, 0.3);
+        --glow-secondary: rgba(59, 130, 246, 0.2);
       }
 
       body {
-        font-family: "Inter", sans-serif !important;
+        font-family: "Inter", sans-serif;
         background: var(--bg-primary);
+        cursor: none;
+        overflow-x: hidden;
       }
 
+      /* Custom Cursor */
+      .custom-cursor {
+        position: fixed;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          var(--accent-secondary),
+          var(--accent-primary)
+        );
+        pointer-events: none;
+        mix-blend-mode: difference;
+        z-index: 9999;
+        transition: transform 0.1s ease;
+      }
+
+      .cursor-hover {
+        transform: scale(1.5);
+        background: radial-gradient(
+          circle,
+          var(--accent-light),
+          var(--accent-secondary)
+        );
+      }
+
+      /* Hide scrollbar */
       ::-webkit-scrollbar {
         display: none;
       }
-
       html,
       body {
         -ms-overflow-style: none;
         scrollbar-width: none;
       }
 
-      .glow-portrait {
-        box-shadow: 0 0 32px 6px var(--accent-indigo),
-          0 2px 12px rgba(0, 0, 0, 0.3);
-        animation: softGlow 2.5s alternate infinite;
-      }
-
-      @keyframes softGlow {
-        0% {
-          box-shadow: 0 0 28px 4px var(--accent-indigo),
-            0 2px 12px rgba(0, 0, 0, 0.3);
-        }
-        100% {
-          box-shadow: 0 0 36px 8px var(--accent-indigo),
-            0 2px 20px rgba(0, 0, 0, 0.3);
-        }
-      }
-
-      .status-completed {
-        background: rgba(16, 185, 129, 0.15);
-        color: var(--success-green);
-        border: 1px solid rgba(16, 185, 129, 0.3);
-        font-size: 0.75rem;
-        padding: 0.4rem 1.2rem;
-        border-radius: 1rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-      }
-
-      .status-progress {
-        background: rgba(99, 102, 241, 0.15);
-        color: var(--accent-indigo);
-        border: 1px solid rgba(99, 102, 241, 0.3);
-        font-size: 0.75rem;
-        padding: 0.4rem 1.2rem;
-        border-radius: 1rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-      }
-
-      .course-badge {
+      /* Glass morphism effects */
+      .glass-card {
         background: var(--bg-card);
-        color: var(--text-secondary);
+        backdrop-filter: blur(20px);
         border: 1px solid var(--border-subtle);
+        border-radius: 20px;
+        transition: all 0.3s ease;
+      }
+
+      .glass-card:hover {
+        border-color: var(--accent-secondary);
+        box-shadow: 0 0 30px var(--glow-secondary);
+        transform: translateY(-2px);
+      }
+
+      .glass-nav {
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--border-subtle);
+      }
+
+      /* Timeline styles */
+      .timeline-container {
+        position: relative;
+      }
+
+      .timeline-line {
+        position: absolute;
+        left: 50%;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: linear-gradient(
+          to bottom,
+          transparent,
+          var(--accent-primary) 10%,
+          var(--accent-secondary) 50%,
+          var(--accent-primary) 90%,
+          transparent
+        );
+        transform: translateX(-50%);
+      }
+
+      .timeline-item {
+        position: relative;
+        margin-bottom: 80px;
+      }
+
+      .timeline-item:nth-child(odd) .timeline-content {
+        margin-right: calc(50% + 40px);
+        text-align: right;
+      }
+
+      .timeline-item:nth-child(even) .timeline-content {
+        margin-left: calc(50% + 40px);
+        text-align: left;
+      }
+
+      .timeline-icon {
+        position: absolute;
+        left: 50%;
+        top: 20px;
+        width: 60px;
+        height: 60px;
+        background: var(--bg-card);
+        border: 3px solid var(--accent-secondary);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transform: translateX(-50%);
+        backdrop-filter: blur(20px);
+        z-index: 10;
+        transition: all 0.3s ease;
+      }
+
+      .timeline-icon:hover {
+        transform: translateX(-50%) scale(1.1);
+        box-shadow: 0 0 25px var(--glow-primary);
+      }
+
+      .timeline-date {
+        position: absolute;
+        left: 50%;
+        top: -10px;
+        transform: translateX(-50%);
+        background: var(--accent-primary);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 20px;
         font-size: 0.75rem;
-        padding: 0.4rem 1.2rem;
-        border-radius: 1rem;
-        font-weight: 500;
+        font-weight: 600;
+        white-space: nowrap;
+        z-index: 5;
       }
 
-      .tech-tag {
-        background: rgba(99, 102, 241, 0.15);
-        color: var(--accent-indigo);
-        font-size: 0.75rem;
-        padding: 0.25rem 0.75rem;
-        border-radius: 0.5rem;
-        font-weight: 500;
-        display: inline-block;
-        margin: 0.125rem;
+      /* Particles background */
+      .particles-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1;
       }
 
-      .project-modal-bg {
-        background: rgba(10, 10, 10, 0.95);
-        backdrop-filter: blur(6px);
+      .particle {
+        position: absolute;
+        width: 2px;
+        height: 2px;
+        background: var(--accent-secondary);
+        border-radius: 50%;
+        opacity: 0.6;
+        animation: float 6s infinite linear;
       }
 
-      .project-modal {
-        animation: modalPopIn 0.3s ease-out;
-        max-height: 90vh;
-        overflow-y: auto;
-      }
-
-      @keyframes modalPopIn {
+      @keyframes float {
         0% {
+          transform: translateY(100vh) translateX(0);
           opacity: 0;
-          transform: scale(0.9) translateY(20px);
+        }
+        10% {
+          opacity: 0.6;
+        }
+        90% {
+          opacity: 0.6;
         }
         100% {
-          opacity: 1;
-          transform: scale(1) translateY(0);
+          transform: translateY(-100px) translateX(0);
+          opacity: 0;
         }
       }
 
-      .hover-scale {
-        transition: transform 0.2s ease, box-shadow 0.2s ease,
-          border-color 0.2s ease;
-      }
-
-      .hover-scale:hover {
-        transform: scale(1.02);
-        box-shadow: 0 0 32px 8px rgba(99, 102, 241, 0.3);
-        border-color: var(--accent-indigo);
-      }
-
-      .glow-input:focus {
-        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
-        border-color: var(--accent-indigo);
-        outline: none;
+      /* Glow effects */
+      .glow-text {
+        text-shadow: 0 0 20px var(--glow-primary);
       }
 
       .glow-button {
+        background: linear-gradient(
+          135deg,
+          var(--accent-primary),
+          var(--accent-secondary)
+        );
+        box-shadow: 0 0 20px var(--glow-primary);
         transition: all 0.3s ease;
       }
 
       .glow-button:hover {
-        box-shadow: 0 0 20px rgba(99, 102, 241, 0.6),
-          0 0 40px rgba(99, 102, 241, 0.4);
-        transform: translateY(-1px);
+        box-shadow: 0 0 30px var(--glow-secondary);
+        transform: translateY(-2px);
+      }
+
+      /* Hero section */
+      .hero-portrait {
+        border: 3px solid var(--accent-secondary);
+        box-shadow: 0 0 40px var(--glow-primary);
+        animation: heroGlow 3s ease-in-out infinite alternate;
+      }
+
+      @keyframes heroGlow {
+        0% {
+          box-shadow: 0 0 30px var(--glow-primary);
+        }
+        100% {
+          box-shadow: 0 0 50px var(--glow-secondary);
+        }
+      }
+
+      /* Mobile responsive timeline */
+      @media (max-width: 768px) {
+        .timeline-line {
+          left: 30px;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content,
+        .timeline-item:nth-child(even) .timeline-content {
+          margin-left: 80px;
+          margin-right: 0;
+          text-align: left;
+        }
+
+        .timeline-icon {
+          left: 30px;
+        }
+
+        .timeline-date {
+          left: 30px;
+        }
+      }
+
+      /* Form styles */
+      .glass-input {
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        backdrop-filter: blur(20px);
+        transition: all 0.3s ease;
+      }
+
+      .glass-input:focus {
+        border-color: var(--accent-secondary);
+        box-shadow: 0 0 15px var(--glow-secondary);
+        outline: none;
+      }
+
+      /* Project cards */
+      .project-card {
+        background: var(--bg-card);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--border-subtle);
+        transition: all 0.3s ease;
+      }
+
+      .project-card:hover {
+        border-color: var(--accent-secondary);
+        box-shadow: 0 0 25px var(--glow-secondary);
+        transform: translateY(-5px);
+      }
+
+      .tech-tag {
+        background: rgba(59, 130, 246, 0.15);
+        color: var(--accent-secondary);
+        border: 1px solid rgba(59, 130, 246, 0.3);
       }
     </style>
   </head>
 
-  <body class="bg-[var(--bg-primary)] text-[var(--text-primary)] font-inter">
-    <!-- Top Right Links -->
-    <div class="fixed top-6 right-6 z-50 flex gap-6">
+  <body class="text-white">
+    <!-- Custom Cursor -->
+    <div class="custom-cursor" id="cursor"></div>
+
+    <!-- Particles Background -->
+    <div class="particles-container" id="particles"></div>
+
+    <!-- Navigation -->
+    <nav
+      class="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 glass-nav px-8 py-4 rounded-full"
+    >
+      <div class="flex items-center space-x-8">
+        <a
+          href="#hero"
+          class="text-sm font-medium hover:text-blue-400 transition cursor-pointer"
+          >About</a
+        >
+        <a
+          href="#timeline"
+          class="text-sm font-medium hover:text-blue-400 transition cursor-pointer"
+          >Journey</a
+        >
+        <a
+          href="#projects"
+          class="text-sm font-medium hover:text-blue-400 transition cursor-pointer"
+          >Projects</a
+        >
+        <a
+          href="#contact"
+          class="text-sm font-medium hover:text-blue-400 transition cursor-pointer"
+          >Connect</a
+        >
+      </div>
+    </nav>
+
+    <!-- Social Links -->
+    <div class="fixed top-6 right-6 z-50 flex gap-4">
       <a
         href="https://github.com/ponderrr"
         target="_blank"
-        class="text-[var(--text-secondary)] hover:text-[var(--accent-indigo)] transition"
+        class="text-gray-400 hover:text-blue-400 transition cursor-pointer"
       >
-        <i class="fa-brands fa-github text-2xl"></i>
+        <i class="fab fa-github text-xl"></i>
       </a>
       <a
         href="https://www.linkedin.com/in/robertponder/"
         target="_blank"
-        class="text-[var(--text-secondary)] hover:text-[var(--accent-indigo)] transition"
+        class="text-gray-400 hover:text-blue-400 transition cursor-pointer"
       >
-        <i class="fa-brands fa-linkedin text-2xl"></i>
+        <i class="fab fa-linkedin text-xl"></i>
       </a>
       <a
         href="mailto:andrew.ponderrr@icloud.com"
-        class="text-[var(--text-secondary)] hover:text-[var(--accent-indigo)] transition"
+        class="text-gray-400 hover:text-blue-400 transition cursor-pointer"
       >
-        <i class="fa-regular fa-envelope text-2xl"></i>
+        <i class="far fa-envelope text-xl"></i>
       </a>
     </div>
 
     <!-- Hero Section -->
-    <section id="hero" class="pt-[120px] pb-[80px] relative z-10">
-      <div class="container mx-auto max-w-[1200px] px-6">
-        <div
-          class="flex flex-col md:flex-row items-center md:items-start gap-16"
-        >
-          <div class="w-full md:w-3/5">
-            <h1 class="text-[48px] md:text-[64px] font-bold leading-none mb-4">
-              Hi, I'm Andrew —<br />
-              <span class="text-[var(--accent-indigo)]">Student</span> &
-              <span class="text-[var(--accent-indigo)]">AI Enthusiast</span>
-            </h1>
-            <p class="text-[var(--text-secondary)] text-lg max-w-[600px] mb-8">
-              I'm an Information Technology student at Southeastern Louisiana
-              University passionate about building applications that solve real
-              problems with AI and modern technology.
-            </p>
-            <div class="flex gap-4">
-              <a
-                href="#projects"
-                class="glow-button px-6 py-3 bg-[var(--accent-indigo)] rounded-md font-medium hover:bg-opacity-90 transition duration-200 cursor-pointer"
-                >View Portfolio</a
-              >
-              <a
-                href="#contact"
-                class="px-6 py-3 border border-[var(--border-subtle)] text-[var(--text-primary)] rounded-md font-medium hover:border-[var(--accent-indigo)] transition duration-200 cursor-pointer"
-                >Contact Me</a
-              >
-            </div>
-          </div>
-          <div class="w-full md:w-2/5 flex justify-center md:justify-end">
-            <div
-              class="w-[300px] h-[300px] rounded-full overflow-hidden glow-portrait"
+    <section
+      id="hero"
+      class="min-h-screen flex items-center justify-center px-6 relative z-10"
+    >
+      <div
+        class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center"
+      >
+        <div class="text-center lg:text-left">
+          <h1 class="text-5xl lg:text-7xl font-bold mb-6 leading-tight">
+            Andrew Ponder
+          </h1>
+          <h2 class="text-2xl lg:text-3xl font-light mb-8 text-gray-300">
+            <span class="glow-text text-blue-400">AI Enthusiast</span>
+          </h2>
+          <p class="text-xl text-gray-400 mb-12 max-w-2xl leading-relaxed">
+            Passionate about technology and always eager to learn, grow, and
+            collaborate. I keep an open mind about where my journey in tech will
+            take me.
+          </p>
+          <div
+            class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
+          >
+            <a
+              href="#timeline"
+              class="glow-button px-8 py-4 rounded-full font-semibold text-white cursor-pointer"
             >
-              <img
-                class="w-full h-full object-cover"
-                src="images/headshot-main.jpg"
-                alt="Andrew Ponder Portrait"
-              />
-            </div>
+              View Journey
+            </a>
+            <a
+              href="#contact"
+              class="px-8 py-4 border border-gray-600 rounded-full font-semibold hover:border-blue-400 transition cursor-pointer"
+            >
+              Get In Touch
+            </a>
+          </div>
+        </div>
+        <div class="flex justify-center">
+          <div class="w-80 h-80 rounded-full overflow-hidden hero-portrait">
+            <img
+              src="images/headshot-main.jpg"
+              alt="Andrew Ponder"
+              class="w-full h-full object-cover"
+            />
           </div>
         </div>
       </div>
     </section>
 
-    <!-- About Section -->
-    <section id="about" class="py-[80px] relative z-10">
-      <div class="container mx-auto max-w-[1200px] px-6">
-        <div
-          class="flex flex-col md:flex-row items-center gap-16 bg-[var(--bg-secondary)] p-8 rounded-lg border border-[var(--border-subtle)]"
-        >
-          <div class="w-full md:w-2/5 flex justify-center">
-            <div class="w-[250px] h-[250px] rounded-2xl overflow-hidden">
-              <img
-                class="w-full h-full object-cover"
-                src="images/headshot-about.jpg"
-                alt="Andrew Ponder"
-              />
+    <!-- Timeline Section -->
+    <section id="timeline" class="py-32 px-6 relative z-10">
+      <div class="max-w-6xl mx-auto">
+        <h2 class="text-4xl lg:text-5xl font-bold text-center mb-20 glow-text">
+          Journey
+        </h2>
+
+        <div class="timeline-container">
+          <div class="timeline-line"></div>
+
+          <!-- July 2025 - Business & Internship -->
+          <div class="timeline-item">
+            <div class="timeline-date">July 2025</div>
+            <div class="timeline-icon">
+              <i class="fas fa-rocket text-blue-400 text-xl"></i>
+            </div>
+            <div class="timeline-content glass-card p-8">
+              <h3 class="text-2xl font-bold mb-4 text-blue-400">
+                Founded an LLC & AI Internship
+              </h3>
+              <p class="text-gray-300 mb-4">
+                Launched CrystalCode to build workflows, automation systems,
+                mobile apps, and websites for clients. Started AI & Data
+                Analytics Intern position at Laborde Products.
+              </p>
             </div>
           </div>
-          <div class="w-full md:w-3/5">
-            <h2 class="text-[32px] font-bold mb-6">About Me</h2>
-            <p class="text-[var(--text-secondary)] mb-8 leading-relaxed">
-              I'm an Information Technology student at Southeastern Louisiana
-              University passionate about building applications that solve real
-              problems with AI and modern technology.
-            </p>
 
-            <!-- Info Grid -->
-            <div class="flex flex-col space-y-4 mb-8">
-              <div class="flex items-center gap-3">
-                <i
-                  class="fa-solid fa-graduation-cap text-xl text-[var(--accent-indigo)]"
-                ></i>
-                <div>
-                  <span class="block text-[var(--text-primary)] font-medium"
-                    >Education</span
-                  >
-                  <span class="text-[var(--text-secondary)] text-sm"
-                    >B.S. in IT (May 2026)</span
-                  >
-                </div>
-              </div>
-              <div class="flex items-center gap-3">
-                <i
-                  class="fa-brands fa-python text-xl text-[var(--accent-indigo)]"
-                ></i>
-                <div>
-                  <span class="block text-[var(--text-primary)] font-medium"
-                    >Tech Stack</span
-                  >
-                  <span class="text-[var(--text-secondary)] text-sm"
-                    >Python</span
-                  >
-                </div>
-              </div>
+          <!-- Aug 2024 - Innovation Hub -->
+          <div class="timeline-item">
+            <div class="timeline-date">Aug 2024</div>
+            <div class="timeline-icon">
+              <i class="fas fa-laptop-code text-blue-400 text-xl"></i>
             </div>
+            <div class="timeline-content glass-card p-8">
+              <h3 class="text-2xl font-bold mb-4 text-blue-400">
+                Technology Assistant
+              </h3>
+              <p class="text-gray-300 mb-4">
+                Joined SELU's Innovation Hub as Technology Assistant. Support
+                students with 3D printing, podcasting, and VR development for
+                academic projects.
+              </p>
+            </div>
+          </div>
 
-            <div class="text-center -ml-2">
-              <a
-                href="documents/andrew-ponder-resume.pdf"
-                download="Andrew_Ponder_Resume.pdf"
-                class="inline-flex items-center gap-2 text-[var(--accent-indigo)] hover:text-[var(--text-primary)] transition"
-              >
-                <i class="fa-solid fa-download"></i>
-                <span>Download Resume</span>
-              </a>
+          <!-- Jan 2024 - SELU -->
+          <div class="timeline-item">
+            <div class="timeline-date">Jan 2024</div>
+            <div class="timeline-icon">
+              <i class="fas fa-graduation-cap text-blue-400 text-xl"></i>
+            </div>
+            <div class="timeline-content glass-card p-8">
+              <h3 class="text-2xl font-bold mb-4 text-blue-400">
+                Started at SELU
+              </h3>
+              <p class="text-gray-300 mb-4">
+                Transferred to Southeastern Louisiana University to pursue B.S.
+                in Information Technology. Expected graduation: May 2026.
+              </p>
+            </div>
+          </div>
+
+          <!-- Nov 2023 - Server -->
+          <div class="timeline-item">
+            <div class="timeline-date">Nov 2023</div>
+            <div class="timeline-icon">
+              <i class="fas fa-utensils text-blue-400 text-xl"></i>
+            </div>
+            <div class="timeline-content glass-card p-8">
+              <h3 class="text-2xl font-bold mb-4 text-blue-400">
+                Server - St. Ann Wine Bar
+              </h3>
+              <p class="text-gray-300 mb-4">
+                Customer service role developing interpersonal skills and
+                attention to detail. Managing high-pressure environment while
+                maintaining quality service.
+              </p>
+            </div>
+          </div>
+
+          <!-- 2021-2023 - BRCC -->
+          <div class="timeline-item">
+            <div class="timeline-date">2021 - 2023</div>
+            <div class="timeline-icon">
+              <i class="fas fa-code text-blue-400 text-xl"></i>
+            </div>
+            <div class="timeline-content glass-card p-8">
+              <h3 class="text-2xl font-bold mb-4 text-blue-400">
+                Computer Science - BRCC
+              </h3>
+              <p class="text-gray-300 mb-4">
+                Started my technical education at Baton Rouge Community College
+                with Computer Science.
+              </p>
+            </div>
+          </div>
+
+          <!-- Summer 2023 - Sales Intern -->
+          <div class="timeline-item">
+            <div class="timeline-date">Summer 2023</div>
+            <div class="timeline-icon">
+              <i class="fas fa-handshake text-blue-400 text-xl"></i>
+            </div>
+            <div class="timeline-content glass-card p-8">
+              <h3 class="text-2xl font-bold mb-4 text-blue-400">
+                Sales Intern - Premier Roofing
+              </h3>
+              <p class="text-gray-300 mb-4">
+                Gained valuable sales and customer relations experience in
+                Denver, CO. Conducted roof inspections and provided professional
+                recommendations to homeowners.
+              </p>
+            </div>
+          </div>
+
+          <!-- 2018-2023 - Car Wash -->
+          <div class="timeline-item">
+            <div class="timeline-date">2018 - 2023</div>
+            <div class="timeline-icon">
+              <i class="fas fa-users text-blue-400 text-xl"></i>
+            </div>
+            <div class="timeline-content glass-card p-8">
+              <h3 class="text-2xl font-bold mb-4 text-blue-400">
+                Shift Supervisor - Pelican Pointe
+              </h3>
+              <p class="text-gray-300 mb-4">
+                Developed leadership and management skills supervising teams in
+                fast-paced environment. Responsible for operations, training,
+                and customer service excellence.
+              </p>
             </div>
           </div>
         </div>
@@ -302,231 +596,137 @@
     </section>
 
     <!-- Projects Section -->
-    <section id="projects" class="py-[80px] relative z-10">
-      <div class="container mx-auto max-w-[1200px] px-6">
-        <h2 class="text-[32px] font-bold text-center mb-[60px]">
-          Academic Projects
+    <section id="projects" class="py-32 px-6 relative z-10">
+      <div class="max-w-6xl mx-auto">
+        <h2 class="text-4xl lg:text-5xl font-bold text-center mb-20 glow-text">
+          Current Projects
         </h2>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <!-- Project 1: SELU AI Advisor -->
-          <div
-            class="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-lg overflow-hidden hover-scale cursor-pointer p-6 relative min-h-[180px]"
-            onclick="openProjectModal(0)"
-          >
-            <h3 class="text-xl font-semibold mb-2">SELU AI Advisor</h3>
-            <p
-              class="text-[var(--text-secondary)] text-sm mb-12 leading-relaxed"
-            >
-              Full-stack AI academic advisor portal for SELU students featuring
-              personalized schedule optimization, degree planning, and AI
-              chatbot trained on university-specific data.
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <!-- Smart Advisor -->
+          <div class="project-card p-8 rounded-2xl">
+            <h3 class="text-2xl font-bold mb-4 text-blue-400">Smart Advisor</h3>
+            <p class="text-gray-300 mb-8 leading-relaxed">
+              AI-powered recommendation platform built with React/TypeScript,
+              Supabase, and OpenAI GPT-4. Features personalized book/movie
+              suggestions, real-time authentication, and serverless architecture
+              with 99.9% uptime scalability.
             </p>
-            <div class="absolute bottom-4 right-4 flex items-center gap-2">
-              <span class="status-progress">In Progress</span>
-              <span class="course-badge">Capstone</span>
-            </div>
+            <a
+              href="https://smartadvisor.live"
+              target="_blank"
+              class="glow-button px-6 py-3 rounded-full font-semibold inline-block cursor-pointer"
+            >
+              View Live Site
+            </a>
           </div>
 
-          <!-- Project 2: Smart Advisor -->
-          <div
-            class="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-lg overflow-hidden hover-scale cursor-pointer p-6 relative min-h-[180px]"
-            onclick="openProjectModal(1)"
-          >
-            <h3 class="text-xl font-semibold mb-2">Smart Advisor</h3>
-            <p
-              class="text-[var(--text-secondary)] text-sm mb-12 leading-relaxed"
-            >
-              A personalized recommendation engine that suggests books and
-              movies based on user preferences, with secure backend and API
-              integrations.
+          <!-- CrystalCode -->
+          <div class="project-card p-8 rounded-2xl">
+            <h3 class="text-2xl font-bold mb-4 text-blue-400">CrystalCode</h3>
+            <p class="text-gray-300 mb-8 leading-relaxed">
+              AI solutions business providing custom workflows, automation
+              systems, mobile apps, and websites for businesses looking to
+              leverage artificial intelligence and modern technology.
             </p>
-            <div class="absolute bottom-4 right-4 flex items-center gap-2">
-              <span class="status-progress">In Progress</span>
-              <span class="course-badge">HCI</span>
-            </div>
+            <a
+              href="https://crystalcode.design"
+              target="_blank"
+              class="glow-button px-6 py-3 rounded-full font-semibold inline-block cursor-pointer"
+            >
+              Visit CrystalCode
+            </a>
           </div>
+        </div>
 
-          <!-- Project 3: Lion's Den Cinema -->
-          <div
-            class="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-lg overflow-hidden hover-scale cursor-pointer p-6 relative min-h-[180px]"
-            onclick="openProjectModal(2)"
-          >
-            <h3 class="text-xl font-semibold mb-2">Lion's Den Cinema</h3>
-            <p
-              class="text-[var(--text-secondary)] text-sm mb-12 leading-relaxed"
-            >
-              Mobile cinema app with ticket booking, interactive seat selection,
-              and concession ordering. Built with React Native and .NET backend.
-            </p>
-            <div class="absolute bottom-4 right-4 flex items-center gap-2">
-              <span class="status-completed">Completed</span>
-              <span class="course-badge">Information Systems</span>
-            </div>
-          </div>
-
-          <!-- Project 4: Pao'er Ship -->
-          <div
-            class="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-lg overflow-hidden hover-scale cursor-pointer p-6 relative min-h-[180px]"
-            onclick="openProjectModal(3)"
-          >
-            <h3 class="text-xl font-semibold mb-2">Pao'er Ship</h3>
-            <p
-              class="text-[var(--text-secondary)] text-sm mb-12 leading-relaxed"
-            >
-              Battleship-style game for Raspberry Pi with multiple AI difficulty
-              levels, hardware controls, and advanced targeting algorithms.
-            </p>
-            <div class="absolute bottom-4 right-4 flex items-center gap-2">
-              <span class="status-completed">Completed</span>
-              <span class="course-badge">Computer Architecture</span>
-            </div>
-          </div>
+        <div class="text-center mt-12">
+          <p class="text-gray-400 text-lg">More projects launching soon...</p>
         </div>
       </div>
     </section>
 
     <!-- Contact Section -->
-    <section
-      id="contact"
-      class="py-[80px] bg-[var(--bg-primary)] relative z-10"
-    >
-      <div class="container mx-auto max-w-[640px] px-6">
-        <div
-          class="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-lg p-6"
-        >
-          <h2 class="text-[28px] font-bold text-center mb-3">Let's Connect</h2>
-          <p
-            class="text-[var(--text-secondary)] text-center mb-8 max-w-[500px] mx-auto"
+    <section id="contact" class="py-32 px-6 relative z-10">
+      <div class="max-w-2xl mx-auto">
+        <h2 class="text-4xl lg:text-5xl font-bold text-center mb-8 glow-text">
+          Let's Connect
+        </h2>
+        <p class="text-xl text-gray-400 text-center mb-16 leading-relaxed">
+          Whether you're interested in collaboration, have questions about my
+          projects, or just want to connect and chat about technology, I'd love
+          to hear from you.
+        </p>
+
+        <form id="contact-form" class="glass-card p-8 rounded-2xl space-y-6">
+          <div>
+            <label
+              for="name"
+              class="block text-sm font-medium text-gray-300 mb-2"
+              >Name</label
+            >
+            <input
+              type="text"
+              id="name"
+              name="name"
+              required
+              class="glass-input w-full px-4 py-3 rounded-lg text-white"
+            />
+          </div>
+
+          <div>
+            <label
+              for="email"
+              class="block text-sm font-medium text-gray-300 mb-2"
+              >Email</label
+            >
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+              class="glass-input w-full px-4 py-3 rounded-lg text-white"
+            />
+          </div>
+
+          <div>
+            <label
+              for="message"
+              class="block text-sm font-medium text-gray-300 mb-2"
+              >Message</label
+            >
+            <textarea
+              id="message"
+              name="message"
+              rows="5"
+              required
+              class="glass-input w-full px-4 py-3 rounded-lg text-white resize-none"
+            ></textarea>
+          </div>
+
+          <button
+            type="submit"
+            class="glow-button w-full py-4 rounded-lg font-semibold text-white cursor-pointer"
           >
-            I'm always open to discussing new projects, creative ideas, or
-            opportunities to be part of your vision.
-          </p>
+            <span id="submit-text">Send Message</span>
+            <span id="submit-spinner" class="hidden">Sending...</span>
+          </button>
 
-          <form id="contact-form" class="space-y-5">
-            <div>
-              <label for="name" class="block text-[var(--text-secondary)] mb-2"
-                >Name</label
-              >
-              <input
-                type="text"
-                id="name"
-                name="name"
-                required
-                class="w-full bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded-md px-4 py-3 text-[var(--text-primary)] glow-input transition"
-              />
-            </div>
+          <div
+            id="form-success"
+            class="hidden bg-green-500/20 border border-green-500 text-green-400 p-4 rounded-lg text-center"
+          >
+            Your message has been sent successfully. I'll get back to you soon!
+          </div>
 
-            <div>
-              <label for="email" class="block text-[var(--text-secondary)] mb-2"
-                >Email</label
-              >
-              <input
-                type="email"
-                id="email"
-                name="email"
-                required
-                class="w-full bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded-md px-4 py-3 text-[var(--text-primary)] glow-input transition"
-              />
-            </div>
-
-            <div>
-              <label
-                for="message"
-                class="block text-[var(--text-secondary)] mb-2"
-                >Message</label
-              >
-              <textarea
-                id="message"
-                name="message"
-                rows="4"
-                required
-                class="w-full bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded-md px-4 py-3 text-[var(--text-primary)] glow-input transition"
-              ></textarea>
-            </div>
-
-            <div>
-              <button
-                type="submit"
-                class="glow-button w-full bg-[var(--accent-indigo)] text-white py-3 rounded-md font-medium hover:bg-opacity-90 transition"
-              >
-                <span id="submit-text">Send Message</span>
-                <span id="submit-spinner" class="hidden">Sending...</span>
-              </button>
-            </div>
-
-            <div
-              id="form-success"
-              class="hidden bg-green-500 bg-opacity-20 border border-green-500 text-green-500 p-4 rounded-md text-center"
-            >
-              Your message has been sent successfully. I'll get back to you
-              soon!
-            </div>
-
-            <div
-              id="form-error"
-              class="hidden bg-red-500 bg-opacity-20 border border-red-500 text-red-500 p-4 rounded-md text-center"
-            >
-              There was an error sending your message. Please try again later.
-            </div>
-          </form>
-        </div>
+          <div
+            id="form-error"
+            class="hidden bg-red-500/20 border border-red-500 text-red-400 p-4 rounded-lg text-center"
+          >
+            There was an error sending your message. Please try again later.
+          </div>
+        </form>
       </div>
     </section>
-
-    <!-- Project Modal -->
-    <div
-      id="project-modal-overlay"
-      class="fixed inset-0 z-50 overflow-auto project-modal-bg hidden"
-      onclick="closeProjectModal()"
-    >
-      <div class="flex items-center justify-center min-h-screen p-4">
-        <div
-          id="project-modal"
-          class="project-modal bg-[var(--bg-secondary)] border border-[var(--border-subtle)] rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto"
-          onclick="event.stopPropagation()"
-        >
-          <div class="p-8">
-            <div class="flex justify-between items-start mb-6">
-              <div class="flex-1">
-                <h3 id="modal-title" class="text-2xl font-bold mb-3"></h3>
-                <div class="mb-4">
-                  <h4
-                    class="text-sm font-semibold mb-2 text-[var(--text-secondary)]"
-                  >
-                    Technologies Used
-                  </h4>
-                  <div
-                    id="modal-technologies"
-                    class="flex flex-wrap gap-2"
-                  ></div>
-                </div>
-              </div>
-              <button
-                onclick="closeProjectModal()"
-                class="text-[var(--text-tertiary)] hover:text-[var(--text-primary)] ml-4"
-              >
-                <i class="fa-solid fa-times text-xl"></i>
-              </button>
-            </div>
-
-            <div id="modal-image" class="mb-8"></div>
-
-            <div class="mb-6">
-              <h4 class="text-lg font-semibold mb-3">Project Overview</h4>
-              <div
-                id="modal-description"
-                class="text-[var(--text-secondary)]"
-              ></div>
-            </div>
-
-            <div class="flex justify-end space-x-4 mt-8">
-              <div id="modal-links"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <script>
       // Initialize EmailJS
@@ -534,146 +734,62 @@
         emailjs.init("tmieiu124Ber32QOE");
       })();
 
-      // Project data with updated descriptions (removed contributors)
-      const projectData = [
-        {
-          title: "SELU AI Advisor",
-          image: "images/selu-ai-advisor.jpg",
-          tech: [
-            "React",
-            "FastAPI",
-            "Mistral 7B",
-            "LangChain",
-            "ChromaDB",
-            "PostgreSQL",
-            "Ollama",
-          ],
-          desc: "Full-stack AI academic advisor portal for SELU students featuring personalized schedule optimization, degree planning, and AI chatbot trained on university-specific data.",
-          longDesc: `<b>Role:</b> Team Leader, Full-Stack Developer & AI Model Integration Specialist<br><br>
-                <b>Problem:</b> SELU students struggle with complex degree planning, course sequencing, and accessing up-to-date academic information scattered across multiple sources.<br><br>
-                <b>Solution:</b> Architected an AI-powered academic portal using Mistral 7B LLM with RAG to provide personalized scheduling, intelligent degree auditing, and instant access to SELU policies via a chatbot.<br><br>
-                <b>Key Features:</b> Secure SELU email authentication, interactive degree progress tracking, AI-powered semester-by-semester schedule optimization with custom constraints, intelligent chatbot trained on SELU catalogs and policies, onboarding flow for academic history, and scalable architecture for multi-department expansion.`,
-          links: [
-            {
-              type: "github",
-              url: "https://github.com/ponderrr/selu-ai-advisor",
-              text: "View Code",
-            },
-          ],
-        },
-        {
-          title: "Smart Advisor",
-          image: "images/smart-advisor.jpg",
-          tech: [
-            "React",
-            "Python",
-            "OpenAI API",
-            "Supabase",
-            "TMDB",
-            "Google Books",
-          ],
-          desc: "A personalized recommendation engine that suggests books and movies based on user preferences, with secure backend and API integrations.",
-          longDesc: `<b>Role:</b> Team Leader, Full-Stack Developer & AI Integration Specialist<br><br>
-                <b>Problem:</b> Users struggle to discover personalized content that matches their preferences across different media types.<br><br>
-                <b>Solution:</b> Architected an AI-powered platform using OpenAI's GPT models to generate dynamic questionnaires (3-15 questions) and provide intelligent recommendations with tiered subscription features.<br><br>
-                <b>Key Features:</b> Dynamic AI questionnaires, personalized recommendations with rich metadata, user profiles with history tracking, tiered subscription system, accessibility options, and responsive design with dark/light themes.`,
-          links: [
-            {
-              type: "github",
-              url: "https://github.com/ponderrr/smartadvisor-v1",
-              text: "View Code",
-            },
-          ],
-        },
-        {
-          title: "Lion's Den Cinema",
-          image: "images/lions-den-cinema.jpg",
-          tech: [
-            "React Native",
-            "TypeScript",
-            ".NET Core",
-            "Expo",
-            "Entity Framework",
-          ],
-          desc: "Mobile cinema app with ticket booking, interactive seat selection, and concession ordering. Built with React Native and .NET backend.",
-          longDesc: `<b>Role:</b> Team Leader, Mobile Developer & Backend Developer<br><br>
-                <b>Problem:</b> Traditional theater booking systems lack modern UX features like real-time seat selection and integrated concessions.<br><br>
-                <b>Solution:</b> Designed complete system architecture with .NET Core Web API backend, React Native mobile app, and React TypeScript web frontend, ensuring unified experience across all platforms.<br><br>
-                <b>Key Features:</b> Interactive seat maps with real-time availability, sophisticated state management for booking flows, integrated concessions ordering, guest & authenticated workflows, QR code ticketing, and dynamic theming.`,
-          links: [
-            {
-              type: "github",
-              url: "https://github.com/Southeastern-Louisiana-University/cmps383-2025-sp-p03-g04",
-              text: "View Code",
-            },
-          ],
-        },
-        {
-          title: "Pao'er Ship",
-          image: "images/paoer-ship.jpg",
-          tech: ["Python", "Pygame", "Raspberry Pi", "GPIO", "NumPy"],
-          desc: "Battleship-style game for Raspberry Pi with multiple AI difficulty levels, hardware controls, and advanced targeting algorithms.",
-          longDesc: `<b>Role:</b> Team Leader, Game Developer & Hardware Integration Specialist<br><br>
-                <b>Problem:</b> Traditional Battleship games lack physical interaction and modern hardware integration.<br><br>
-                <b>Solution:</b> Built complete game architecture with object-oriented design, hardware abstraction layer for GPIO controls, and sophisticated AI opponents with varying difficulty algorithms.<br><br>
-                <b>Key Features:</b> Multiple game modes (Player vs AI, Player vs Player), special "Pao Mode" where missing a single shot results in defeat, full GPIO button support, interactive ship placement, dynamic sound system, and customizable settings.`,
-          links: [
-            {
-              type: "github",
-              url: "https://github.com/ponderrr/paoer_ship",
-              text: "View Code",
-            },
-          ],
-        },
-      ];
+      // Custom cursor
+      const cursor = document.getElementById("cursor");
+      let mouseX = 0,
+        mouseY = 0;
 
-      // Modal functions
-      function openProjectModal(idx) {
-        const modal = document.getElementById("project-modal-overlay");
-        const project = projectData[idx];
+      document.addEventListener("mousemove", (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+      });
 
-        // Set modal content
-        document.getElementById("modal-title").textContent = project.title;
-        document.getElementById("modal-description").innerHTML =
-          project.longDesc;
+      function updateCursor() {
+        cursor.style.left = mouseX + "px";
+        cursor.style.top = mouseY + "px";
+        requestAnimationFrame(updateCursor);
+      }
+      updateCursor();
 
-        // Set image
-        const imageContainer = document.getElementById("modal-image");
-        imageContainer.innerHTML = `<img class="w-full h-[400px] object-cover rounded-lg" src="${project.image}" alt="${project.title}">`;
+      // Cursor hover effects
+      document.querySelectorAll(".cursor-pointer, a, button").forEach((el) => {
+        el.addEventListener("mouseenter", () =>
+          cursor.classList.add("cursor-hover")
+        );
+        el.addEventListener("mouseleave", () =>
+          cursor.classList.remove("cursor-hover")
+        );
+      });
 
-        // Set technologies
-        const techContainer = document.getElementById("modal-technologies");
-        techContainer.innerHTML = project.tech
-          .map((tech) => `<span class="tech-tag">${tech}</span>`)
-          .join("");
+      // Particles system
+      function createParticle() {
+        const particle = document.createElement("div");
+        particle.className = "particle";
+        particle.style.left = Math.random() * 100 + "%";
+        particle.style.animationDuration = Math.random() * 3 + 3 + "s";
+        particle.style.animationDelay = Math.random() * 2 + "s";
+        document.getElementById("particles").appendChild(particle);
 
-        // Set links
-        const linksContainer = document.getElementById("modal-links");
-        linksContainer.innerHTML = project.links
-          .map((link) => {
-            if (link.type === "github") {
-              return `<a href="${link.url}" target="_blank" class="flex items-center gap-2 px-4 py-2 bg-[var(--bg-card)] rounded-md text-[var(--text-secondary)] hover:text-[var(--accent-indigo)] transition">
-                        <i class="fa-brands fa-github"></i>
-                        <span>${link.text}</span>
-                    </a>`;
-            }
-            return `<a href="${link.url}" target="_blank" class="flex items-center gap-2 px-4 py-2 bg-[var(--accent-indigo)] rounded-md text-white hover:bg-opacity-90 transition">
-                    <i class="fa-solid fa-external-link-alt"></i>
-                    <span>${link.text}</span>
-                </a>`;
-          })
-          .join("");
-
-        modal.classList.remove("hidden");
-        document.body.style.overflow = "hidden";
+        setTimeout(() => {
+          particle.remove();
+        }, 6000);
       }
 
-      function closeProjectModal() {
-        document
-          .getElementById("project-modal-overlay")
-          .classList.add("hidden");
-        document.body.style.overflow = "auto";
-      }
+      setInterval(createParticle, 500);
+
+      // Smooth scrolling
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute("href"));
+          if (target) {
+            target.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+            });
+          }
+        });
+      });
 
       // Contact form submission
       document
@@ -704,14 +820,12 @@
           };
 
           try {
-            // Send email using EmailJS
             await emailjs.send(
-              "service_ih3qyzo", // Your Service ID
-              "template_x10or9k", // Your Template ID
+              "service_ih3qyzo",
+              "template_x10or9k",
               templateParams
             );
 
-            // Show success message
             successMsg.classList.remove("hidden");
             this.reset();
           } catch (error) {
@@ -725,25 +839,143 @@
           }
         });
 
-      // Smooth scrolling for navigation links
-      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-        anchor.addEventListener("click", function (e) {
-          e.preventDefault();
-          const target = document.querySelector(this.getAttribute("href"));
-          if (target) {
-            target.scrollIntoView({
-              behavior: "smooth",
-              block: "start",
-            });
+      // Timeline animations on scroll
+      function animateTimeline() {
+        const timelineItems = document.querySelectorAll(".timeline-item");
+
+        timelineItems.forEach((item) => {
+          const rect = item.getBoundingClientRect();
+          const isVisible = rect.top < window.innerHeight * 0.8;
+
+          if (isVisible) {
+            item.style.opacity = "1";
+            item.style.transform = "translateY(0)";
           }
+        });
+      }
+
+      // Set initial state for timeline items
+      document.querySelectorAll(".timeline-item").forEach((item) => {
+        item.style.opacity = "0";
+        item.style.transform = "translateY(50px)";
+        item.style.transition = "all 0.6s ease";
+      });
+
+      window.addEventListener("scroll", animateTimeline);
+      animateTimeline(); // Run once on load
+
+      // Navbar background on scroll
+      const nav = document.querySelector("nav");
+      window.addEventListener("scroll", () => {
+        if (window.scrollY > 100) {
+          nav.style.background = "rgba(0, 0, 0, 0.95)";
+        } else {
+          nav.style.background = "rgba(0, 0, 0, 0.8)";
+        }
+      });
+
+      // Intersection Observer for enhanced animations
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: "0px 0px -100px 0px",
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = "1";
+            entry.target.style.transform = "translateY(0)";
+          }
+        });
+      }, observerOptions);
+
+      // Observe sections for animations
+      document.querySelectorAll(".glass-card, .project-card").forEach((el) => {
+        el.style.opacity = "0";
+        el.style.transform = "translateY(30px)";
+        el.style.transition = "all 0.6s ease";
+        observer.observe(el);
+      });
+
+      // Mobile menu handling
+      function handleMobileView() {
+        const nav = document.querySelector("nav");
+        const socialLinks = document.querySelector(".fixed.top-6.right-6");
+
+        if (window.innerWidth < 768) {
+          nav.style.left = "50%";
+          nav.style.transform = "translateX(-50%) scale(0.9)";
+          socialLinks.style.top = "80px";
+        } else {
+          nav.style.transform = "translateX(-50%)";
+          socialLinks.style.top = "24px";
+        }
+      }
+
+      window.addEventListener("resize", handleMobileView);
+      handleMobileView();
+
+      // Enhanced glass card interactions
+      document
+        .querySelectorAll(".glass-card, .project-card")
+        .forEach((card) => {
+          card.addEventListener("mouseenter", function () {
+            this.style.transform = "translateY(-8px) scale(1.02)";
+          });
+
+          card.addEventListener("mouseleave", function () {
+            this.style.transform = "translateY(0) scale(1)";
+          });
+        });
+
+      // Add magnetic effect to timeline icons
+      document.querySelectorAll(".timeline-icon").forEach((icon) => {
+        icon.addEventListener("mouseenter", function () {
+          this.style.transform = "translateX(-50%) scale(1.15)";
+          this.style.boxShadow = "0 0 30px var(--glow-primary)";
+        });
+
+        icon.addEventListener("mouseleave", function () {
+          this.style.transform = "translateX(-50%) scale(1)";
+          this.style.boxShadow = "none";
         });
       });
 
-      // Keyboard navigation
-      document.addEventListener("keydown", function (e) {
-        if (e.key === "Escape") {
-          closeProjectModal();
+      // Performance optimization for particles on mobile
+      function optimizeForDevice() {
+        const isMobile = window.innerWidth < 768;
+        const particlesContainer = document.getElementById("particles");
+
+        if (isMobile) {
+          // Reduce particle frequency on mobile
+          clearInterval(window.particleInterval);
+          window.particleInterval = setInterval(createParticle, 1000);
+          // Remove custom cursor on mobile
+          cursor.style.display = "none";
+          document.body.style.cursor = "auto";
+        } else {
+          // Normal particle frequency on desktop
+          clearInterval(window.particleInterval);
+          window.particleInterval = setInterval(createParticle, 500);
+          cursor.style.display = "block";
+          document.body.style.cursor = "none";
         }
+      }
+
+      window.addEventListener("resize", optimizeForDevice);
+      optimizeForDevice();
+
+      // Add loading animation for hero section
+      window.addEventListener("load", () => {
+        const hero = document.querySelector("#hero");
+        hero.style.opacity = "0";
+        hero.style.transform = "translateY(30px)";
+
+        setTimeout(() => {
+          hero.style.transition = "all 1s ease";
+          hero.style.opacity = "1";
+          hero.style.transform = "translateY(0)";
+        }, 100);
       });
     </script>
   </body>

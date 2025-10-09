@@ -1,0 +1,123 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply m-0 p-0 box-border;
+  }
+
+  html {
+    @apply scroll-smooth;
+    scroll-padding-top: 100px; /* Account for fixed nav */
+  }
+
+  body {
+    @apply bg-black-base text-white font-sans antialiased;
+    cursor: none;
+    overflow-x: hidden;
+  }
+
+  /* Hide scrollbar but keep functionality */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  html {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* Selection colors */
+  ::selection {
+    background-color: rgba(255, 69, 0, 0.3);
+    color: #ffffff;
+  }
+
+  ::-moz-selection {
+    background-color: rgba(255, 69, 0, 0.3);
+    color: #ffffff;
+  }
+
+  /* Focus visible for accessibility */
+  *:focus-visible {
+    outline: 2px solid #ff4500;
+    outline-offset: 2px;
+  }
+
+  /* Reduce motion for accessibility */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .glow-orange {
+    box-shadow: 0 0 20px rgba(255, 69, 0, 0.3);
+  }
+
+  .glow-orange-strong {
+    box-shadow: 0 0 30px rgba(255, 69, 0, 0.5);
+  }
+
+  .text-glow {
+    text-shadow: 0 0 20px rgba(255, 69, 0, 0.5);
+  }
+
+  .border-glow {
+    border: 1px solid rgba(255, 69, 0, 0.5);
+  }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  @keyframes glowPulse {
+    0%, 100% {
+      opacity: 1;
+      box-shadow: 0 0 10px rgba(255, 69, 0, 0.5);
+    }
+    50% {
+      opacity: 0.6;
+      box-shadow: 0 0 20px rgba(255, 69, 0, 0.8);
+    }
+  }
+
+  .animate-glow-pulse {
+    animation: glowPulse 2s ease-in-out infinite;
+  }
+}
+
+/* Custom scrollbar for project modal */
+.project-modal-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.project-modal-content::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+.project-modal-content::-webkit-scrollbar-thumb {
+  background: #ff4500;
+  border-radius: 4px;
+}
+
+.project-modal-content::-webkit-scrollbar-thumb:hover {
+  background: #ff6b35;
+}
+

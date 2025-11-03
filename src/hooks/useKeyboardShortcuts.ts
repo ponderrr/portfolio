@@ -18,24 +18,9 @@ export const useKeyboardShortcuts = () => {
         document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
       }
       
-      // Press 's' to go to skills
-      if (e.key === 's' && !e.ctrlKey && !e.metaKey) {
-        document.getElementById('skills')?.scrollIntoView({ behavior: 'smooth' });
-      }
-      
-      // Press 'a' to go to about
-      if (e.key === 'a' && !e.ctrlKey && !e.metaKey) {
-        document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
-      }
-      
-      // Press 'c' to go to contact
-      if (e.key === 'c' && !e.ctrlKey && !e.metaKey) {
-        document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
-      }
-      
       // Press '?' to show keyboard shortcuts
       if (e.key === '?') {
-        alert('Keyboard Shortcuts:\n\nh - Home\np - Projects\ns - Skills\na - About\nc - Contact\nESC - Close modal');
+        alert('Keyboard Shortcuts:\n\nh - Home\np - Projects\nESC - Close modal');
       }
     };
 

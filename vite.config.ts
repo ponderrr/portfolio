@@ -8,24 +8,23 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
+    dedupe: ['react', 'react-dom'],
   },
   server: {
     host: '0.0.0.0',
     port: 5173,
   },
   build: {
-    // Optimize for production
     target: 'es2015',
     minify: 'terser',
     terserOptions: {
       compress: {
-        drop_console: true, // Remove console.logs in production
+        drop_console: true,
         drop_debugger: true,
       },
     },
     rollupOptions: {
       output: {
-        // Manual chunk splitting for better caching
         manualChunks: {
           'react-vendor': ['react', 'react-dom'],
           'framer-motion': ['framer-motion'],
@@ -33,14 +32,14 @@ export default defineConfig({
         },
       },
     },
-    // Enable source maps for debugging (optional)
     sourcemap: false,
-    // Increase chunk size warning limit
     chunkSizeWarningLimit: 1000,
+    commonjsOptions: {
+      include: [/three/, /globe.gl/],
+      transformMixedEsModules: true,
+    },
   },
-  // Optimize dependencies
   optimizeDeps: {
-    include: ['react', 'react-dom', 'framer-motion'],
+    include: ['react', 'react-dom', 'framer-motion', 'three', 'globe.gl'],
   },
 })
-

@@ -5,9 +5,6 @@ import { LoadingScreen } from '@/components/ui/LoadingScreen';
 import { Hero } from '@/components/hero/Hero';
 import { ProjectsSection } from '@/components/projects/ProjectsSection';
 import { ProjectModal } from '@/components/projects/ProjectModal';
-import { SkillsSection } from '@/components/skills/SkillsSection';
-import { AboutSection } from '@/components/about/AboutSection';
-import { ContactSection } from '@/components/contact/ContactSection';
 import { Footer } from '@/components/layout/Footer';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import '@/styles/globals.css';
@@ -26,9 +23,6 @@ function App() {
       <div className="relative">
         <Hero />
         <ProjectsSection />
-        <SkillsSection />
-        <AboutSection />
-        <ContactSection />
         <Footer />
       </div>
     </>

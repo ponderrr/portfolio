@@ -48,36 +48,3 @@ export const EASING = {
   out: 'cubic-bezier(0, 0, 0.2, 1)',
 } as const;
 
-export const SKILLS: {
-  frontend: { name: string; level: number }[];
-  backend: { name: string; level: number }[];
-  tools: { name: string; level: number }[];
-  ai: { name: string; level: number }[];
-} = {
-  frontend: [
-    { name: 'React', level: 85 },
-    { name: 'TypeScript', level: 75 },
-    { name: 'Tailwind CSS', level: 90 },
-    { name: 'Framer Motion', level: 80 },
-    { name: 'HTML/CSS', level: 95 },
-  ],
-  backend: [
-    { name: 'Python', level: 80 },
-    { name: 'Node.js', level: 70 },
-    { name: 'Supabase', level: 75 },
-    { name: 'PostgreSQL', level: 65 },
-  ],
-  tools: [
-    { name: 'Git/GitHub', level: 85 },
-    { name: 'VS Code', level: 90 },
-    { name: 'Figma', level: 70 },
-    { name: 'Vite', level: 80 },
-  ],
-  ai: [
-    { name: 'OpenAI APIs', level: 85 },
-    { name: 'Machine Learning', level: 65 },
-    { name: 'Data Analysis', level: 75 },
-    { name: 'Automation', level: 80 },
-  ],
-};
-

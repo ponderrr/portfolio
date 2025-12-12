@@ -16,7 +16,6 @@
 
   body {
     @apply bg-black-base text-white font-sans antialiased;
-    cursor: none;
     overflow-x: hidden;
   }
 

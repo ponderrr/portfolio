@@ -13,6 +13,7 @@ Modern, cyberpunk-themed portfolio showcasing web development and design work wi
 
 ## Table of Contents
 
+- [Exhibits](#exhibits)
 - [Features](#features)
 - [Tech Stack](#tech-stack)
 - [Quick Start](#quick-start)
@@ -29,6 +30,23 @@ Modern, cyberpunk-themed portfolio showcasing web development and design work wi
 - [Deployment](#deployment)
 - [Troubleshooting](#troubleshooting)
 - [License](#license)
+
+---
+
+## Exhibits
+
+The portfolio is built as a series of **Exhibits** — standalone Three.js/R3F experiences that showcase creative development skills.
+
+### EXHIBIT_001 — Neural Lattice
+Location: `src/components/exhibits/neural-lattice/`
+
+An ambient node network rendered with React Three Fiber:
+- **Visuals:** Indigo/cyan color palette with additive glow
+- **Interaction:** Subtle parallax + proximity-based node activation
+- **Performance:** Quality tiers (low/medium/high) based on device capabilities
+- **Accessibility:** Respects `prefers-reduced-motion`, touch fallback for mobile
+
+> **Note:** Current site renders **Hero + EXHIBIT_001 only**; other sections (projects, skills, about, contact) are intentionally not rendered during the exhibit development phase.
 
 ---
 
@@ -292,9 +310,10 @@ graph TB
 Location: `src/components/ui/CustomCursor.tsx`
 
 Multi-state cursor with trail effects:
-- **States:** default, link, button, card, drag
-- **Effects:** Spring physics, particle trail (8 points), mix-blend modes
-- **Interactivity:** Detects hover targets, shows crosshair on links, glow on buttons
+- **States:** default, link, button, card, drag, neural
+- **Effects:** Smooth trailing, orbiting dots for neural state
+- **Interactivity:** Detects `data-cursor` attributes, context-aware styling
+- **Accessibility:** Disabled for touch devices and reduced motion preference
 
 ### Project Modal
 Location: `src/components/projects/ProjectModal.tsx`
@@ -312,10 +331,7 @@ Location: `src/hooks/useKeyboardShortcuts.ts`
 
 Shortcuts:
 - `h` → Home (scroll to top)
-- `p` → Projects section
-- `s` → Skills section
-- `a` → About section
-- `c` → Contact section
+- `l` → Neural Lattice exhibit
 - `?` → Show shortcuts help
 - `ESC` → Close modal
 

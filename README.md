@@ -132,11 +132,11 @@ flowchart LR
   V -->|force-cache| W[mlp_weights.json]
 
   subgraph Client Runtime
-    R[React] --> C[@react-three/fiber Canvas]
+    R[React] --> C["@react-three/fiber Canvas"]
     C --> T[Three.js Renderer]
-    T --> G[GPU: Points/Lines/Shader]
-    R --> F[Weights fetch + model build]
-    F --> S[Simulation loop + buffer updates]
+    T --> G["GPU: Points/Lines/Shader"]
+    R --> F["Weights fetch + model build"]
+    F --> S["Simulation loop + buffer updates"]
     S --> G
   end
 ```
@@ -154,10 +154,10 @@ flowchart TD
   Canvas --> Rig[LatticeRig]
   Rig --> Field[LatticeField]
 
-  Field --> Mat[LatticePointsMaterial (shader)]
+  Field --> Mat["LatticePointsMaterial (shader)"]
   Field --> HUD[ProbabilityHUD3D]
   Field --> Weights[loadExhibit001Weights]
-  Weights --> Model[buildNetworkModel(topK)]
+  Weights --> Model["buildNetworkModel(topK)"]
 ```
 
 ### Weights → model → render lifecycle

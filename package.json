@@ -9,7 +9,8 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "gen:exhibit001-weights": "node scripts/generate-exhibit001-weights.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^9.96.0",

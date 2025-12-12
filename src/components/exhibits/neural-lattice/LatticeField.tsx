@@ -1,74 +1,73 @@
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type React from "react";
 import type { VisualQuality } from "@/hooks/useVisualQuality";
-import { buildLattice } from "./neuralLattice";
 import { LatticePointsMaterial } from "./materials/LatticePointsMaterial";
+import ProbabilityHUD3D from "./ProbabilityHUD3D";
+import { buildNetworkModel, loadExhibit001Weights, type NetworkModel, type WeightsFile } from "./neuralLattice";
 
 type Props = {
   quality: VisualQuality;
-  pointerLocalRef: React.MutableRefObject<THREE.Vector3>;
+  pointerOnInputPlaneRef: React.MutableRefObject<THREE.Vector3>;
   interactive: boolean;
   reducedMotion: boolean;
+  ignite: number;
 };
 
-// Small RNG for infrequent spawns (stable, no allocations).
-function xorshift32(state: number) {
-  let x = state | 0;
-  x ^= x << 13;
-  x ^= x >>> 17;
-  x ^= x << 5;
-  return x | 0;
+function relu(x: number) {
+  return x > 0 ? x : 0;
 }
 
-export function LatticeField({ quality, pointerLocalRef, interactive, reducedMotion }: Props) {
-  const lattice = useMemo(() => buildLattice(quality), [quality]);
+function softmax(logits: Float32Array, out: Float32Array) {
+  let max = -Infinity;
+  for (let i = 0; i < logits.length; i++) max = Math.max(max, logits[i]);
+  let sum = 0;
+  for (let i = 0; i < logits.length; i++) {
+    const v = Math.exp(logits[i] - max);
+    out[i] = v;
+    sum += v;
+  }
+  const inv = sum > 0 ? 1 / sum : 0.1;
+  for (let i = 0; i < logits.length; i++) out[i] *= inv;
+}
 
-  const base = lattice.basePositions;
-  const seeds = lattice.seeds;
-  const edgesFrom = lattice.edgesFrom;
-  const edgesTo = lattice.edgesTo;
-  const edgeWeights = lattice.edgeWeights;
-  const outOffsets = lattice.outOffsets;
-  const outEdgeIndices = lattice.outEdgeIndices;
+export function LatticeField({ quality, pointerOnInputPlaneRef, interactive, reducedMotion, ignite }: Props) {
+  const [weights, setWeights] = useState<WeightsFile | null>(null);
+  const [model, setModel] = useState<NetworkModel | null>(null);
 
-  const nodeCount = lattice.nodeCount;
-  const edgeCount = lattice.edgeCount;
+  // Load weights once
+  useEffect(() => {
+    let alive = true;
+    loadExhibit001Weights()
+      .then((w) => {
+        if (alive) setWeights(w);
+      })
+      .catch((e) => console.error(e));
+    return () => {
+      alive = false;
+    };
+  }, []);
 
-  const positions = useMemo(() => new Float32Array(base), [base]);
-  const activity = useMemo(() => new Float32Array(nodeCount), [nodeCount]);
-  const impulse = useMemo(() => new Float32Array(nodeCount), [nodeCount]);
+  // Build model from weights
+  useEffect(() => {
+    if (!weights) return;
+    const topK = quality === "high" ? 6 : quality === "medium" ? 5 : 4;
 
-  const nodeColors = useMemo(() => {
-    const a = new THREE.Color("#6366F1");
-    const b = new THREE.Color("#22D3EE");
-    const out = new Float32Array(nodeCount * 3);
-    for (let i = 0; i < nodeCount; i++) {
-      const c = a.clone().lerp(b, seeds[i]);
-      out[i * 3 + 0] = c.r;
-      out[i * 3 + 1] = c.g;
-      out[i * 3 + 2] = c.b;
-    }
-    return out;
-  }, [nodeCount, seeds]);
+    setModel(buildNetworkModel(weights, topK));
+  }, [weights, quality]);
 
-  const edgeSubdiv = quality === "high" ? 8 : quality === "medium" ? 6 : 4;
-  const edgeSegCount = edgeCount * edgeSubdiv;
-  const edgePositions = useMemo(() => new Float32Array(edgeSegCount * 2 * 3), [edgeSegCount]);
-  const edgeColors = useMemo(() => new Float32Array(edgeSegCount * 2 * 3), [edgeSegCount]);
-  const edgeGlow = useMemo(() => new Float32Array(edgeSegCount), [edgeSegCount]);
+  const total = model?.totalNodes ?? 0;
 
-  const maxPackets = quality === "high" ? 96 : quality === "medium" ? 64 : 40;
-  const packetsEdge = useMemo(() => new Int32Array(maxPackets).fill(-1), [maxPackets]);
-  const packetsT = useMemo(() => new Float32Array(maxPackets), [maxPackets]);
-  const packetsSpeed = useMemo(() => new Float32Array(maxPackets), [maxPackets]);
-  const packetsStrength = useMemo(() => new Float32Array(maxPackets), [maxPackets]);
-  const packetsHops = useMemo(() => new Int8Array(maxPackets), [maxPackets]);
-  const packetsAlive = useMemo(() => new Uint8Array(maxPackets), [maxPackets]);
+  // Node geometry (static positions, dynamic activity)
+  const positions = useMemo(() => (model ? new Float32Array(model.positions) : new Float32Array(0)), [model]);
+  const seeds = useMemo(() => {
+    const s = new Float32Array(total);
+    for (let i = 0; i < total; i++) s[i] = (i * 0.6180339887) % 1; // deterministic
+    return s;
+  }, [total]);
 
-  const packetPositions = useMemo(() => new Float32Array(maxPackets * 3), [maxPackets]);
-  const packetColors = useMemo(() => new Float32Array(maxPackets * 3), [maxPackets]);
+  const activity = useMemo(() => new Float32Array(total), [total]);
 
   const pointsGeom = useMemo(() => {
     const g = new THREE.BufferGeometry();
@@ -79,323 +78,370 @@ export function LatticeField({ quality, pointerLocalRef, interactive, reducedMot
     return g;
   }, [positions, seeds, activity]);
 
+  // Edge geometry (static positions, dynamic colors)
+  const edgeCount = model?.edgeCount ?? 0;
+  const edgePositions = useMemo(() => new Float32Array(edgeCount * 2 * 3), [edgeCount]);
+  const edgeColors = useMemo(() => new Float32Array(edgeCount * 2 * 3), [edgeCount]);
+
   const linesGeom = useMemo(() => {
+    if (model) {
+      // initial positions
+      for (let e = 0; e < edgeCount; e++) {
+        const a = model.edges[e * 2 + 0];
+        const b = model.edges[e * 2 + 1];
+        const out = e * 2 * 3;
+        edgePositions[out + 0] = positions[a * 3 + 0];
+        edgePositions[out + 1] = positions[a * 3 + 1];
+        edgePositions[out + 2] = positions[a * 3 + 2];
+        edgePositions[out + 3] = positions[b * 3 + 0];
+        edgePositions[out + 4] = positions[b * 3 + 1];
+        edgePositions[out + 5] = positions[b * 3 + 2];
+      }
+    }
+
     const g = new THREE.BufferGeometry();
     g.setAttribute("position", new THREE.BufferAttribute(edgePositions, 3));
     g.setAttribute("color", new THREE.BufferAttribute(edgeColors, 3));
     g.computeBoundingSphere();
     return g;
-  }, [edgePositions, edgeColors]);
+  }, [edgeCount, model, positions, edgePositions, edgeColors]);
+
+  // Output positions (10*3) for HUD
+  const outputPositions = useMemo(() => {
+    if (!model) return new Float32Array(0);
+    const out = new Float32Array(model.outputCount * 3);
+    for (let k = 0; k < model.outputCount; k++) {
+      const idx = model.outputStart + k;
+      out[k * 3 + 0] = positions[idx * 3 + 0];
+      out[k * 3 + 1] = positions[idx * 3 + 1];
+      out[k * 3 + 2] = positions[idx * 3 + 2];
+    }
+    return out;
+  }, [model, positions]);
+
+  // Packet system (wow): points traveling along edges
+  const maxPackets = quality === "high" ? 160 : quality === "medium" ? 110 : 70;
+
+  const packetPos = useMemo(() => new Float32Array(maxPackets * 3), [maxPackets]);
+  const packetLife = useMemo(() => new Float32Array(maxPackets), [maxPackets]);
+  const packetEdge = useMemo(() => new Uint32Array(maxPackets), [maxPackets]);
+  const packetT = useMemo(() => new Float32Array(maxPackets), [maxPackets]);
+  const packetSpeed = useMemo(() => new Float32Array(maxPackets), [maxPackets]);
 
   const packetsGeom = useMemo(() => {
     const g = new THREE.BufferGeometry();
-    g.setAttribute("position", new THREE.BufferAttribute(packetPositions, 3));
-    g.setAttribute("color", new THREE.BufferAttribute(packetColors, 3));
-    g.setDrawRange(0, 0);
-    g.computeBoundingSphere();
+    g.setAttribute("position", new THREE.BufferAttribute(packetPos, 3));
+    g.setAttribute("aLife", new THREE.BufferAttribute(packetLife, 1));
     return g;
-  }, [packetPositions, packetColors]);
+  }, [packetPos, packetLife]);
 
-  const pointsRef = useRef<THREE.Points>(null);
-  const linesRef = useRef<THREE.LineSegments>(null);
-  const packetsRef = useRef<THREE.Points>(null);
+  const packetsMat = useMemo(() => {
+    return new THREE.PointsMaterial({
+      color: new THREE.Color("#22D3EE"),
+      size: 0.06,
+      transparent: true,
+      opacity: 0.9,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+    });
+  }, []);
+
+  // Activations buffers per layer
+  const a0 = useRef<Float32Array>(new Float32Array(0));
+  const a1 = useRef<Float32Array>(new Float32Array(0));
+  const a2 = useRef<Float32Array>(new Float32Array(0));
+  const logits = useRef<Float32Array>(new Float32Array(0));
+  const probs = useRef<Float32Array>(new Float32Array(0));
+
+  useEffect(() => {
+    if (!model) {
+      a0.current = new Float32Array(0);
+      a1.current = new Float32Array(0);
+      a2.current = new Float32Array(0);
+      logits.current = new Float32Array(0);
+      probs.current = new Float32Array(0);
+      return;
+    }
+    a0.current = new Float32Array(model.layerCounts[0]);
+    a1.current = new Float32Array(model.layerCounts[1]);
+    a2.current = new Float32Array(model.layerCounts[2]);
+    logits.current = new Float32Array(model.layerCounts[3]);
+    probs.current = new Float32Array(model.layerCounts[3]);
+  }, [model]);
+
+  // Cached max weight for normalization
+  const wAbsMax = useMemo(() => {
+    if (!model) return 1;
+    let m = 1e-6;
+    for (let i = 0; i < model.edgeWeight.length; i++) m = Math.max(m, Math.abs(model.edgeWeight[i]));
+    return m;
+  }, [model]);
 
   const timeRef = useRef(0);
-  const rngRef = useRef(0x1234567);
-  const nextAmbientRef = useRef(0.9);
-  const pointerCooldownRef = useRef(0);
+  const simRef = useRef({
+    // rate limit compute
+    acc: 0,
+    // random impulse cadence
+    impulseAcc: 0,
+    // pointer drawing
+    pointerAcc: 0,
+  });
 
-  const spawnPacketOnEdge = (edgeIndex: number, strength: number, hops: number, t0 = 0) => {
-    // find a free slot (small max, linear scan is fine)
+  function spawnPacket(edgeIndex: number, strength: number) {
+    // find dead slot
     for (let i = 0; i < maxPackets; i++) {
-      if (packetsAlive[i] === 0) {
-        packetsAlive[i] = 1;
-        packetsEdge[i] = edgeIndex;
-        packetsT[i] = t0;
-        packetsStrength[i] = strength;
-        packetsHops[i] = hops;
-        // speed: subtle variation
-        rngRef.current = xorshift32(rngRef.current);
-        const r01 = ((rngRef.current >>> 0) % 10000) / 10000;
-        packetsSpeed[i] = (quality === "low" ? 0.85 : 0.95) + r01 * (quality === "high" ? 0.55 : 0.45);
+      if (packetLife[i] <= 0) {
+        packetEdge[i] = edgeIndex;
+        packetT[i] = 0;
+        packetLife[i] = Math.max(0.25, Math.min(1.0, strength));
+        packetSpeed[i] = 0.55 + 0.85 * strength;
         return;
       }
     }
-  };
-
-  const spawnImpulseFromNode = (nodeIndex: number, baseStrength: number, hops: number) => {
-    impulse[nodeIndex] = Math.min(1, Math.max(impulse[nodeIndex], baseStrength));
-
-    const start = outOffsets[nodeIndex];
-    const end = outOffsets[nodeIndex + 1];
-    const outCount = end - start;
-    if (outCount === 0) return;
-
-    const branch = quality === "low" ? 1 : 2;
-    const emit = Math.min(branch, outCount);
-    for (let k = 0; k < emit; k++) {
-      const eIdx = outEdgeIndices[start + k];
-      const w = edgeWeights[eIdx];
-      const s = baseStrength * (0.20 + 0.80 * w);
-      spawnPacketOnEdge(eIdx, s, hops, 0);
-    }
-  };
+  }
 
   useFrame((_, delta) => {
-    if (reducedMotion) return;
+    if (!weights || !model) return;
 
     timeRef.current += delta;
-    const t = timeRef.current;
 
-    const p = pointerLocalRef.current;
-    const pr2 = lattice.pointerRadius * lattice.pointerRadius;
+    // Ignition gates: do not run sim until late ignition (premium sequencing)
+    const igniteNodes = THREE.MathUtils.smoothstep(ignite, 0.05, 0.45);
+    const igniteEdges = THREE.MathUtils.smoothstep(ignite, 0.25, 0.85);
+    const igniteSim = ignite > 0.78 && !reducedMotion;
 
-    // decay impulse energy
-    const impulseDecay = Math.exp(-delta * 5.2);
-    for (let i = 0; i < nodeCount; i++) impulse[i] *= impulseDecay;
-
-    // ambient impulse spawn (every ~1–2s)
-    nextAmbientRef.current -= delta;
-    if (nextAmbientRef.current <= 0) {
-      rngRef.current = xorshift32(rngRef.current);
-      const r01 = ((rngRef.current >>> 0) % 100000) / 100000;
-      const node = (r01 * nodeCount) | 0;
-      spawnImpulseFromNode(node, quality === "low" ? 0.65 : 0.75, quality === "low" ? 2 : 3);
-
-      rngRef.current = xorshift32(rngRef.current);
-      const r02 = ((rngRef.current >>> 0) % 100000) / 100000;
-      nextAmbientRef.current = 1.0 + r02 * (quality === "high" ? 1.0 : 1.2);
+    // gentle idle: small baseline activity so nodes aren't dead
+    for (let i = 0; i < total; i++) {
+      activity[i] = THREE.MathUtils.damp(activity[i], 0.035 * igniteNodes, 3.0, delta);
     }
 
-    // pointer-driven subtle impulses (rate-limited)
-    if (interactive) {
-      pointerCooldownRef.current = Math.max(0, pointerCooldownRef.current - delta);
-      if (pointerCooldownRef.current <= 0) {
-        let best = -1;
-        let bestD2 = 1e9;
-        for (let i = 0; i < nodeCount; i++) {
-          const ix = i * 3;
-          const dx = positions[ix + 0] - p.x;
-          const dy = positions[ix + 1] - p.y;
-          const dz = positions[ix + 2] - p.z;
-          const d2 = dx * dx + dy * dy + dz * dz;
-          if (d2 < bestD2) {
-            bestD2 = d2;
-            best = i;
-          }
+    // Input drawing (pointer influences input layer only)
+    if (interactive && igniteSim) {
+      simRef.current.pointerAcc += delta;
+      if (simRef.current.pointerAcc > 0.016) {
+        // ~60Hz sampling
+        simRef.current.pointerAcc = 0;
+        const p = pointerOnInputPlaneRef.current;
+
+        // map pointer (y,z) to input grid indices by distance
+        const inputStart = model.layerStarts[0];
+        const inputCount = model.layerCounts[0];
+
+        for (let i = 0; i < inputCount; i++) {
+          const idx = inputStart + i;
+          const dy = positions[idx * 3 + 1] - p.y;
+          const dz = positions[idx * 3 + 2] - p.z;
+          const d2 = dy * dy + dz * dz;
+          const target = Math.exp(-d2 / 0.06); // tight brush
+          a0.current[i] = THREE.MathUtils.damp(a0.current[i], target, 10.0, delta);
         }
-        if (best >= 0 && bestD2 < 1.05 * 1.05) {
-          spawnImpulseFromNode(best, 0.42, quality === "low" ? 1 : 2);
-          pointerCooldownRef.current = quality === "high" ? 0.14 : quality === "medium" ? 0.18 : 0.24;
-        } else {
-          pointerCooldownRef.current = 0.22;
-        }
+      }
+    } else {
+      // decay input
+      for (let i = 0; i < a0.current.length; i++) {
+        a0.current[i] = THREE.MathUtils.damp(a0.current[i], 0, 6.0, delta);
       }
     }
 
-    // Animate positions + compute activity
-    for (let i = 0; i < nodeCount; i++) {
-      const ix = i * 3;
+    // Sim forward pass at ~30Hz for stability
+    simRef.current.acc += delta;
+    const step = 1 / 30;
 
-      const bx = base[ix + 0];
-      const by = base[ix + 1];
-      const bz = base[ix + 2];
+    if (igniteSim && simRef.current.acc >= step) {
+      simRef.current.acc = 0;
 
-      const s = seeds[i];
-      const wobble =
-        0.030 * Math.sin(t * 0.85 + s * 9.0) +
-        0.018 * Math.sin(t * 1.35 + s * 21.0);
-
-      positions[ix + 0] = bx + wobble * 0.9;
-      positions[ix + 1] = by + wobble * 0.6;
-      positions[ix + 2] = bz + wobble * 1.1;
-
-      const dx = positions[ix + 0] - p.x;
-      const dy = positions[ix + 1] - p.y;
-      const dz = positions[ix + 2] - p.z;
-      const d2 = dx * dx + dy * dy + dz * dz;
-
-      const pointerTarget = interactive ? Math.exp(-d2 / pr2) : 0;
-      const target = Math.max(pointerTarget, impulse[i]);
-      activity[i] = THREE.MathUtils.damp(activity[i], target, 6.5, delta);
-    }
-
-    (pointsGeom.getAttribute("position") as THREE.BufferAttribute).needsUpdate = true;
-    (pointsGeom.getAttribute("aActivity") as THREE.BufferAttribute).needsUpdate = true;
-
-    // Decay edge glow (localized packet highlight)
-    const glowDecay = Math.exp(-delta * 7.2);
-    for (let i = 0; i < edgeSegCount; i++) edgeGlow[i] *= glowDecay;
-
-    // Advance packets + propagate
-    for (let i = 0; i < maxPackets; i++) {
-      if (packetsAlive[i] === 0) continue;
-      const e = packetsEdge[i];
-      if (e < 0) {
-        packetsAlive[i] = 0;
-        continue;
+      // Occasionally inject a soft impulse so it's alive even without pointer
+      simRef.current.impulseAcc += step;
+      if (simRef.current.impulseAcc > 1.25) {
+        simRef.current.impulseAcc = 0;
+        const i = Math.floor(Math.random() * a0.current.length);
+        a0.current[i] = Math.min(1, a0.current[i] + 0.9);
       }
 
-      const tt = packetsT[i] + delta * packetsSpeed[i];
-      if (tt >= 1) {
-        const target = edgesTo[e];
-        const s = packetsStrength[i];
-        impulse[target] = Math.min(1, impulse[target] + s * 1.05);
-
-        const hops = packetsHops[i];
-        if (hops > 0 && s > 0.16) {
-          spawnImpulseFromNode(target, s * 0.78, hops - 1);
+      // Layer 1
+      {
+        const L = weights.layers[0];
+        const inD = L.in,
+          outD = L.out;
+        for (let o = 0; o < outD; o++) {
+          let sum = L.b[o];
+          const row = o * inD;
+          for (let i = 0; i < inD; i++) sum += L.w[row + i] * a0.current[i];
+          a1.current[o] = relu(sum);
         }
-
-        packetsAlive[i] = 0;
-        packetsEdge[i] = -1;
-        packetsT[i] = 0;
-        continue;
       }
 
-      packetsT[i] = tt;
+      // Layer 2
+      {
+        const L = weights.layers[1];
+        const inD = L.in,
+          outD = L.out;
+        for (let o = 0; o < outD; o++) {
+          let sum = L.b[o];
+          const row = o * inD;
+          for (let i = 0; i < inD; i++) sum += L.w[row + i] * a1.current[i];
+          a2.current[o] = relu(sum);
+        }
+      }
 
-      // local edge glow near the packet (subdiv-based)
-      const seg = Math.min(edgeSubdiv - 1, (tt * edgeSubdiv) | 0);
-      const baseIdx = e * edgeSubdiv + seg;
-      const s = packetsStrength[i];
-      if (edgeGlow[baseIdx] < s) edgeGlow[baseIdx] = s;
-      if (seg > 0) edgeGlow[baseIdx - 1] = Math.max(edgeGlow[baseIdx - 1], s * 0.55);
-      if (seg + 1 < edgeSubdiv) edgeGlow[baseIdx + 1] = Math.max(edgeGlow[baseIdx + 1], s * 0.55);
+      // Output logits + probs
+      {
+        const L = weights.layers[2];
+        const inD = L.in,
+          outD = L.out;
+        for (let o = 0; o < outD; o++) {
+          let sum = L.b[o];
+          const row = o * inD;
+          for (let i = 0; i < inD; i++) sum += L.w[row + i] * a2.current[i];
+          logits.current[o] = sum;
+        }
+        softmax(logits.current, probs.current);
+      }
+
+      // Normalize & write node activity
+      const writeLayer = (layerIndex: number, acts: Float32Array, gain: number) => {
+        const start = model.layerStarts[layerIndex];
+        const n = model.layerCounts[layerIndex];
+
+        let mx = 1e-6;
+        for (let i = 0; i < n; i++) mx = Math.max(mx, acts[i]);
+
+        for (let i = 0; i < n; i++) {
+          const idx = start + i;
+          const v = (acts[i] / mx) * gain;
+          activity[idx] = Math.max(activity[idx], v);
+        }
+      };
+
+      writeLayer(0, a0.current, 0.9);
+      writeLayer(1, a1.current, 0.8);
+      writeLayer(2, a2.current, 0.75);
+
+      // Output layer activity: use probs directly
+      {
+        const start = model.outputStart;
+        for (let k = 0; k < model.outputCount; k++) {
+          activity[start + k] = Math.max(activity[start + k], probs.current[k] * 1.0);
+        }
+      }
+
+      // Spawn packets biased by active sources (wow)
+      // Only spawn a few per step
+      const packetBudget = quality === "high" ? 6 : quality === "medium" ? 4 : 3;
+
+      for (let s = 0; s < packetBudget; s++) {
+        const src = Math.floor(Math.random() * total);
+        const srcAct = activity[src];
+
+        if (srcAct < 0.25) continue;
+
+        const start = model.sourceEdgeStart[src];
+        const count = model.sourceEdgeCount[src];
+        if (count === 0) continue;
+
+        const pick = start + Math.floor(Math.random() * count);
+        const eIdx = model.sourceEdgeList[pick];
+
+        spawnPacket(eIdx, srcAct);
+      }
     }
 
-    // Pack packet positions/colors for drawRange
-    let packetWrite = 0;
-    for (let i = 0; i < maxPackets; i++) {
-      if (packetsAlive[i] === 0) continue;
-      const e = packetsEdge[i];
-      const tt = packetsT[i];
-      const a = edgesFrom[e];
-      const b = edgesTo[e];
+    // Update edge colors based on activations + weight
+    const indigo = new THREE.Color("#6366F1");
+    const cyan = new THREE.Color("#22D3EE");
 
-      const a3 = a * 3;
-      const b3 = b * 3;
-
-      const ax = positions[a3 + 0], ay = positions[a3 + 1], az = positions[a3 + 2];
-      const bx = positions[b3 + 0], by = positions[b3 + 1], bz = positions[b3 + 2];
-
-      const px = ax + (bx - ax) * tt;
-      const py = ay + (by - ay) * tt;
-      const pz = az + (bz - az) * tt;
-
-      const w3 = packetWrite * 3;
-      packetPositions[w3 + 0] = px;
-      packetPositions[w3 + 1] = py;
-      packetPositions[w3 + 2] = pz;
-
-      // subtle cyan accent, strength-weighted
-      const s = packetsStrength[i];
-      const cr = THREE.MathUtils.lerp(nodeColors[a3 + 0], nodeColors[b3 + 0], tt);
-      const cg = THREE.MathUtils.lerp(nodeColors[a3 + 1], nodeColors[b3 + 1], tt);
-      const cb = THREE.MathUtils.lerp(nodeColors[a3 + 2], nodeColors[b3 + 2], tt);
-
-      const intensity = 0.55 + 0.70 * s;
-      packetColors[w3 + 0] = cr * intensity;
-      packetColors[w3 + 1] = cg * intensity;
-      packetColors[w3 + 2] = cb * intensity;
-
-      packetWrite++;
-      if (packetWrite >= maxPackets) break;
-    }
-
-    packetsGeom.setDrawRange(0, packetWrite);
-    (packetsGeom.getAttribute("position") as THREE.BufferAttribute).needsUpdate = true;
-    (packetsGeom.getAttribute("color") as THREE.BufferAttribute).needsUpdate = true;
-
-    // Rebuild edge segment positions + colors from node arrays (in-place)
     for (let e = 0; e < edgeCount; e++) {
-      const a = edgesFrom[e];
-      const b = edgesTo[e];
+      const a = model.edges[e * 2 + 0];
+      const b = model.edges[e * 2 + 1];
 
-      const a3 = a * 3;
-      const b3 = b * 3;
+      const w = model.edgeWeight[e];
+      const wn = Math.min(1, Math.abs(w) / wAbsMax);
 
-      const ax = positions[a3 + 0], ay = positions[a3 + 1], az = positions[a3 + 2];
-      const bx = positions[b3 + 0], by = positions[b3 + 1], bz = positions[b3 + 2];
+      const srcAct = activity[a];
+      const dstAct = activity[b];
+      const act = Math.max(srcAct, dstAct);
 
-      const ia = activity[a];
-      const ib = activity[b];
-      const nodeBoost = Math.max(ia, ib);
-      const w = edgeWeights[e];
+      // base faint + activation boost
+      const intensity = (0.03 + 0.85 * act * wn) * igniteEdges;
 
-      for (let k = 0; k < edgeSubdiv; k++) {
-        const t0 = k / edgeSubdiv;
-        const t1 = (k + 1) / edgeSubdiv;
+      const base = w >= 0 ? cyan : indigo;
 
-        const segIdx = e * edgeSubdiv + k;
-        const glow = edgeGlow[segIdx];
+      const out = e * 2 * 3;
+      edgeColors[out + 0] = base.r * intensity;
+      edgeColors[out + 1] = base.g * intensity;
+      edgeColors[out + 2] = base.b * intensity;
+      edgeColors[out + 3] = base.r * intensity;
+      edgeColors[out + 4] = base.g * intensity;
+      edgeColors[out + 5] = base.b * intensity;
+    }
 
-        const intensity = Math.min(1.4, 0.010 + 0.050 * w + 0.75 * glow + 0.25 * nodeBoost);
+    (pointsGeom.getAttribute("aActivity") as THREE.BufferAttribute).needsUpdate = true;
+    (linesGeom.getAttribute("color") as THREE.BufferAttribute).needsUpdate = true;
 
-        const out = segIdx * 2 * 3;
+    // Update packets
+    for (let i = 0; i < maxPackets; i++) {
+      if (packetLife[i] <= 0 || !igniteSim) {
+        packetLife[i] = Math.max(0, packetLife[i] - delta * 1.2);
+        continue;
+      }
 
-        // segment positions
-        edgePositions[out + 0] = ax + (bx - ax) * t0;
-        edgePositions[out + 1] = ay + (by - ay) * t0;
-        edgePositions[out + 2] = az + (bz - az) * t0;
+      const eIdx = packetEdge[i];
+      const t = packetT[i] + delta * packetSpeed[i] * 0.9;
+      packetT[i] = t;
 
-        edgePositions[out + 3] = ax + (bx - ax) * t1;
-        edgePositions[out + 4] = ay + (by - ay) * t1;
-        edgePositions[out + 5] = az + (bz - az) * t1;
+      const src = model.edges[eIdx * 2 + 0];
+      const dst = model.edges[eIdx * 2 + 1];
 
-        // segment colors (lerp node colors along edge)
-        const c0r = THREE.MathUtils.lerp(nodeColors[a3 + 0], nodeColors[b3 + 0], t0) * intensity;
-        const c0g = THREE.MathUtils.lerp(nodeColors[a3 + 1], nodeColors[b3 + 1], t0) * intensity;
-        const c0b = THREE.MathUtils.lerp(nodeColors[a3 + 2], nodeColors[b3 + 2], t0) * intensity;
+      const sx = positions[src * 3 + 0],
+        sy = positions[src * 3 + 1],
+        sz = positions[src * 3 + 2];
+      const dx = positions[dst * 3 + 0],
+        dy = positions[dst * 3 + 1],
+        dz = positions[dst * 3 + 2];
 
-        const c1r = THREE.MathUtils.lerp(nodeColors[a3 + 0], nodeColors[b3 + 0], t1) * intensity;
-        const c1g = THREE.MathUtils.lerp(nodeColors[a3 + 1], nodeColors[b3 + 1], t1) * intensity;
-        const c1b = THREE.MathUtils.lerp(nodeColors[a3 + 2], nodeColors[b3 + 2], t1) * intensity;
+      const px = THREE.MathUtils.lerp(sx, dx, t);
+      const py = THREE.MathUtils.lerp(sy, dy, t);
+      const pz = THREE.MathUtils.lerp(sz, dz, t);
 
-        edgeColors[out + 0] = c0r;
-        edgeColors[out + 1] = c0g;
-        edgeColors[out + 2] = c0b;
+      packetPos[i * 3 + 0] = px;
+      packetPos[i * 3 + 1] = py;
+      packetPos[i * 3 + 2] = pz;
 
-        edgeColors[out + 3] = c1r;
-        edgeColors[out + 4] = c1g;
-        edgeColors[out + 5] = c1b;
+      // when reaches end, die + spike node briefly
+      if (t >= 1) {
+        packetLife[i] = 0;
+        packetT[i] = 0;
+        activity[dst] = Math.max(activity[dst], 0.95);
+      } else {
+        packetLife[i] = Math.max(0, packetLife[i] - delta * 0.35);
       }
     }
 
-    (linesGeom.getAttribute("position") as THREE.BufferAttribute).needsUpdate = true;
-    (linesGeom.getAttribute("color") as THREE.BufferAttribute).needsUpdate = true;
+    (packetsGeom.getAttribute("position") as THREE.BufferAttribute).needsUpdate = true;
+
+    // material size adjustment (quality)
+    packetsMat.size = quality === "high" ? 0.062 : quality === "medium" ? 0.058 : 0.054;
+    packetsMat.opacity = 0.85 * igniteEdges;
   });
 
-  // For material time uniform
-  const shaderTime = timeRef.current;
+  // Until loaded, render nothing (background still shows)
+  if (!weights || !model) return null;
 
   return (
     <group>
-      <lineSegments ref={linesRef} geometry={linesGeom} frustumCulled={false}>
-        <lineBasicMaterial
-          vertexColors
-          transparent
-          opacity={0.88}
-          blending={THREE.AdditiveBlending}
-          depthWrite={false}
-        />
+      <lineSegments geometry={linesGeom} frustumCulled={false}>
+        <lineBasicMaterial vertexColors transparent opacity={0.95} blending={THREE.AdditiveBlending} depthWrite={false} />
       </lineSegments>
 
-      <points ref={packetsRef} geometry={packetsGeom} frustumCulled={false}>
-        <pointsMaterial
-          vertexColors
-          transparent
-          opacity={0.95}
-          size={quality === "high" ? 0.07 : quality === "medium" ? 0.065 : 0.06}
-          sizeAttenuation
-          blending={THREE.AdditiveBlending}
-          depthWrite={false}
-        />
+      <points geometry={pointsGeom} frustumCulled={false}>
+        <LatticePointsMaterial ignite={ignite} quality={quality} />
       </points>
 
-      <points ref={pointsRef} geometry={pointsGeom} frustumCulled={false}>
-        <LatticePointsMaterial time={shaderTime} quality={quality} />
-      </points>
+      <points geometry={packetsGeom} material={packetsMat} frustumCulled={false} />
+
+      <ProbabilityHUD3D outputPositions={outputPositions} probs={probs.current} ignite={ignite} />
     </group>
   );
 }
+
+export default LatticeField;

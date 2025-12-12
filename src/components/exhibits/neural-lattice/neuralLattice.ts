@@ -5,24 +5,32 @@ export type BuiltLattice = {
   edgeCount: number;
   basePositions: Float32Array; // length = nodeCount * 3
   seeds: Float32Array;         // length = nodeCount
-  edges: Uint32Array;          // length = edgeCount * 2 (pairs)
+  edgesFrom: Uint32Array;      // length = edgeCount
+  edgesTo: Uint32Array;        // length = edgeCount
+  edgeWeights: Float32Array;   // length = edgeCount (0..1)
+  outOffsets: Uint32Array;     // length = nodeCount + 1 (CSR)
+  outEdgeIndices: Uint32Array; // length = edgeCount (edge indices, grouped per node)
+  layerIndex: Uint8Array;      // length = nodeCount
   boundsRadius: number;
   pointerRadius: number;
 };
 
 type Config = {
-  nx: number;
-  ny: number;
-  nz: number;
-  spacing: number;
+  layers: number[];
+  depth: number;
+  radiusX: number;
+  radiusY: number;
   jitter: number;
-  diagonals: boolean;
+  topN: number;
 };
 
 export function getLatticeConfig(q: VisualQuality): Config {
-  if (q === "high") return { nx: 14, ny: 9, nz: 6, spacing: 0.55, jitter: 0.12, diagonals: true };
-  if (q === "medium") return { nx: 12, ny: 8, nz: 5, spacing: 0.60, jitter: 0.11, diagonals: false };
-  return { nx: 10, ny: 6, nz: 4, spacing: 0.66, jitter: 0.10, diagonals: false };
+  // Feed-forward layered layout: input -> hidden -> output
+  // Top-N edges per node keeps it legible (no spaghetti).
+  const topN = q === "low" ? 4 : 6;
+  if (q === "high") return { layers: [48, 64, 56, 32], depth: 4.9, radiusX: 2.35, radiusY: 1.55, jitter: 0.10, topN };
+  if (q === "medium") return { layers: [36, 48, 40, 24], depth: 4.6, radiusX: 2.15, radiusY: 1.45, jitter: 0.095, topN };
+  return { layers: [24, 32, 28, 16], depth: 4.2, radiusX: 1.95, radiusY: 1.35, jitter: 0.085, topN };
 }
 
 // Tiny deterministic-ish RNG (seeded by index) to avoid Math.random noise per frame.
@@ -31,86 +39,190 @@ function hash01(n: number): number {
   return x - Math.floor(x);
 }
 
+function clamp01(x: number) {
+  return x < 0 ? 0 : x > 1 ? 1 : x;
+}
+
+function stableWeight(src: number, dst: number) {
+  // 0..1
+  return hash01(src * 131 + dst * 977 + 0.731);
+}
+
 export function buildLattice(q: VisualQuality): BuiltLattice {
   const cfg = getLatticeConfig(q);
-  const nodeCount = cfg.nx * cfg.ny * cfg.nz;
+  const nodeCount = cfg.layers.reduce((a, b) => a + b, 0);
 
   const basePositions = new Float32Array(nodeCount * 3);
   const seeds = new Float32Array(nodeCount);
+  const layerIndex = new Uint8Array(nodeCount);
 
-  const cx = (cfg.nx - 1) * 0.5;
-  const cy = (cfg.ny - 1) * 0.5;
-  const cz = (cfg.nz - 1) * 0.5;
+  // Layout: layered planes along Z, with a compact premium silhouette in X/Y.
+  // Each layer uses a golden-angle spiral distribution for even spacing.
+  const golden = Math.PI * (3 - Math.sqrt(5));
+  const layerCount = cfg.layers.length;
+  const z0 = -cfg.depth * 0.5;
+  const zStep = layerCount <= 1 ? 0 : cfg.depth / (layerCount - 1);
 
-  let idx = 0;
-  for (let z = 0; z < cfg.nz; z++) {
-    for (let y = 0; y < cfg.ny; y++) {
-      for (let x = 0; x < cfg.nx; x++) {
-        const i = idx++;
-        const h1 = hash01(i * 3 + 1) - 0.5;
-        const h2 = hash01(i * 3 + 2) - 0.5;
-        const h3 = hash01(i * 3 + 3) - 0.5;
+  let cursor = 0;
+  for (let li = 0; li < layerCount; li++) {
+    const n = cfg.layers[li];
+    const z = z0 + li * zStep;
+    for (let k = 0; k < n; k++) {
+      const i = cursor++;
+      const t = (k + 0.5) / n;
+      const r = Math.sqrt(t);
+      const theta = k * golden;
 
-        basePositions[i * 3 + 0] = (x - cx) * cfg.spacing + h1 * cfg.jitter;
-        basePositions[i * 3 + 1] = (y - cy) * cfg.spacing + h2 * cfg.jitter;
-        basePositions[i * 3 + 2] = (z - cz) * cfg.spacing + h3 * cfg.jitter;
+      const jx = (hash01(i * 3 + 1) - 0.5) * cfg.jitter;
+      const jy = (hash01(i * 3 + 2) - 0.5) * cfg.jitter;
+      const jz = (hash01(i * 3 + 3) - 0.5) * cfg.jitter * 0.65;
 
-        seeds[i] = hash01(i * 17 + 0.77);
-      }
+      const x = Math.cos(theta) * r * cfg.radiusX + jx;
+      const y = Math.sin(theta) * r * cfg.radiusY + jy;
+
+      basePositions[i * 3 + 0] = x;
+      basePositions[i * 3 + 1] = y;
+      basePositions[i * 3 + 2] = z + jz;
+
+      seeds[i] = hash01(i * 17 + 0.77);
+      layerIndex[i] = li;
     }
   }
 
-  const edges: number[] = [];
-  const indexOf = (x: number, y: number, z: number) => x + y * cfg.nx + z * cfg.nx * cfg.ny;
+  // Build directed feed-forward edges between adjacent layers.
+  // For each node, we compute candidate weights to next layer, then keep top-N.
+  const layerStarts = new Uint32Array(layerCount + 1);
+  layerStarts[0] = 0;
+  for (let li = 0; li < layerCount; li++) layerStarts[li + 1] = layerStarts[li] + cfg.layers[li];
 
-  const pushEdge = (a: number, b: number) => {
-    // store each undirected edge once
-    if (a === b) return;
-    if (a < b) edges.push(a, b);
-    else edges.push(b, a);
-  };
+  const edgesFromArr: number[] = [];
+  const edgesToArr: number[] = [];
+  const edgeWeightsArr: number[] = [];
 
-  for (let z = 0; z < cfg.nz; z++) {
-    for (let y = 0; y < cfg.ny; y++) {
-      for (let x = 0; x < cfg.nx; x++) {
-        const a = indexOf(x, y, z);
+  // Temporary top-N buffers (tiny, per node).
+  const bestJ = new Int32Array(cfg.topN);
+  const bestW = new Float32Array(cfg.topN);
 
-        if (x + 1 < cfg.nx) pushEdge(a, indexOf(x + 1, y, z));
-        if (y + 1 < cfg.ny) pushEdge(a, indexOf(x, y + 1, z));
-        if (z + 1 < cfg.nz) pushEdge(a, indexOf(x, y, z + 1));
+  const sigma2 = 0.75 * 0.75; // spatial bias width
 
-        if (cfg.diagonals) {
-          if (x + 1 < cfg.nx && y + 1 < cfg.ny) pushEdge(a, indexOf(x + 1, y + 1, z));
-          if (x + 1 < cfg.nx && z + 1 < cfg.nz) pushEdge(a, indexOf(x + 1, y, z + 1));
-          if (y + 1 < cfg.ny && z + 1 < cfg.nz) pushEdge(a, indexOf(x, y + 1, z + 1));
+  for (let li = 0; li < layerCount - 1; li++) {
+    const a0 = layerStarts[li];
+    const a1 = layerStarts[li + 1];
+    const b0 = layerStarts[li + 1];
+    const b1 = layerStarts[li + 2];
+
+    for (let a = a0; a < a1; a++) {
+      // init
+      for (let k = 0; k < cfg.topN; k++) {
+        bestJ[k] = -1;
+        bestW[k] = -1;
+      }
+
+      const ax = basePositions[a * 3 + 0];
+      const ay = basePositions[a * 3 + 1];
+      const az = basePositions[a * 3 + 2];
+
+      for (let b = b0; b < b1; b++) {
+        const bx = basePositions[b * 3 + 0];
+        const by = basePositions[b * 3 + 1];
+        const bz = basePositions[b * 3 + 2];
+
+        const dx = ax - bx;
+        const dy = ay - by;
+        const dz = az - bz;
+        const d2 = dx * dx + dy * dy + dz * dz;
+
+        // Weight: mostly deterministic random, gently biased toward spatial locality.
+        const wRand = stableWeight(a, b);
+        const wLocal = Math.exp(-d2 / sigma2);
+        const w = clamp01(0.72 * wRand + 0.28 * wLocal);
+
+        // Insert into top-N
+        let minIdx = 0;
+        let minW = bestW[0];
+        for (let k = 1; k < cfg.topN; k++) {
+          if (bestW[k] < minW) {
+            minW = bestW[k];
+            minIdx = k;
+          }
+        }
+        if (w > minW) {
+          bestW[minIdx] = w;
+          bestJ[minIdx] = b;
         }
       }
+
+      // Emit edges for this node, sorted by weight descending
+      for (let k = 0; k < cfg.topN - 1; k++) {
+        for (let m = k + 1; m < cfg.topN; m++) {
+          if (bestW[m] > bestW[k]) {
+            const tw = bestW[k];
+            bestW[k] = bestW[m];
+            bestW[m] = tw;
+            const tj = bestJ[k];
+            bestJ[k] = bestJ[m];
+            bestJ[m] = tj;
+          }
+        }
+      }
+
+      for (let k = 0; k < cfg.topN; k++) {
+        const b = bestJ[k];
+        const w = bestW[k];
+        if (b < 0 || w <= 0) continue;
+        edgesFromArr.push(a);
+        edgesToArr.push(b);
+        edgeWeightsArr.push(w);
+      }
     }
   }
 
-  // Deduplicate (diagonals can create duplicates depending on ordering)
-  const seen = new Set<string>();
-  const unique: number[] = [];
-  for (let i = 0; i < edges.length; i += 2) {
-    const a = edges[i], b = edges[i + 1];
-    const key = a + ":" + b;
-    if (seen.has(key)) continue;
-    seen.add(key);
-    unique.push(a, b);
+  const edgeCount = edgesFromArr.length;
+  const edgesFrom = new Uint32Array(edgesFromArr);
+  const edgesTo = new Uint32Array(edgesToArr);
+  const edgeWeights = new Float32Array(edgeWeightsArr);
+
+  // Build outgoing adjacency (CSR)
+  const outDegree = new Uint32Array(nodeCount);
+  for (let e = 0; e < edgeCount; e++) outDegree[edgesFrom[e]]++;
+
+  const outOffsets = new Uint32Array(nodeCount + 1);
+  outOffsets[0] = 0;
+  for (let i = 0; i < nodeCount; i++) outOffsets[i + 1] = outOffsets[i] + outDegree[i];
+
+  const outEdgeIndices = new Uint32Array(edgeCount);
+  const writeCursor = new Uint32Array(nodeCount);
+  for (let i = 0; i < nodeCount; i++) writeCursor[i] = outOffsets[i];
+  for (let e = 0; e < edgeCount; e++) {
+    const a = edgesFrom[e];
+    const w = writeCursor[a]++;
+    outEdgeIndices[w] = e;
   }
 
-  const edgeCount = unique.length / 2;
-  const edgesTyped = new Uint32Array(unique);
+  // Bounds + pointer radius
+  let boundsRadius = 0;
+  for (let i = 0; i < nodeCount; i++) {
+    const x = basePositions[i * 3 + 0];
+    const y = basePositions[i * 3 + 1];
+    const z = basePositions[i * 3 + 2];
+    const r = Math.sqrt(x * x + y * y + z * z);
+    if (r > boundsRadius) boundsRadius = r;
+  }
+  boundsRadius *= 1.1;
 
-  const boundsRadius = Math.max(cfg.nx, cfg.ny, cfg.nz) * cfg.spacing * 0.75;
-  const pointerRadius = q === "high" ? 1.35 : q === "medium" ? 1.25 : 1.15;
+  const pointerRadius = q === "high" ? 1.2 : q === "medium" ? 1.1 : 1.0;
 
   return {
     nodeCount,
     edgeCount,
     basePositions,
     seeds,
-    edges: edgesTyped,
+    edgesFrom,
+    edgesTo,
+    edgeWeights,
+    outOffsets,
+    outEdgeIndices,
+    layerIndex,
     boundsRadius,
     pointerRadius,
   };

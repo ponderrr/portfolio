@@ -3,7 +3,6 @@ import { ParticleBackground } from './ParticleBackground';
 import { BootSequence } from './BootSequence';
 import { HeroText } from './HeroText';
 import { StatusIndicators } from './StatusIndicators';
-import { ScrollIndicator } from './ScrollIndicator';
 import { Navigation } from './Navigation';
 import { CornerBrackets } from '../ui/CornerBrackets';
 
@@ -17,11 +16,6 @@ export const Hero = () => {
       
       {/* Particle background */}
       {bootComplete && <ParticleBackground />}
-      
-      {/* Grid overlay (from Phase 1) */}
-      <div className="absolute inset-0 pointer-events-none z-10">
-        {/* Optional: Add additional grid effects here */}
-      </div>
 
       {/* Status indicators */}
       {bootComplete && <StatusIndicators />}
@@ -30,9 +24,6 @@ export const Hero = () => {
       <div className="relative z-20 max-w-7xl mx-auto px-6">
         {bootComplete && <HeroText />}
       </div>
-
-      {/* Scroll indicator */}
-      {bootComplete && <ScrollIndicator targetId="projects" />}
 
       {/* Navigation */}
       {bootComplete && <Navigation />}

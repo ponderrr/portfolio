@@ -11,7 +11,7 @@
 
   html {
     @apply scroll-smooth;
-    scroll-padding-top: 100px; /* Account for fixed nav */
+    scroll-padding-top: 0px;
   }
 
   body {
@@ -44,6 +44,11 @@
   *:focus-visible {
     outline: 2px solid #ff4500;
     outline-offset: 2px;
+  }
+
+  /* Hide the Hero navbar completely (keep Hero code untouched) */
+  #hero nav {
+    display: none !important;
   }
 
   /* Reduce motion for accessibility */

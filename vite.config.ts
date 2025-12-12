@@ -34,10 +34,6 @@ export default defineConfig({
     },
     sourcemap: false,
     chunkSizeWarningLimit: 1000,
-    commonjsOptions: {
-      include: [/three/],
-      transformMixedEsModules: true,
-    },
   },
   optimizeDeps: {
     include: ['react', 'react-dom', 'framer-motion', 'three'],

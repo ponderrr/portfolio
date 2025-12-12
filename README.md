@@ -1,478 +1,420 @@
-# Andrew Ponder Portfolio
+<div align="center">
 
-Modern, cyberpunk-themed portfolio showcasing web development and design work with advanced UI/UX interactions.
+<h1>Andrew Ponder — Portfolio</h1>
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-orange.svg)](https://opensource.org/licenses/MIT)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue)](https://www.typescriptlang.org/)
-[![React](https://img.shields.io/badge/React-18.2-61dafb)](https://reactjs.org/)
-[![Vite](https://img.shields.io/badge/Vite-5.0-646cff)](https://vitejs.dev/)
+<p>
+  Production-grade <strong>Vite + React + TypeScript</strong> portfolio featuring <strong>EXHIBIT 001</strong>: a GPU-accelerated
+  <strong>neural-lattice</strong> visualization driven by deterministic MLP weights and a real-time Three.js simulation loop.
+</p>
 
-🔗 **Live:** [andrewponder.com](https://andrewponder.com)
+<br/>
+
+<img alt="Vite" src="https://img.shields.io/badge/Vite-5-8B5CF6?style=for-the-badge&logo=vite&logoColor=white" />
+<img alt="React" src="https://img.shields.io/badge/React-18-00D9FF?style=for-the-badge&logo=react&logoColor=0B0B0B" />
+<img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript&logoColor=white" />
+<img alt="Three.js" src="https://img.shields.io/badge/Three.js-0.181-111111?style=for-the-badge&logo=three.js&logoColor=white" />
+<br/>
+<img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind_CSS-3-00D9FF?style=for-the-badge&logo=tailwindcss&logoColor=0B0B0B" />
+<img alt="Framer Motion" src="https://img.shields.io/badge/Framer_Motion-11-FF006E?style=for-the-badge&logo=framer&logoColor=white" />
+<img alt="Vercel" src="https://img.shields.io/badge/Vercel-Deploy-111111?style=for-the-badge&logo=vercel&logoColor=white" />
+<img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-8B5CF6?style=for-the-badge" />
+<br/>
+<img alt="Version" src="https://img.shields.io/badge/Version-1.0.0-FF006E?style=for-the-badge" />
+<img alt="Build" src="https://img.shields.io/badge/Build-tsc_+_vite-00D9FF?style=for-the-badge" />
+<img alt="ESLint" src="https://img.shields.io/badge/ESLint-Quality-8B5CF6?style=for-the-badge&logo=eslint&logoColor=white" />
+<img alt="Prettier" src="https://img.shields.io/badge/Prettier-Format-00D9FF?style=for-the-badge&logo=prettier&logoColor=0B0B0B" />
+<img alt="R3F" src="https://img.shields.io/badge/R3F-@react--three/fiber-111111?style=for-the-badge" />
+
+<br/>
+
+<table style="border: 1px solid rgba(255,255,255,0.08); border-radius: 12px;">
+  <tr>
+    <td align="left">
+      <strong>Runtime</strong><br/>
+      <sub>React + R3F + Three.js (WebGL)</sub>
+    </td>
+    <td align="left">
+      <strong>Artifact</strong><br/>
+      <sub>Deterministic MLP weights → graph model</sub>
+    </td>
+    <td align="left">
+      <strong>Delivery</strong><br/>
+      <sub>Vercel CDN + immutable caching</sub>
+    </td>
+  </tr>
+</table>
+
+<br/>
+
+</div>
 
 ---
 
-## Table of Contents
+## About
 
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Quick Start](#quick-start)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-  - [Environment Variables](#environment-variables)
-  - [Run Development](#run-development)
-  - [Build for Production](#build-for-production)
-- [Scripts](#scripts)
-- [Project Structure](#project-structure)
-- [Architecture](#architecture)
-- [Key Features Implementation](#key-features-implementation)
-- [Configuration](#configuration)
-- [Deployment](#deployment)
-- [Troubleshooting](#troubleshooting)
-- [License](#license)
+This repository is a modern, production-ready **frontend** built for **high-end interaction** and **visual storytelling**.
+
+- **What it does**: Ships a fast portfolio SPA with an interactive 3D exhibit (**EXHIBIT 001 — Neural Lattice**) that visualizes a small feed-forward MLP as an animated graph.
+- **Problem it solves**: Demonstrates real engineering execution (render loop, deterministic assets, performance gating, accessibility fallbacks) while delivering a premium UX.
+- **Built for**: Engineering teams, recruiters, and product-minded collaborators evaluating **frontend architecture**, **rendering performance**, and **interaction design**.
+- **Why it matters**: This isn’t a “static site with animations” — the exhibit is a miniature real-time system with **typed-array data structures**, **GPU shader materials**, and **runtime quality controls**.
 
 ---
 
-## Features
+## Key Features
 
-All features verified from source code (`src/`):
-
-### UI/UX
-- **Custom Cursor System** - Multi-state animated cursor with trail effects and context-aware styling (link, button, card, drag states) - `src/components/ui/CustomCursor.tsx`
-- **Boot Sequence Animation** - System initialization animation on page load - `src/components/hero/BootSequence.tsx`
-- **3D Particle Background** - Three.js-powered animated particle field with 2000+ particles - `src/components/hero/ParticleBackground.tsx`
-- **Loading Screen** - Progress bar with percentage indicator and corner brackets - `src/components/ui/LoadingScreen.tsx`
-- **Scroll Progress Indicator** - Top-fixed progress bar with spring physics - `src/components/ui/ScrollProgress.tsx`
-- **Keyboard Navigation** - Shortcuts for quick section navigation (h/p/s/a/c, ? for help, ESC to close modals) - `src/hooks/useKeyboardShortcuts.ts`
-- **Grid Overlay** - Technical cyberpunk aesthetic grid - `src/components/layout/GridOverlay.tsx`
-- **Corner Brackets** - Reusable UI element for framing content - `src/components/ui/CornerBrackets.tsx`
-
-### Content Sections
-- **Hero Section** - Full-screen introduction with status indicators and scroll prompt - `src/components/hero/`
-- **Projects Grid** - 4 featured projects with modal details, tech stack, and links - `src/components/projects/ProjectsSection.tsx`
-- **Skills Visualization** - Animated skill bars across 4 categories (Frontend, Backend, Tools, AI) - `src/components/skills/SkillsSection.tsx`
-- **About Section** - Personal bio and background - `src/components/about/AboutSection.tsx`
-- **Contact Form** - EmailJS-integrated form with validation and status feedback - `src/components/contact/ContactForm.tsx`
-- **Social Links** - GitHub, LinkedIn, Email with animated icons - `src/components/contact/SocialLinks.tsx`
-
-### State & Data
-- **Zustand Store** - Global project state management - `src/stores/projectStore.ts`
-- **4 Project Entries** - Web Agency, AI Advisor, Lead Generator, Theory Validator - with codenames, status, tech stacks, and GitHub links
-
-### Performance
-- **Code Splitting** - Manual chunks for React, Framer Motion, and Three.js - `vite.config.ts:29-33`
-- **Optimized Build** - Terser minification, console removal, ES2015 target - `vite.config.ts:16-40`
-- **Font Preconnect** - Google Fonts optimized loading - `index.html:33-34`
-
-### SEO & Accessibility
-- **Meta Tags** - OpenGraph, Twitter Card, structured data - `index.html:7-28`
-- **Sitemap & Robots.txt** - Search engine optimization - `public/sitemap.xml`, `public/robots.txt`
-- **Semantic HTML** - Proper section IDs for navigation
-- **Reduced Motion Support** - Respects `prefers-reduced-motion` - `src/utils/animations.ts:31-48`
+- **GPU-accelerated neural lattice renderer** — Three.js scene driven by a real simulation loop (nodes, edges, packets, and 3D HUD).
+- **Deterministic data artifact pipeline** — a Node script generates reproducible MLP weight files used by the runtime visualization.
+- **Adaptive quality scaling** — dynamically selects render quality based on device DPR and CPU cores; controls DPR, fog, antialiasing, and particle budgets.
+- **Accessibility-first motion model** — honors `prefers-reduced-motion` by switching the canvas to demand-driven rendering and disabling heavy simulation.
+- **Interactive input-plane raycasting** — pointer intersection is computed against an input plane and translated into activation “brush strokes”.
+- **Shader-based node material** — custom point shader controls intensity, halos, and ignition sequencing without per-frame React churn.
+- **Performance-oriented build output** — manual vendor chunking, Terser console stripping, and immutable asset caching headers for CDN delivery.
+- **Operationally clean deployment** — Vercel SPA rewrites + long-lived caching for static assets.
 
 ---
 
 ## Tech Stack
 
-### Core
-- **Runtime:** Node.js (18+)
-- **Framework:** React 18.2
-- **Language:** TypeScript 5.3
-- **Build Tool:** Vite 5.0
-- **Package Manager:** npm
+### Languages
 
-### UI Libraries
-- **Animation:** Framer Motion 11.0, GSAP 3.12
-- **3D Graphics:** Three.js 0.160, @react-three/fiber 8.15, @react-three/drei 9.96
-- **Styling:** Tailwind CSS 3.4, PostCSS 8.4, Autoprefixer 10.4
+<img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" />
+<img alt="JavaScript" src="https://img.shields.io/badge/JavaScript-111111?style=for-the-badge&logo=javascript&logoColor=F7DF1E" />
+<img alt="CSS" src="https://img.shields.io/badge/CSS-1572B6?style=for-the-badge&logo=css3&logoColor=white" />
+<img alt="HTML" src="https://img.shields.io/badge/HTML-E34F26?style=for-the-badge&logo=html5&logoColor=white" />
 
-### State & Data
-- **State Management:** Zustand 4.5.7
+### Frontend
+
+<img alt="React" src="https://img.shields.io/badge/React-00D9FF?style=for-the-badge&logo=react&logoColor=0B0B0B" />
+<img alt="Vite" src="https://img.shields.io/badge/Vite-8B5CF6?style=for-the-badge&logo=vite&logoColor=white" />
+<img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind_CSS-00D9FF?style=for-the-badge&logo=tailwindcss&logoColor=0B0B0B" />
+<img alt="Framer Motion" src="https://img.shields.io/badge/Framer_Motion-FF006E?style=for-the-badge&logo=framer&logoColor=white" />
+
+### 3D / Rendering
+
+<img alt="Three.js" src="https://img.shields.io/badge/Three.js-111111?style=for-the-badge&logo=three.js&logoColor=white" />
+<img alt="React Three Fiber" src="https://img.shields.io/badge/React_Three_Fiber-111111?style=for-the-badge" />
+<img alt="@react-three/drei" src="https://img.shields.io/badge/drei-111111?style=for-the-badge" />
+<img alt="WebGL" src="https://img.shields.io/badge/WebGL-8B5CF6?style=for-the-badge" />
 
 ### Tooling
-- **Linting:** ESLint 8.56, @typescript-eslint/eslint-plugin 6.0
-- **Formatting:** Prettier 3.2
-- **Type Checking:** TypeScript strict mode
 
-### Deployment
-- **Platform:** Vercel
-- **Domain:** andrewponder.com (CNAME)
-- **Email Service:** EmailJS (configured)
+<img alt="ESLint" src="https://img.shields.io/badge/ESLint-8B5CF6?style=for-the-badge&logo=eslint&logoColor=white" />
+<img alt="Prettier" src="https://img.shields.io/badge/Prettier-00D9FF?style=for-the-badge&logo=prettier&logoColor=0B0B0B" />
+<img alt="PostCSS" src="https://img.shields.io/badge/PostCSS-DD3A0A?style=for-the-badge&logo=postcss&logoColor=white" />
+<img alt="Terser" src="https://img.shields.io/badge/Terser-111111?style=for-the-badge" />
 
----
+### Deployment / Infrastructure
 
-## Quick Start
-
-### Prerequisites
-
-```bash
-node >= 18.0.0
-npm >= 9.0.0
-```
-
-### Installation
-
-```bash
-# Clone repository
-git clone https://github.com/ponderrr/portfolio.git
-cd portfolio
-
-# Install dependencies
-npm install
-```
-
-### Environment Variables
-
-Create `.env` from `env.example`:
-
-```bash
-cp env.example .env
-```
-
-| Variable | Description | Required | Default |
-|----------|-------------|----------|---------|
-| `VITE_EMAILJS_SERVICE_ID` | EmailJS service identifier | Yes | - |
-| `VITE_EMAILJS_TEMPLATE_ID` | EmailJS email template ID | Yes | - |
-| `VITE_EMAILJS_PUBLIC_KEY` | EmailJS public API key | Yes | - |
-| `VITE_GA_MEASUREMENT_ID` | Google Analytics 4 measurement ID | No | - |
-| `VITE_API_URL` | External API base URL (if needed) | No | - |
-
-**Note:** EmailJS configuration is required for contact form functionality. Sign up at [emailjs.com](https://www.emailjs.com/).
-
-### Run Development
-
-```bash
-npm run dev
-```
-
-Server runs at `http://localhost:5173` (host: `0.0.0.0` for network access).
-
-### Build for Production
-
-```bash
-# Type check + build
-npm run build
-
-# Preview production build locally
-npm run preview
-```
-
-Build output: `dist/` directory.
-
----
-
-## Scripts
-
-Defined in `package.json`:
-
-| Command | Action | Details |
-|---------|--------|---------|
-| `npm run dev` | Start dev server | Vite dev server with HMR on port 5173 |
-| `npm run build` | Build for production | TypeScript compilation + Vite build |
-| `npm run preview` | Preview production build | Serves `dist/` locally |
-| `npm run lint` | Lint codebase | ESLint with TypeScript rules |
-| `npm run type-check` | Type checking only | TypeScript check without emit |
-
----
-
-## Project Structure
-
-```
-portfolio/
-├── public/                    # Static assets
-│   ├── favicon.svg
-│   ├── robots.txt
-│   └── sitemap.xml
-├── src/
-│   ├── components/           # React components
-│   │   ├── about/           # About section
-│   │   ├── base/            # Base UI (Button, Card, Container)
-│   │   ├── contact/         # Contact form & social links
-│   │   ├── hero/            # Hero section with boot, particles, navigation
-│   │   ├── layout/          # Footer, grid overlay
-│   │   ├── projects/        # Project grid, cards, modal
-│   │   ├── skills/          # Skills visualization
-│   │   └── ui/              # UI utilities (cursor, loading, scroll progress)
-│   ├── hooks/               # Custom React hooks
-│   │   ├── useKeyboardShortcuts.ts
-│   │   ├── useMousePosition.ts
-│   │   └── useScrollProgress.ts
-│   ├── stores/              # Zustand state stores
-│   │   └── projectStore.ts  # Project data & selected project
-│   ├── styles/              # Global styles
-│   │   └── globals.css
-│   ├── types/               # TypeScript definitions
-│   │   └── index.ts
-│   ├── utils/               # Utility functions
-│   │   ├── analytics.ts     # Google Analytics integration
-│   │   ├── animations.ts    # Animation helpers
-│   │   └── constants.ts     # Theme constants, skills data
-│   ├── App.tsx              # Root component
-│   ├── main.tsx             # Entry point
-│   └── vite-env.d.ts        # Vite type definitions
-├── .eslintrc.cjs            # ESLint config
-├── .prettierrc              # Prettier config
-├── postcss.config.js        # PostCSS config
-├── tailwind.config.js       # Tailwind theme customization
-├── tsconfig.json            # TypeScript config
-├── vite.config.ts           # Vite build config
-├── vercel.json              # Vercel deployment config
-└── package.json             # Dependencies & scripts
-```
+<img alt="Vercel" src="https://img.shields.io/badge/Vercel-111111?style=for-the-badge&logo=vercel&logoColor=white" />
+<img alt="CDN Cache" src="https://img.shields.io/badge/CDN_Immutable_Cache-00D9FF?style=for-the-badge" />
+<img alt="SPA Rewrites" src="https://img.shields.io/badge/SPA_Rewrites-8B5CF6?style=for-the-badge" />
+<img alt="Custom Domain" src="https://img.shields.io/badge/CNAME-FF006E?style=for-the-badge" />
 
 ---
 
 ## Architecture
 
+At runtime this is a **static SPA** plus an internal “mini-engine” that:
+
+- loads a deterministic weights artifact (`/public/exhibits/exhibit001/mlp_weights.json`)
+- converts weights → graph topology (**top‑K incoming edges per neuron**)
+- runs a throttled forward pass (~30Hz) and writes results into GPU-friendly buffers
+- renders nodes/edges/packets/HUD with additive blending and a custom shader material
+
+### System architecture
+
 ```mermaid
-graph TB
-    subgraph "Entry Point"
-        HTML[index.html] --> Main[main.tsx]
-        Main --> App[App.tsx]
-    end
+flowchart LR
+  U[User Browser] -->|HTTPS| V[Vercel Edge / CDN]
+  V -->|SPA rewrite| I[index.html]
+  V -->|immutable cache| A[JS/CSS Assets]
+  V -->|force-cache| W[mlp_weights.json]
 
-    subgraph "Global UI Layer"
-        App --> Loading[LoadingScreen]
-        App --> Cursor[CustomCursor]
-        App --> Progress[ScrollProgress]
-        App --> Grid[GridOverlay]
-        App --> Modal[ProjectModal]
-    end
-
-    subgraph "Content Sections"
-        App --> Hero[Hero Section]
-        App --> Projects[Projects Section]
-        App --> Skills[Skills Section]
-        App --> About[About Section]
-        App --> Contact[Contact Section]
-        App --> Footer[Footer]
-    end
-
-    subgraph "Hero Components"
-        Hero --> Boot[BootSequence]
-        Hero --> Particles[ParticleBackground]
-        Hero --> HeroText[HeroText]
-        Hero --> Status[StatusIndicators]
-        Hero --> Nav[Navigation]
-        Hero --> Scroll[ScrollIndicator]
-    end
-
-    subgraph "State Management"
-        ProjectStore[Zustand Store] --> Projects
-        ProjectStore --> Modal
-    end
-
-    subgraph "3D Rendering"
-        Particles --> Three[Three.js Canvas]
-        Three --> Points[2000 Particles]
-    end
-
-    subgraph "Hooks & Utils"
-        Keyboard[useKeyboardShortcuts] --> App
-        Analytics[analytics.ts] -.-> App
-        Constants[constants.ts] --> Skills
-        Constants --> Hero
-    end
-
-    subgraph "Contact Integration"
-        Contact --> Form[ContactForm]
-        Form --> EmailJS[EmailJS API]
-    end
-
-    style App fill:#ff4500,stroke:#ff6b35,color:#fff
-    style ProjectStore fill:#1a1a1a,stroke:#ff4500
-    style Three fill:#0a0a0a,stroke:#ff4500
-    style EmailJS fill:#2a2a2a,stroke:#ff4500
+  subgraph Client Runtime
+    R[React] --> C[@react-three/fiber Canvas]
+    C --> T[Three.js Renderer]
+    T --> G[GPU: Points/Lines/Shader]
+    R --> F[Weights fetch + model build]
+    F --> S[Simulation loop + buffer updates]
+    S --> G
+  end
 ```
+
+### Component layout (runtime)
+
+```mermaid
+flowchart TD
+  App[App.tsx]
+  App --> Cursor[CustomCursor]
+  App --> Hero[Hero]
+  App --> Exhibit[NeuralLatticeSection]
+
+  Exhibit --> Canvas[NeuralLatticeCanvas]
+  Canvas --> Rig[LatticeRig]
+  Rig --> Field[LatticeField]
+
+  Field --> Mat[LatticePointsMaterial (shader)]
+  Field --> HUD[ProbabilityHUD3D]
+  Field --> Weights[loadExhibit001Weights]
+  Weights --> Model[buildNetworkModel(topK)]
+```
+
+### Weights → model → render lifecycle
+
+```mermaid
+sequenceDiagram
+  autonumber
+  participant Dev as Developer
+  participant Gen as scripts/generate-exhibit001-weights.mjs
+  participant Pub as public/exhibits/exhibit001/mlp_weights.json
+  participant UI as LatticeField
+  participant GPU as WebGL
+
+  Dev->>Gen: npm run gen:exhibit001-weights
+  Gen->>Pub: write deterministic JSON weights
+  UI->>Pub: fetch("/exhibits/exhibit001/mlp_weights.json", { cache: "force-cache" })
+  UI->>UI: buildNetworkModel(weights, topKIncoming)
+  loop every frame
+    UI->>UI: forward pass (~30Hz) + activities
+    UI->>GPU: update BufferAttributes + shader uniforms
+    GPU-->>UI: draw points/lines/packets + HUD
+  end
+```
+
+### Performance & reliability notes
+
+- **Throttled compute**: the forward pass is rate-limited to ~30Hz while rendering can stay smooth.
+- **Typed arrays everywhere**: node positions, edges, colors, activities, packet state are stored in `Float32Array`/`Uint32Array` to reduce allocations and improve locality.
+- **Top‑K edges**: the graph stays legible and bounded (reduces draw + update cost).
+- **Reduced motion mode**: switches to `frameloop="demand"` and gates heavy simulation.
+- **CDN caching**: `vercel.json` sets immutable caching for build assets.
 
 ---
 
-## Key Features Implementation
+## Documentation & Deep Examples
 
-### Custom Cursor
-Location: `src/components/ui/CustomCursor.tsx`
-
-Multi-state cursor with trail effects:
-- **States:** default, link, button, card, drag
-- **Effects:** Spring physics, particle trail (8 points), mix-blend modes
-- **Interactivity:** Detects hover targets, shows crosshair on links, glow on buttons
-
-### Project Modal
-Location: `src/components/projects/ProjectModal.tsx`
-
-Slide-in panel with:
-- Side panel animation (spring physics)
-- ESC key to close
-- Body scroll lock when open
-- Scan line animation effect
-- GitHub + live site links
-- Feature list with animated checkmarks
-
-### Keyboard Navigation
-Location: `src/hooks/useKeyboardShortcuts.ts`
-
-Shortcuts:
-- `h` → Home (scroll to top)
-- `p` → Projects section
-- `s` → Skills section
-- `a` → About section
-- `c` → Contact section
-- `?` → Show shortcuts help
-- `ESC` → Close modal
-
-Disabled when typing in input fields.
-
-### 3D Particle Background
-Location: `src/components/hero/ParticleBackground.tsx`
-
-Three.js implementation:
-- 2000 particles positioned in 3D space
-- Continuous rotation animation
-- Orange theme color (#ff4500)
-- Optimized with `frustumCulled={false}`
-
----
-
-## Configuration
-
-### Vite (`vite.config.ts`)
-
-**Path Aliases:**
-```typescript
-'@/*' → './src/*'
-```
-
-**Server:**
-- Host: `0.0.0.0` (network accessible)
-- Port: `5173`
-
-**Build Optimization:**
-- Target: ES2015
-- Minifier: Terser
-- Console logs removed in production
-- Manual chunks: `react-vendor`, `framer-motion`, `three`
-- Source maps: disabled
-
-### Tailwind (`tailwind.config.js`)
-
-**Custom Theme:**
-- **Colors:** Orange primary (#ff4500), black variants, gray scale
-- **Fonts:** Space Grotesk (heading), Inter (body), JetBrains Mono (code)
-- **Animations:** `glow-pulse` (2s), `scan-line` (2s)
-
-### Vercel (`vercel.json`)
-
-**Settings:**
-- Output: `dist/`
-- Framework: Vite
-- SPA rewrites: All routes → `/index.html`
-- Asset caching: 1 year immutable
-
-**Headers:**
-```json
-/assets/*: Cache-Control: public, max-age=31536000, immutable
-/*.js: Cache-Control: public, max-age=31536000, immutable
-```
-
----
-
-## Deployment
-
-### Current Deployment
-
-**Platform:** Vercel  
-**URL:** https://andrewponder.com  
-**Branch:** main (auto-deploy on push)
-
-### Manual Deploy
+### 1) Generate deterministic weights (artifact pipeline)
 
 ```bash
-# Build production bundle
-npm run build
-
-# Deploy to Vercel
-vercel --prod
+npm run gen:exhibit001-weights
 ```
 
-### Environment Variables on Vercel
+Output file:
 
-Set in Vercel dashboard under **Settings → Environment Variables**:
-- `VITE_EMAILJS_SERVICE_ID`
-- `VITE_EMAILJS_TEMPLATE_ID`
-- `VITE_EMAILJS_PUBLIC_KEY`
-- `VITE_GA_MEASUREMENT_ID` (optional)
+- `public/exhibits/exhibit001/mlp_weights.json`
+
+The generator uses a deterministic PRNG (`mulberry32(1337)`) so the artifact is reproducible across machines.
+
+### 2) Load weights (runtime)
+
+```ts
+// src/components/exhibits/neural-lattice/neuralLattice.ts
+export async function loadExhibit001Weights() {
+  const res = await fetch("/exhibits/exhibit001/mlp_weights.json", { cache: "force-cache" });
+  if (!res.ok) throw new Error(`Failed to load weights: ${res.status}`);
+  // ...convert JSON arrays -> Float32Array
+}
+```
+
+### 3) Build a graph model from weights (top‑K compression)
+
+The runtime converts dense weight matrices into a sparse, visual-friendly graph.
+
+```ts
+// src/components/exhibits/neural-lattice/LatticeField.tsx
+const topK = quality === "high" ? 6 : quality === "medium" ? 5 : 4;
+setModel(buildNetworkModel(weights, topK));
+```
+
+### 4) Input interaction model (pointer → input plane → activations)
+
+- Pointer is raycasted against an **input plane** at `x = -3.2`.
+- The local pointer coordinates are used as an activation “brush” across the 8×8 input grid.
+
+```ts
+// inside LatticeField frame loop
+const p = pointerOnInputPlaneRef.current;
+for (let i = 0; i < inputCount; i++) {
+  const idx = inputStart + i;
+  const dy = positions[idx * 3 + 1] - p.y;
+  const dz = positions[idx * 3 + 2] - p.z;
+  const target = Math.exp(-(dy * dy + dz * dz) / 0.06);
+  a0.current[i] = THREE.MathUtils.damp(a0.current[i], target, 10.0, delta);
+}
+```
+
+### 5) Runtime “API”: static asset endpoints
+
+Even though this is a frontend-only app, there is a real interface surface: the app fetches versioned assets from the CDN (documented below under **API Documentation**).
+
+### 6) Keyboard shortcuts
+
+| Key | Action |
+|---:|---|
+| `h` | Scroll to hero section |
+| `l` | Scroll to Neural Lattice section |
+| `?` | Show shortcut dialog |
+
+### 7) Configuration / environment
+
+No runtime environment variables are required for local dev or deployment.
+
+| Variable | Required | Default | Description |
+|---|---:|---|---|
+| _(none)_ | No | — | Static SPA + assets |
 
 ---
 
-## Troubleshooting
+## Getting Started
 
-### Build Errors
+### Prerequisites
 
-**Issue:** TypeScript errors during build
+- **Node.js**: 18+ (recommended)
+- **npm**: 9+
+- **OS**: Windows/macOS/Linux
+
+### Installation
+
 ```bash
-# Run type check separately to isolate errors
+npm install
+```
+
+### Local development
+
+```bash
+npm run dev
+```
+
+- Vite dev server: `http://localhost:5173`
+
+### Type-checking & linting
+
+```bash
 npm run type-check
+npm run lint
 ```
 
-**Issue:** Out of memory during build
+### Production build
+
 ```bash
-# Increase Node memory limit
-NODE_OPTIONS=--max-old-space-size=4096 npm run build
+npm run build
+npm run preview
 ```
 
-### Development Issues
+---
 
-**Issue:** Port 5173 already in use
+## API Documentation
+
+This project does **not** expose a backend API. The “API surface” is a **static asset contract** consumed by the exhibit runtime.
+
+### Endpoint summary
+
+| Endpoint | Method | Purpose | Cache model |
+|---|---:|---|---|
+| `/exhibits/exhibit001/mlp_weights.json` | GET | MLP weights artifact for Exhibit 001 | Requested with `cache: force-cache`; served via CDN |
+
+### Request / response example
+
 ```bash
-# Kill process on port
-# Windows PowerShell:
-Get-Process -Id (Get-NetTCPConnection -LocalPort 5173).OwningProcess | Stop-Process
-
-# Linux/Mac:
-lsof -ti:5173 | xargs kill
+curl -sS "http://localhost:5173/exhibits/exhibit001/mlp_weights.json" | head
 ```
 
-**Issue:** Vite HMR not working
-- Check firewall settings for port 5173
-- Ensure `host: '0.0.0.0'` in `vite.config.ts`
+Response shape (high level):
 
-**Issue:** Three.js performance degradation
-- Check GPU acceleration in browser settings
-- Reduce particle count in `ParticleBackground.tsx:9` if needed (default: 2000)
+```json
+{
+  "name": "exhibit001_mlp_demo_v1",
+  "createdAt": "2025-…",
+  "note": "Deterministic demo weights for Exhibit 001 visualization.",
+  "layers": [
+    { "in": 64, "out": 48, "w": [/* ... */], "b": [/* ... */] },
+    { "in": 48, "out": 24, "w": [/* ... */], "b": [/* ... */] },
+    { "in": 24, "out": 10, "w": [/* ... */], "b": [/* ... */] }
+  ]
+}
+```
 
-### EmailJS Configuration
+### Error handling
 
-**Issue:** Contact form not sending emails
-1. Verify environment variables are set correctly
-2. Check EmailJS dashboard for service status
-3. Confirm template ID matches your EmailJS template
-4. Test with EmailJS playground first
+- **Non-2xx responses**: the runtime throws `Failed to load weights: <status>` and logs the error in the console.
+- **Common causes**: missing artifact (weights not generated/committed), misconfigured static hosting, or a broken rewrite rule.
 
-**Issue:** CORS errors with EmailJS
-- Ensure domain is whitelisted in EmailJS dashboard
-- Check public key is correctly set
+### Auth & rate limits
 
-### Performance
+- **Auth**: none (public static asset).
+- **Rate limits**: none implemented at the app level (CDN/host policies apply).
 
-**Issue:** Slow initial load
-- Check network tab for large assets
-- Verify code splitting is working (`dist/assets/` should have separate chunks)
-- Consider lazy loading Three.js components
+### API lifecycle (runtime sequence)
 
-**Issue:** Cursor lag
-- Reduce trail points in `CustomCursor.tsx:24` (default: 8)
-- Adjust spring damping/stiffness for less smooth animation
+```mermaid
+sequenceDiagram
+  autonumber
+  participant UI as LatticeField
+  participant CDN as CDN / Static Host
+
+  UI->>CDN: GET /exhibits/exhibit001/mlp_weights.json\n(cache: force-cache)
+  alt 200 OK
+    CDN-->>UI: JSON weights\n(layers: w,b)
+    UI->>UI: JSON -> Float32Array\nbuildNetworkModel(topK)
+  else non-2xx
+    CDN-->>UI: error status
+    UI->>UI: throw + console.error
+  end
+```
+
+---
+
+## Production Deployment
+
+This repo is configured for **Vercel**.
+
+- **Build command**: `npm run build`
+- **Output directory**: `dist`
+- **SPA routing**: `vercel.json` rewrites all routes to `index.html`
+- **Cache headers**: immutable caching for `/assets/*` and `*.js`
+
+If you use a custom domain, `CNAME` is present for DNS configuration.
+
+```mermaid
+flowchart LR
+  Dev[Git push] --> V[Vercel Build]
+  V -->|npm run build| D[dist/]
+  D --> CDN[Vercel Edge/CDN]
+  CDN --> Users[Browsers]
+```
+
+---
+
+## Project Structure
+
+```text
+.
+├── index.html
+├── package.json
+├── vite.config.ts              # Vite config (alias @ -> src, manualChunks)
+├── vercel.json                 # SPA rewrites + immutable cache headers
+├── scripts/
+│   └── generate-exhibit001-weights.mjs   # Deterministic MLP weight generator
+├── public/
+│   └── exhibits/
+│       └── exhibit001/
+│           └── mlp_weights.json         # Generated weights artifact (runtime fetch)
+└── src/
+    ├── main.tsx                # React entry
+    ├── App.tsx                 # App composition
+    ├── components/
+    │   ├── hero/                # Boot sequence + hero UI
+    │   ├── ui/                  # Cursor + UI primitives
+    │   └── exhibits/
+    │       └── neural-lattice/  # Exhibit 001 runtime (3D + sim)
+    ├── hooks/                   # Visual quality + reduced motion + shortcuts
+    └── styles/
+        └── globals.css          # Global styling + Exhibit 001 visuals
+```
 
 ---
 
 ## License
 
-MIT License - see [LICENSE](LICENSE) for details.
-
-Copyright (c) 2025 Andrew Ponder
-
----
-
-**Built with:** React + TypeScript + Vite + Three.js + Framer Motion  
-**Deployed on:** Vercel  
-**Design:** Cyberpunk aesthetic with orange accent (#ff4500)
-
+MIT — see `LICENSE`.

@@ -9,18 +9,16 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "gen:exhibit001-weights": "node scripts/generate-exhibit001-weights.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^9.96.0",
     "@react-three/fiber": "^8.15.0",
     "framer-motion": "^11.0.0",
-    "globe.gl": "^2.45.0",
-    "gsap": "^3.12.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "three": "^0.181.0",
-    "zustand": "^4.5.7"
+    "three": "^0.181.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.0",

@@ -12,15 +12,15 @@ export const useKeyboardShortcuts = () => {
       if (e.key === 'h' && !e.ctrlKey && !e.metaKey) {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
-      
-      // Press 'p' to go to projects
-      if (e.key === 'p' && !e.ctrlKey && !e.metaKey) {
-        document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
+
+      // Press 'l' to go to neural lattice
+      if (e.key === 'l' && !e.ctrlKey && !e.metaKey) {
+        document.getElementById('neural-lattice')?.scrollIntoView({ behavior: 'smooth' });
       }
-      
+
       // Press '?' to show keyboard shortcuts
       if (e.key === '?') {
-        alert('Keyboard Shortcuts:\n\nh - Home\np - Projects\nESC - Close modal');
+        alert('Keyboard Shortcuts:\n\nh - Home\nl - Neural Lattice\nESC - Close modal');
       }
     };
 
@@ -28,4 +28,3 @@ export const useKeyboardShortcuts = () => {
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, []);
 };
-

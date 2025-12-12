@@ -1,9 +1,7 @@
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 
-const navItems = [
-  { label: 'PROJECTS', href: '#projects' },
-];
+const navItems: Array<{ label: string; href: string }> = [];
 
 export const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);

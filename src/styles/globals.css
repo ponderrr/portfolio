@@ -11,12 +11,11 @@
 
   html {
     @apply scroll-smooth;
-    scroll-padding-top: 100px; /* Account for fixed nav */
+    scroll-padding-top: 0px;
   }
 
   body {
     @apply bg-black-base text-white font-sans antialiased;
-    cursor: none;
     overflow-x: hidden;
   }
 
@@ -45,6 +44,11 @@
   *:focus-visible {
     outline: 2px solid #ff4500;
     outline-offset: 2px;
+  }
+
+  /* Hide the Hero navbar completely (keep Hero code untouched) */
+  #hero nav {
+    display: none !important;
   }
 
   /* Reduce motion for accessibility */
@@ -121,3 +125,55 @@
   background: #ff6b35;
 }
 
+/* -------------------------------------------
+   EXHIBIT_001 — Neural Lattice (append-only)
+------------------------------------------- */
+
+:root {
+  --ap-bg-0: #000000;
+  --ap-bg-1: #050508;
+  --ap-bg-2: #0a0a0f;
+  --ap-indigo: #6366f1;
+  --ap-cyan: #22d3ee;
+  --ap-zinc: #a1a1aa;
+}
+
+.ap-neural-bg {
+  background:
+    radial-gradient(900px 550px at 20% 30%, rgba(99, 102, 241, 0.10), transparent 55%),
+    radial-gradient(700px 520px at 80% 60%, rgba(34, 211, 238, 0.08), transparent 60%),
+    radial-gradient(1200px 800px at 50% 120%, rgba(99, 102, 241, 0.06), transparent 60%),
+    linear-gradient(180deg, var(--ap-bg-0) 0%, var(--ap-bg-1) 55%, var(--ap-bg-0) 100%);
+}
+
+.ap-scanlines {
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.06) 0px,
+    rgba(255, 255, 255, 0.06) 1px,
+    transparent 2px,
+    transparent 6px
+  );
+  opacity: 0.07;
+  mix-blend-mode: overlay;
+}
+
+.ap-noise {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.22'/%3E%3C/svg%3E");
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+}
+
+.ap-glass {
+  background: rgba(10, 10, 15, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.06) inset;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+/* optional: hide OS cursor when our custom cursor is enabled */
+.ap-hide-native-cursor,
+.ap-hide-native-cursor * {
+  cursor: none !important;
+}

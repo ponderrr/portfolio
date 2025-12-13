@@ -13,7 +13,7 @@ type Props = {
 };
 
 // Safe exposure value - prevents transmission blowout
-const EXPOSURE = 0.72;
+const EXPOSURE = 0.68;
 
 function RendererConfig() {
   const { gl } = useThree();
@@ -53,18 +53,18 @@ export function PrismCoreCanvas({ progressRef, quality, interactive, reducedMoti
       <color attach="background" args={["#050508"]} />
 
       {/* Minimal key + rim + ambient lighting - conservative intensities */}
-      <ambientLight intensity={0.05} color="#ffffff" />
+      <ambientLight intensity={0.06} color="#ffffff" />
       
       {/* Key light - slightly warm, positioned high front */}
-      <directionalLight position={[3, 4, 5]} intensity={0.12} color="#f8f8ff" />
+      <directionalLight position={[3, 4, 5]} intensity={0.14} color="#f8f8ff" />
       
       {/* Rim light - cool indigo for facet readability */}
-      <directionalLight position={[0, 1.5, -5]} intensity={0.08} color="#6366F1" />
+      <directionalLight position={[0, 1.5, -5]} intensity={0.1} color="#6366F1" />
 
       {/* Single controlled environment highlight */}
       <Environment resolution={64}>
         <Lightformer
-          intensity={0.18}
+          intensity={0.12}
           position={[0, 2, 4]}
           scale={[5, 1.5, 1]}
           color="#ffffff"

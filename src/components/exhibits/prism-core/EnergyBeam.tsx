@@ -41,13 +41,18 @@ export function EnergyBeam({ ignite, strength, split, lockPulse, a, b, c }: Prop
   B.set(b[0], b[1], b[2]);
   C.set(c[0], c[1], c[2]);
 
+  const s = Math.max(0, Math.min(1, strength));
+  // Ignition should *boost* intensity/glow, never gate visibility by dropping opacity to zero.
+  // Strength is what determines whether the beam exists at all.
+  const igniteBoost = 0.35 + 0.65 * Math.max(0, Math.min(1, ignite));
+
   // Core beam parameters
-  const coreOpacity = 0.92 * ignite * (0.45 + 0.55 * strength);
-  const coreRadius = 0.024 + 0.012 * strength;
+  const coreOpacity = 0.92 * s * igniteBoost * (0.92 + 0.12 * lockPulse);
+  const coreRadius = 0.024 + 0.012 * s;
   
   // Halo beam parameters - thicker, lower opacity
-  const haloOpacity = 0.32 * ignite * (0.32 + 0.68 * strength);
-  const haloRadius = coreRadius * (2.9 + 0.3 * split) + 0.04 * lockPulse; // Widens during lock/split
+  const haloOpacity = 0.42 * s * igniteBoost * (0.88 + 0.2 * lockPulse);
+  const haloRadius = coreRadius * (2.9 + 0.3 * split) + 0.05 * lockPulse; // Widens during lock/split
 
   const segIn = cylinderBetween(A, B);
   const segOut = cylinderBetween(B, C);
@@ -58,7 +63,7 @@ export function EnergyBeam({ ignite, strength, split, lockPulse, a, b, c }: Prop
   const internalEnd = useMemo(() => new THREE.Vector3(), []);
   internalEnd.lerpVectors(B, C, 0.55); // Ends about halfway through
   const segInternal = cylinderBetween(internalMid, internalEnd);
-  const internalOpacity = coreOpacity * (0.85 + 0.1 * lockPulse) * strength;
+  const internalOpacity = 0.95 * s * igniteBoost * (0.65 + 0.35 * lockPulse);
 
   // Split rays: rotate outgoing direction slightly around Y axis.
   const outDir = tmp0.subVectors(C, B);
@@ -75,7 +80,7 @@ export function EnergyBeam({ ignite, strength, split, lockPulse, a, b, c }: Prop
   C2v.copy(B).add(outDir.clone().multiplyScalar(outLen));
   C3v.copy(B).add(dirR.multiplyScalar(outLen));
 
-  const splitOpacity = coreOpacity * split * 0.8;
+  const splitOpacity = coreOpacity * split * 0.85;
 
   // Lens glint at exit point during lock
   const exitPoint = useMemo(() => new THREE.Vector3(), []);

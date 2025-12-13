@@ -59,11 +59,11 @@ export function prismParamsFromProgress(p: number): PrismParams {
   // Beam appears during alignment and persists
   const beamStrength = smoothstep(0.18, 0.34, p) * (0.9 + 0.14 * lock);
 
-  // Lock pulse - narrow window (0.58-0.68) for controlled "wow" moment
-  const lockPulse = pulse(0.58, 0.68, p);
+  // Lock pulse - tighter, more readable "click" moment
+  const lockPulse = pulse(0.635, 0.675, p);
 
   // Dispersion pulse during lock window (brief, controlled)
-  const split = pulse(0.60, 0.70, p) * 0.9;
+  const split = pulse(0.64, 0.695, p) * 0.85;
 
   // Fake caustics - pulse during lock window then fade
   const causticBase = pulse(0.58, 0.75, p) * 0.85;

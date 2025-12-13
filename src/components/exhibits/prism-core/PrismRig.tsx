@@ -81,6 +81,15 @@ export function PrismRig({ progressRef, quality, interactive, reducedMotion }: P
     <group ref={groupRef}>
       <Crystal quality={crystalQuality} ignite={p.ignite} lock={p.lock} split={p.split} lockPulse={p.lockPulse} />
 
+      {/* Lock-only glint assist (tiny, restrained) */}
+      <pointLight
+        position={[exit.x, exit.y, exit.z]}
+        intensity={0.45 * p.lockPulse}
+        distance={6}
+        decay={2}
+        color={"#a5b4fc"}
+      />
+
       <EnergyBeam
         ignite={p.ignite}
         strength={p.beamStrength}

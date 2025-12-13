@@ -12,6 +12,9 @@ type Props = {
   reducedMotion: boolean;
 };
 
+// Safe exposure value - prevents transmission blowout
+const EXPOSURE = 0.72;
+
 function RendererConfig() {
   const { gl } = useThree();
 
@@ -19,7 +22,7 @@ function RendererConfig() {
     // Configure renderer for premium transmission materials
     gl.outputColorSpace = THREE.SRGBColorSpace;
     gl.toneMapping = THREE.ACESFilmicToneMapping;
-    gl.toneMappingExposure = 0.88; // Conservative exposure to prevent blowout
+    gl.toneMappingExposure = EXPOSURE;
     gl.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   }, [gl]);
 
@@ -40,28 +43,32 @@ export function PrismCoreCanvas({ progressRef, quality, interactive, reducedMoti
       shadows={false}
       frameloop={reducedMotion ? "demand" : "always"}
       onCreated={(state) => {
-        // Ensure renderer config is applied
+        // Ensure renderer config is applied - locked exposure
         state.gl.outputColorSpace = THREE.SRGBColorSpace;
         state.gl.toneMapping = THREE.ACESFilmicToneMapping;
-        state.gl.toneMappingExposure = 0.88;
+        state.gl.toneMappingExposure = EXPOSURE;
       }}
     >
       <RendererConfig />
       <color attach="background" args={["#050508"]} />
 
-      {/* Minimal studio lighting - reduced intensities */}
-      <ambientLight intensity={0.08} />
-      <directionalLight position={[4, 4, 6]} intensity={0.15} />
-      <directionalLight position={[-5, -2, 4]} intensity={0.06} />
+      {/* Minimal key + rim + ambient lighting - conservative intensities */}
+      <ambientLight intensity={0.05} color="#ffffff" />
       
-      {/* Rim light for facet readability (cool indigo) */}
-      <directionalLight position={[0, 2, -6]} intensity={0.12} color="#6366F1" />
+      {/* Key light - slightly warm, positioned high front */}
+      <directionalLight position={[3, 4, 5]} intensity={0.12} color="#f8f8ff" />
+      
+      {/* Rim light - cool indigo for facet readability */}
+      <directionalLight position={[0, 1.5, -5]} intensity={0.08} color="#6366F1" />
 
-      {/* Controlled environment highlights - much reduced */}
+      {/* Single controlled environment highlight */}
       <Environment resolution={64}>
-        <Lightformer intensity={0.25} position={[0, 2.2, 4.2]} scale={[6, 2, 1]} />
-        <Lightformer intensity={0.15} position={[-3.2, 0.5, 3.5]} scale={[3, 2, 1]} />
-        <Lightformer intensity={0.10} position={[3.5, -1.6, 3.0]} scale={[3, 2, 1]} />
+        <Lightformer
+          intensity={0.18}
+          position={[0, 2, 4]}
+          scale={[5, 1.5, 1]}
+          color="#ffffff"
+        />
       </Environment>
 
       <PrismRig

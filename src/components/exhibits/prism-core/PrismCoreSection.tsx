@@ -1,5 +1,5 @@
 import { motion, useInView, useMotionValueEvent, useScroll } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import PrismCoreCanvas from "./PrismCoreCanvas";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { useVisualQuality, useIsFinePointer } from "@/hooks/useVisualQuality";
@@ -23,8 +23,7 @@ function ensureScrollContainerPositioned() {
 }
 
 export function PrismCoreSection() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const stickyRef = useRef<HTMLDivElement | null>(null);
+  const scrollTargetRef = useRef<HTMLDivElement>(null);
 
   const reducedMotion = usePrefersReducedMotion();
   const quality = useVisualQuality();
@@ -36,33 +35,50 @@ export function PrismCoreSection() {
   ensureScrollContainerPositioned();
 
   const { scrollYProgress } = useScroll({
-    target: sectionRef,
+    target: scrollTargetRef,
     offset: ["start start", "end start"],
   });
 
   const [debugProgress, setDebugProgress] = useState<number>(0);
+  const debugEnabled = useMemo(
+    () =>
+      import.meta.env.DEV &&
+      typeof localStorage !== "undefined" &&
+      localStorage.getItem("prism_debug") === "1",
+    []
+  );
+
+  const clampProgress = useCallback((value: number) => {
+    if (!Number.isFinite(value)) return progressRef.current;
+    if (value === Infinity || value === -Infinity) return progressRef.current;
+    return Math.max(0, Math.min(1, value));
+  }, []);
+
+  const setProgress = useCallback(
+    (value: number) => {
+      const clamped = clampProgress(value);
+      progressRef.current = clamped;
+      if (debugEnabled) setDebugProgress(clamped);
+    },
+    [clampProgress, debugEnabled]
+  );
 
   // Seed progress immediately on mount so progress=0 still renders deterministically.
   useEffect(() => {
-    const v = scrollYProgress.get();
-    if (!Number.isFinite(v)) return;
-    progressRef.current = Math.max(0, Math.min(1, v));
-    if (import.meta.env.DEV) setDebugProgress(progressRef.current);
-  }, [scrollYProgress]);
+    setProgress(scrollYProgress.get());
+  }, [scrollYProgress, setProgress]);
 
   useMotionValueEvent(scrollYProgress, "change", (v) => {
     if (!Number.isFinite(v)) return;
     // Reduced motion: keep a stable “final pose”, no scroll-scrub animation feel.
     if (reducedMotion) {
-      progressRef.current = 1;
-      if (import.meta.env.DEV) setDebugProgress(progressRef.current);
+      setProgress(1);
       return;
     }
-    progressRef.current = Math.max(0, Math.min(1, v));
-    if (import.meta.env.DEV) setDebugProgress(progressRef.current);
+    setProgress(v);
   });
 
-  const inView = useInView(sectionRef, { margin: "-30% 0px -30% 0px" });
+  const inView = useInView(scrollTargetRef, { margin: "-30% 0px -30% 0px" });
 
   const fallbackFine =
     typeof window !== "undefined" && window.matchMedia
@@ -84,24 +100,24 @@ export function PrismCoreSection() {
   }, [allowWebgl, inView]);
 
   useEffect(() => {
-    if (reducedMotion) progressRef.current = 1;
-  }, [reducedMotion]);
+    if (reducedMotion) setProgress(1);
+  }, [reducedMotion, setProgress]);
 
   const [dockOpen, setDockOpen] = useState(false);
 
   return (
     <section
       id="prism-core"
-      className="w-full overflow-hidden bg-black"
+      className="relative w-full overflow-hidden bg-black"
       aria-label="EXHIBIT 002 — Prism Core"
     >
-      <div ref={sectionRef} className="relative w-full min-h-[300svh]">
+      <div ref={scrollTargetRef} className="relative w-full min-h-[320svh]">
         <div className="absolute inset-0 ap-prism-bg" />
         <div className="absolute inset-0 ap-noise pointer-events-none" />
         <div className="absolute inset-0 ap-scanlines pointer-events-none" />
 
         {/* Sticky viewport */}
-        <div ref={stickyRef} className="sticky top-0 h-[100svh] w-full">
+        <div className="sticky top-0 h-[100svh] w-full">
           <div className="absolute inset-0">
             {mounted && allowWebgl ? (
               <PrismCoreCanvas
@@ -134,8 +150,14 @@ export function PrismCoreSection() {
             <div className="mt-1 text-sm font-semibold text-white">
               Prism Core
             </div>
-            {import.meta.env.DEV && (
-              <div className="mt-1 text-[11px] text-zinc-500">progress: {debugProgress.toFixed(2)}</div>
+            {debugEnabled && (
+              <div className="mt-2 text-[11px] leading-relaxed text-zinc-400">
+                <div>progress: {debugProgress.toFixed(2)}</div>
+                <div>mounted: {mounted ? "true" : "false"}</div>
+                <div>allowWebgl: {allowWebgl ? "true" : "false"}</div>
+                <div>reducedMotion: {reducedMotion ? "true" : "false"}</div>
+                <div>quality: {quality}</div>
+              </div>
             )}
             {dockOpen && (
               <div className="mt-2 text-xs leading-relaxed text-zinc-300">

@@ -1,5 +1,4 @@
 import { Canvas, useThree } from "@react-three/fiber";
-import { Environment, Lightformer } from "@react-three/drei";
 import * as THREE from "three";
 import { useEffect } from "react";
 import type { MutableRefObject } from "react";
@@ -52,24 +51,22 @@ export function PrismCoreCanvas({ progressRef, quality, interactive, reducedMoti
       <RendererConfig />
       <color attach="background" args={["#050508"]} />
 
-      {/* Minimal key + rim + ambient lighting - conservative intensities */}
-      <ambientLight intensity={0.06} color="#ffffff" />
-      
-      {/* Key light - slightly warm, positioned high front */}
-      <directionalLight position={[3, 4, 5]} intensity={0.14} color="#f8f8ff" />
-      
-      {/* Rim light - cool indigo for facet readability */}
-      <directionalLight position={[0, 1.5, -5]} intensity={0.1} color="#6366F1" />
+      {/* Controlled 3-light studio: dim ambient + soft key + cool rim */}
+      <ambientLight intensity={0.05} color="#ffffff" />
 
-      {/* Single controlled environment highlight */}
-      <Environment resolution={64}>
-        <Lightformer
-          intensity={0.12}
-          position={[0, 2, 4]}
-          scale={[5, 1.5, 1]}
-          color="#ffffff"
-        />
-      </Environment>
+      {/* Key (soft) */}
+      <spotLight
+        position={[4.5, 4.8, 6.5]}
+        intensity={0.55}
+        angle={0.55}
+        penumbra={0.85}
+        decay={2}
+        distance={40}
+        color="#fff6ee"
+      />
+
+      {/* Rim (cool indigo) for silhouette */}
+      <directionalLight position={[-2.0, 1.6, -6.5]} intensity={0.18} color="#4f46e5" />
 
       <PrismRig
         progressRef={progressRef}

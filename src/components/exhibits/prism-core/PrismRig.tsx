@@ -79,7 +79,7 @@ export function PrismRig({ progressRef, quality, interactive, reducedMotion }: P
 
   return (
     <group ref={groupRef}>
-      <Crystal quality={crystalQuality} ignite={p.ignite} lock={p.lock} />
+      <Crystal quality={crystalQuality} ignite={p.ignite} lock={p.lock} split={p.split} />
 
       <EnergyBeam
         ignite={p.ignite}

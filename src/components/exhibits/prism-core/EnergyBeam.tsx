@@ -46,6 +46,10 @@ export function EnergyBeam({ ignite, strength, split, a, b, c }: Props) {
   const segIn = cylinderBetween(A, B);
   const segOut = cylinderBetween(B, C);
 
+  // Internal segment (visible inside crystal during refraction)
+  const segInternal = cylinderBetween(B, C);
+  const internalOpacity = baseOpacity * 0.45 * strength; // Lower opacity, visible inside
+
   // Split rays: rotate outgoing direction slightly around Y axis.
   const outDir = tmp0.subVectors(C, B);
   const outLen = outDir.length();
@@ -76,6 +80,20 @@ export function EnergyBeam({ ignite, strength, split, a, b, c }: Props) {
           blending={THREE.AdditiveBlending}
         />
       </mesh>
+
+      {/* Internal beam segment (visible inside crystal) */}
+      {strength > 0.15 && (
+        <mesh position={segInternal.mid} quaternion={segInternal.quat}>
+          <cylinderGeometry args={[radius * 0.85, radius * 0.85, segInternal.len, 14, 1, true]} />
+          <meshBasicMaterial
+            color={"#F8FAFF"}
+            transparent
+            opacity={internalOpacity}
+            depthWrite={false}
+            blending={THREE.AdditiveBlending}
+          />
+        </mesh>
+      )}
 
       {/* Outgoing base beam (faint if split is active) */}
       <mesh position={segOut.mid} quaternion={segOut.quat}>

@@ -47,7 +47,7 @@ export function CausticsPlane({ ignite, amount }: Props) {
   const tex = useMemo(() => (typeof document !== "undefined" ? makeRadialTexture() : null), []);
   if (!tex) return null;
 
-  const opacity = 0.22 * ignite * amount;
+  const opacity = 0.16 * ignite * amount; // More restrained
 
   return (
     <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0.15, -1.65, 0.0]}>

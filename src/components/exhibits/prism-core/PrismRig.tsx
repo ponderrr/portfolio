@@ -79,12 +79,13 @@ export function PrismRig({ progressRef, quality, interactive, reducedMotion }: P
 
   return (
     <group ref={groupRef}>
-      <Crystal quality={crystalQuality} ignite={p.ignite} lock={p.lock} split={p.split} />
+      <Crystal quality={crystalQuality} ignite={p.ignite} lock={p.lock} split={p.split} lockPulse={p.lockPulse} />
 
       <EnergyBeam
         ignite={p.ignite}
         strength={p.beamStrength}
         split={p.split}
+        lockPulse={p.lockPulse}
         a={[entry.x, entry.y, entry.z]}
         b={[hit.x, hit.y, hit.z]}
         c={[exit.x, exit.y, exit.z]}
@@ -100,7 +101,7 @@ export function PrismRig({ progressRef, quality, interactive, reducedMotion }: P
         reducedMotion={reducedMotion}
       />
 
-      <CausticsPlane ignite={p.ignite} amount={p.caustic} />
+      <CausticsPlane ignite={p.ignite} amount={p.caustic} lockPulse={p.lockPulse} />
     </group>
   );
 }

@@ -7,6 +7,7 @@ type Props = {
   ignite: number;
   strength: number; // 0..1
   split: number;    // 0..1
+  lockPulse: number; // 0..1 (peak during lock window)
   a: Vec3;          // entry
   b: Vec3;          // hit
   c: Vec3;          // exit base
@@ -23,7 +24,7 @@ function cylinderBetween(start: THREE.Vector3, end: THREE.Vector3) {
   return { len, mid, quat };
 }
 
-export function EnergyBeam({ ignite, strength, split, a, b, c }: Props) {
+export function EnergyBeam({ ignite, strength, split, lockPulse, a, b, c }: Props) {
   const A = useMemo(() => new THREE.Vector3(), []);
   const B = useMemo(() => new THREE.Vector3(), []);
   const C = useMemo(() => new THREE.Vector3(), []);
@@ -40,15 +41,24 @@ export function EnergyBeam({ ignite, strength, split, a, b, c }: Props) {
   B.set(b[0], b[1], b[2]);
   C.set(c[0], c[1], c[2]);
 
-  const baseOpacity = 0.75 * ignite * (0.35 + 0.65 * strength);
-  const radius = 0.025 + 0.015 * strength;
+  // Core beam parameters
+  const coreOpacity = 0.85 * ignite * (0.4 + 0.6 * strength);
+  const coreRadius = 0.022 + 0.012 * strength;
+  
+  // Halo beam parameters - thicker, lower opacity
+  const haloOpacity = 0.25 * ignite * (0.3 + 0.7 * strength);
+  const haloRadius = coreRadius * 2.8 + 0.02 * lockPulse; // Widens during lock
 
   const segIn = cylinderBetween(A, B);
   const segOut = cylinderBetween(B, C);
 
-  // Internal segment (visible inside crystal during refraction)
-  const segInternal = cylinderBetween(B, C);
-  const internalOpacity = baseOpacity * 0.45 * strength; // Lower opacity, visible inside
+  // Internal segment - shorter, brighter, visible through crystal
+  const internalMid = useMemo(() => new THREE.Vector3(), []);
+  internalMid.lerpVectors(B, C, 0.15); // Starts just past hit point
+  const internalEnd = useMemo(() => new THREE.Vector3(), []);
+  internalEnd.lerpVectors(B, C, 0.55); // Ends about halfway through
+  const segInternal = cylinderBetween(internalMid, internalEnd);
+  const internalOpacity = coreOpacity * 0.7 * strength;
 
   // Split rays: rotate outgoing direction slightly around Y axis.
   const outDir = tmp0.subVectors(C, B);
@@ -57,7 +67,7 @@ export function EnergyBeam({ ignite, strength, split, a, b, c }: Props) {
 
   const axis = new THREE.Vector3(0, 1, 0);
 
-  const ang = 0.24 * split;
+  const ang = 0.22 * split;
   const dirL = tmp1.copy(outDir).applyAxisAngle(axis, +ang);
   const dirR = tmp2.copy(outDir).applyAxisAngle(axis, -ang);
 
@@ -65,84 +75,157 @@ export function EnergyBeam({ ignite, strength, split, a, b, c }: Props) {
   C2v.copy(B).add(outDir.clone().multiplyScalar(outLen));
   C3v.copy(B).add(dirR.multiplyScalar(outLen));
 
-  const splitOpacity = baseOpacity * split * 0.9 * 0.85;
+  const splitOpacity = coreOpacity * split * 0.75;
+
+  // Lens glint at exit point during lock
+  const exitPoint = useMemo(() => new THREE.Vector3(), []);
+  exitPoint.lerpVectors(B, C, 0.92);
+  const glintOpacity = lockPulse * 0.65 * ignite;
+  const glintScale = 0.12 + 0.08 * lockPulse;
 
   return (
     <group>
-      {/* Incoming beam */}
+      {/* === INCOMING BEAM (2-layer: core + halo) === */}
+      {/* Halo layer */}
       <mesh position={segIn.mid} quaternion={segIn.quat}>
-        <cylinderGeometry args={[radius, radius, segIn.len, 14, 1, true]} />
+        <cylinderGeometry args={[haloRadius, haloRadius, segIn.len, 16, 1, true]} />
         <meshBasicMaterial
           color={"#22D3EE"}
           transparent
-          opacity={baseOpacity}
+          opacity={haloOpacity}
+          depthWrite={false}
+          blending={THREE.AdditiveBlending}
+        />
+      </mesh>
+      {/* Core layer */}
+      <mesh position={segIn.mid} quaternion={segIn.quat}>
+        <cylinderGeometry args={[coreRadius, coreRadius, segIn.len, 14, 1, true]} />
+        <meshBasicMaterial
+          color={"#e0f7ff"}
+          transparent
+          opacity={coreOpacity}
           depthWrite={false}
           blending={THREE.AdditiveBlending}
         />
       </mesh>
 
-      {/* Internal beam segment (visible inside crystal) */}
+      {/* === INTERNAL BEAM SEGMENT (visible through crystal) === */}
       {strength > 0.15 && (
-        <mesh position={segInternal.mid} quaternion={segInternal.quat}>
-          <cylinderGeometry args={[radius * 0.85, radius * 0.85, segInternal.len, 14, 1, true]} />
-          <meshBasicMaterial
-            color={"#F8FAFF"}
-            transparent
-            opacity={internalOpacity}
-            depthWrite={false}
-            blending={THREE.AdditiveBlending}
-          />
-        </mesh>
+        <>
+          <mesh position={segInternal.mid} quaternion={segInternal.quat}>
+            <cylinderGeometry args={[coreRadius * 1.1, coreRadius * 1.1, segInternal.len, 14, 1, true]} />
+            <meshBasicMaterial
+              color={"#ffffff"}
+              transparent
+              opacity={internalOpacity}
+              depthWrite={false}
+              blending={THREE.AdditiveBlending}
+            />
+          </mesh>
+          {/* Internal halo */}
+          <mesh position={segInternal.mid} quaternion={segInternal.quat}>
+            <cylinderGeometry args={[haloRadius * 0.6, haloRadius * 0.6, segInternal.len, 14, 1, true]} />
+            <meshBasicMaterial
+              color={"#a5b4fc"}
+              transparent
+              opacity={internalOpacity * 0.35}
+              depthWrite={false}
+              blending={THREE.AdditiveBlending}
+            />
+          </mesh>
+        </>
       )}
 
-      {/* Outgoing base beam (faint if split is active) */}
+      {/* === OUTGOING BEAM (2-layer, fades if split is active) === */}
+      {/* Halo layer */}
       <mesh position={segOut.mid} quaternion={segOut.quat}>
-        <cylinderGeometry args={[radius, radius, segOut.len, 14, 1, true]} />
+        <cylinderGeometry args={[haloRadius, haloRadius, segOut.len, 16, 1, true]} />
         <meshBasicMaterial
           color={"#6366F1"}
           transparent
-          opacity={baseOpacity * (1 - 0.55 * split)}
+          opacity={haloOpacity * (1 - 0.6 * split)}
+          depthWrite={false}
+          blending={THREE.AdditiveBlending}
+        />
+      </mesh>
+      {/* Core layer */}
+      <mesh position={segOut.mid} quaternion={segOut.quat}>
+        <cylinderGeometry args={[coreRadius, coreRadius, segOut.len, 14, 1, true]} />
+        <meshBasicMaterial
+          color={"#c7d2fe"}
+          transparent
+          opacity={coreOpacity * (1 - 0.5 * split)}
           depthWrite={false}
           blending={THREE.AdditiveBlending}
         />
       </mesh>
 
-      {/* Split beams (only during lock pulse) */}
-      {split > 0.001 && (
+      {/* === SPLIT BEAMS (during lock pulse) === */}
+      {split > 0.01 && (
         <group>
           {[
-            { end: C1v, color: "#22D3EE" },
-            { end: C2v, color: "#F8FAFF" },
-            { end: C3v, color: "#6366F1" },
+            { end: C1v, coreColor: "#67e8f9", haloColor: "#22D3EE" },
+            { end: C2v, coreColor: "#ffffff", haloColor: "#e0e7ff" },
+            { end: C3v, coreColor: "#a5b4fc", haloColor: "#6366F1" },
           ].map((r, idx) => {
             const seg = cylinderBetween(B, r.end);
+            const opacity = splitOpacity * (idx === 1 ? 0.65 : 0.5);
             return (
-              <mesh key={idx} position={seg.mid} quaternion={seg.quat}>
-                <cylinderGeometry args={[radius * 0.92, radius * 0.92, seg.len, 14, 1, true]} />
-                <meshBasicMaterial
-                  color={r.color}
-                  transparent
-                  opacity={splitOpacity * (idx === 1 ? 0.7 : 0.55)}
-                  depthWrite={false}
-                  blending={THREE.AdditiveBlending}
-                />
-              </mesh>
+              <group key={idx}>
+                {/* Split halo */}
+                <mesh position={seg.mid} quaternion={seg.quat}>
+                  <cylinderGeometry args={[haloRadius * 0.7, haloRadius * 0.7, seg.len, 14, 1, true]} />
+                  <meshBasicMaterial
+                    color={r.haloColor}
+                    transparent
+                    opacity={opacity * 0.4}
+                    depthWrite={false}
+                    blending={THREE.AdditiveBlending}
+                  />
+                </mesh>
+                {/* Split core */}
+                <mesh position={seg.mid} quaternion={seg.quat}>
+                  <cylinderGeometry args={[coreRadius * 0.9, coreRadius * 0.9, seg.len, 14, 1, true]} />
+                  <meshBasicMaterial
+                    color={r.coreColor}
+                    transparent
+                    opacity={opacity}
+                    depthWrite={false}
+                    blending={THREE.AdditiveBlending}
+                  />
+                </mesh>
+              </group>
             );
           })}
         </group>
       )}
 
-      {/* Hit glow */}
+      {/* === HIT GLOW (entry point on crystal) === */}
       <mesh position={[B.x, B.y, B.z]}>
-        <sphereGeometry args={[0.06 + 0.05 * strength, 18, 18]} />
+        <sphereGeometry args={[0.055 + 0.04 * strength, 16, 16]} />
         <meshBasicMaterial
           color={"#22D3EE"}
           transparent
-          opacity={0.28 * ignite * (0.3 + 0.7 * strength)}
+          opacity={0.22 * ignite * (0.35 + 0.65 * strength)}
           depthWrite={false}
           blending={THREE.AdditiveBlending}
         />
       </mesh>
+
+      {/* === LENS GLINT SPRITE (exit point during lock) === */}
+      {lockPulse > 0.05 && (
+        <mesh position={[exitPoint.x, exitPoint.y, exitPoint.z]}>
+          <planeGeometry args={[glintScale, glintScale]} />
+          <meshBasicMaterial
+            color={"#ffffff"}
+            transparent
+            opacity={glintOpacity}
+            depthWrite={false}
+            blending={THREE.AdditiveBlending}
+            side={THREE.DoubleSide}
+          />
+        </mesh>
+      )}
     </group>
   );
 }

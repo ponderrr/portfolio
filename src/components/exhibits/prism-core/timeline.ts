@@ -13,6 +13,7 @@ export type PrismParams = {
   // beam behavior
   beamStrength: number; // 0..1
   split: number;        // 0..1 (dispersion moment)
+  lockPulse: number;    // 0..1 (narrow lock window peak)
   caustic: number;      // 0..1 (fake wash)
 
   // camera micro-dolly (cinematic but subtle)
@@ -45,27 +46,30 @@ export function prismParamsFromProgress(p: number): PrismParams {
   p = clamp01(p);
 
   // Cinematic segments:
-  const ignite = smoothstep(0.00, 0.20, p);
-  const align = easeInOutCubic(smoothstep(0.20, 0.65, p));
-  const lock = easeInOutCubic(smoothstep(0.65, 0.90, p));
-  const settle = smoothstep(0.90, 1.00, p);
+  const ignite = smoothstep(0.00, 0.18, p);
+  const align = easeInOutCubic(smoothstep(0.18, 0.58, p));
+  const lock = easeInOutCubic(smoothstep(0.58, 0.85, p));
+  const settle = smoothstep(0.85, 1.00, p);
 
-  // Rotation: start slightly off, end in “hero angle”
-  const rotX = (0.35 * align) + (0.06 * lock);
-  const rotY = (-0.85 * align) + (-0.08 * lock);
-  const rotZ = (0.10 * align) + (0.05 * lock);
+  // Rotation: start slightly off, end in "hero angle"
+  const rotX = (0.32 * align) + (0.05 * lock);
+  const rotY = (-0.80 * align) + (-0.06 * lock);
+  const rotZ = (0.08 * align) + (0.04 * lock);
 
   // Beam appears during alignment and persists
-  const beamStrength = smoothstep(0.22, 0.35, p) * (0.85 + 0.15 * lock);
+  const beamStrength = smoothstep(0.20, 0.32, p) * (0.88 + 0.12 * lock);
 
-  // Dispersion pulse during lock (brief, controlled)
-  const split = pulse(0.72, 0.86, p) * 0.95;
+  // Lock pulse - narrow window (0.58-0.68) for controlled "wow" moment
+  const lockPulse = pulse(0.58, 0.68, p);
 
-  // Fake caustics appear slightly after split begins
-  const caustic = smoothstep(0.70, 0.82, p) * (1 - 0.35 * settle);
+  // Dispersion pulse during lock window (brief, controlled)
+  const split = pulse(0.60, 0.72, p) * 0.85;
+
+  // Fake caustics - pulse during lock window then fade
+  const caustic = pulse(0.58, 0.75, p) * 0.9;
 
   // Camera micro-dolly (very subtle), mostly during ignition/alignment
-  const camZ = 7.4 - 0.22 * ignite - 0.12 * align + 0.05 * settle;
+  const camZ = 7.4 - 0.18 * ignite - 0.10 * align + 0.04 * settle;
 
   return {
     ignite,
@@ -77,6 +81,7 @@ export function prismParamsFromProgress(p: number): PrismParams {
     rotZ,
     beamStrength,
     split,
+    lockPulse,
     caustic,
     camZ,
   };

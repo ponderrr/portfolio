@@ -42,12 +42,12 @@ export function EnergyBeam({ ignite, strength, split, lockPulse, a, b, c }: Prop
   C.set(c[0], c[1], c[2]);
 
   // Core beam parameters
-  const coreOpacity = 0.85 * ignite * (0.4 + 0.6 * strength);
-  const coreRadius = 0.022 + 0.012 * strength;
+  const coreOpacity = 0.92 * ignite * (0.45 + 0.55 * strength);
+  const coreRadius = 0.024 + 0.012 * strength;
   
   // Halo beam parameters - thicker, lower opacity
-  const haloOpacity = 0.25 * ignite * (0.3 + 0.7 * strength);
-  const haloRadius = coreRadius * 2.8 + 0.02 * lockPulse; // Widens during lock
+  const haloOpacity = 0.32 * ignite * (0.32 + 0.68 * strength);
+  const haloRadius = coreRadius * (2.9 + 0.3 * split) + 0.04 * lockPulse; // Widens during lock/split
 
   const segIn = cylinderBetween(A, B);
   const segOut = cylinderBetween(B, C);
@@ -58,7 +58,7 @@ export function EnergyBeam({ ignite, strength, split, lockPulse, a, b, c }: Prop
   const internalEnd = useMemo(() => new THREE.Vector3(), []);
   internalEnd.lerpVectors(B, C, 0.55); // Ends about halfway through
   const segInternal = cylinderBetween(internalMid, internalEnd);
-  const internalOpacity = coreOpacity * 0.7 * strength;
+  const internalOpacity = coreOpacity * (0.85 + 0.1 * lockPulse) * strength;
 
   // Split rays: rotate outgoing direction slightly around Y axis.
   const outDir = tmp0.subVectors(C, B);
@@ -75,13 +75,13 @@ export function EnergyBeam({ ignite, strength, split, lockPulse, a, b, c }: Prop
   C2v.copy(B).add(outDir.clone().multiplyScalar(outLen));
   C3v.copy(B).add(dirR.multiplyScalar(outLen));
 
-  const splitOpacity = coreOpacity * split * 0.75;
+  const splitOpacity = coreOpacity * split * 0.8;
 
   // Lens glint at exit point during lock
   const exitPoint = useMemo(() => new THREE.Vector3(), []);
   exitPoint.lerpVectors(B, C, 0.92);
-  const glintOpacity = lockPulse * 0.65 * ignite;
-  const glintScale = 0.12 + 0.08 * lockPulse;
+  const glintOpacity = (0.65 + 0.25 * split) * lockPulse * ignite;
+  const glintScale = 0.14 + 0.1 * lockPulse + 0.06 * split;
 
   return (
     <group>
@@ -110,12 +110,12 @@ export function EnergyBeam({ ignite, strength, split, lockPulse, a, b, c }: Prop
       </mesh>
 
       {/* === INTERNAL BEAM SEGMENT (visible through crystal) === */}
-      {strength > 0.15 && (
+      {strength > 0.1 && (
         <>
           <mesh position={segInternal.mid} quaternion={segInternal.quat}>
             <cylinderGeometry args={[coreRadius * 1.1, coreRadius * 1.1, segInternal.len, 14, 1, true]} />
             <meshBasicMaterial
-              color={"#ffffff"}
+              color={"#eef7ff"}
               transparent
               opacity={internalOpacity}
               depthWrite={false}
@@ -143,7 +143,7 @@ export function EnergyBeam({ ignite, strength, split, lockPulse, a, b, c }: Prop
         <meshBasicMaterial
           color={"#6366F1"}
           transparent
-          opacity={haloOpacity * (1 - 0.6 * split)}
+          opacity={haloOpacity * (1 - 0.55 * split)}
           depthWrite={false}
           blending={THREE.AdditiveBlending}
         />
@@ -154,7 +154,7 @@ export function EnergyBeam({ ignite, strength, split, lockPulse, a, b, c }: Prop
         <meshBasicMaterial
           color={"#c7d2fe"}
           transparent
-          opacity={coreOpacity * (1 - 0.5 * split)}
+          opacity={coreOpacity * (1 - 0.45 * split)}
           depthWrite={false}
           blending={THREE.AdditiveBlending}
         />
@@ -206,7 +206,7 @@ export function EnergyBeam({ ignite, strength, split, lockPulse, a, b, c }: Prop
         <meshBasicMaterial
           color={"#22D3EE"}
           transparent
-          opacity={0.22 * ignite * (0.35 + 0.65 * strength)}
+          opacity={0.28 * ignite * (0.35 + 0.65 * strength)}
           depthWrite={false}
           blending={THREE.AdditiveBlending}
         />

@@ -57,16 +57,17 @@ export function prismParamsFromProgress(p: number): PrismParams {
   const rotZ = (0.08 * align) + (0.04 * lock);
 
   // Beam appears during alignment and persists
-  const beamStrength = smoothstep(0.20, 0.32, p) * (0.88 + 0.12 * lock);
+  const beamStrength = smoothstep(0.18, 0.34, p) * (0.9 + 0.14 * lock);
 
   // Lock pulse - narrow window (0.58-0.68) for controlled "wow" moment
   const lockPulse = pulse(0.58, 0.68, p);
 
   // Dispersion pulse during lock window (brief, controlled)
-  const split = pulse(0.60, 0.72, p) * 0.85;
+  const split = pulse(0.60, 0.70, p) * 0.9;
 
   // Fake caustics - pulse during lock window then fade
-  const caustic = pulse(0.58, 0.75, p) * 0.9;
+  const causticBase = pulse(0.58, 0.75, p) * 0.85;
+  const caustic = Math.min(1, causticBase + split * 0.3);
 
   // Camera micro-dolly (very subtle), mostly during ignition/alignment
   const camZ = 7.4 - 0.18 * ignite - 0.10 * align + 0.04 * settle;

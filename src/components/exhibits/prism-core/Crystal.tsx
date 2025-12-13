@@ -1,8 +1,12 @@
 import * as THREE from "three";
 import { useMemo } from "react";
-import { MeshTransmissionMaterial, Outlines } from "@react-three/drei";
+import { MeshTransmissionMaterial } from "@react-three/drei";
 
 export type CrystalQuality = "low" | "medium" | "high";
+
+// Temporary stabilization pass: force a safe, always-visible faceted crystal.
+// Do NOT re-enable transmission until the baseline read is perfect at progress=0.
+const SAFE_MODE = false;
 
 type Props = {
   quality: CrystalQuality;
@@ -33,39 +37,35 @@ export function Crystal({ quality, ignite, lock, split, lockPulse }: Props) {
   // Hard clamp emissive intensity to prevent white blowout (max 0.42)
   const emissiveIntensity = Math.min(0.42, (0.05 + 0.26 * lock + 0.08 * lockPulse) * ignite);
 
-  // Outline opacity: near-invisible baseline, only rises slightly during lock
-  const outlineOpacity = (0.01 + 0.025 * lock + 0.02 * lockPulse) * ignite;
-
   // Rim glint intensity: restrained fresnel accent
   const rimIntensity = (0.012 + 0.025 * lock + 0.02 * lockPulse + 0.01 * split) * ignite;
 
   const samples = quality === "high" ? 10 : quality === "medium" ? 7 : 0;
-  const chromaticAberration = Math.min(0.055, 0.006 + split * 0.024 + lockPulse * 0.018);
-  const thickness = 0.42 + 0.16 * lock;
-  const roughness = 0.18 - 0.04 * lock;
+  // Keep aberration extremely restrained; only a tiny lift during lock pulse.
+  const chromaticAberration = Math.min(0.014, 0.002 + lockPulse * (0.006 + 0.006 * split));
+  const thickness = 0.45 + 0.14 * lock; // <= 0.59
+  const roughness = 0.2 - 0.05 * lock; // 0.15..0.2
 
   return (
     <group>
       {/* Outer crystal */}
       <mesh geometry={geom}>
-        {quality === "low" ? (
+        {/* Low quality stays SAFE crystal forever (no transmission). */}
+        {SAFE_MODE || quality === "low" ? (
           <meshPhysicalMaterial
-            color={"#0a0a10"}
-            roughness={0.26}
-            metalness={0.05}
-            clearcoat={0.55}
-            clearcoatRoughness={0.24}
-            sheen={0.1}
-            specularIntensity={0.55}
-            emissive={"#07070d"}
-            emissiveIntensity={0.06 + 0.05 * ignite}
             flatShading
+            color={"#07070b"}
+            roughness={0.3}
+            metalness={0.05}
+            clearcoat={1}
+            clearcoatRoughness={0.15}
+            envMapIntensity={0.25}
           />
         ) : (
           <MeshTransmissionMaterial
             samples={samples}
             resolution={quality === "high" ? 512 : 320}
-            transmission={0.9}
+            transmission={0.84}
             thickness={thickness}
             roughness={roughness}
             chromaticAberration={chromaticAberration}
@@ -79,19 +79,10 @@ export function Crystal({ quality, ignite, lock, split, lockPulse }: Props) {
             attenuationDistance={1.05}
             clearcoat={0.7}
             clearcoatRoughness={0.16}
-            envMapIntensity={0.28}
+            envMapIntensity={0.25}
             transparent
-            opacity={0.94 * ignite}
-          />
-        )}
-        {/* Subtle outline - inverted hull style, ornamental only */}
-        {quality !== "low" && (
-          <Outlines
-            thickness={0.005}
-            color="#6366F1"
-            transparent
-            opacity={outlineOpacity}
-            screenspace={false}
+            // Never gate visibility by driving opacity to 0.
+            opacity={0.96}
           />
         )}
       </mesh>

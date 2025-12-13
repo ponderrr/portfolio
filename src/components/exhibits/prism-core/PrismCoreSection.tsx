@@ -30,20 +30,31 @@ export function PrismCoreSection() {
   });
 
   const inView = useInView(sectionRef, { margin: "-30% 0px -30% 0px" });
-  const [mounted, setMounted] = useState(false);
+
+  const fallbackFine =
+    typeof window !== "undefined" && window.matchMedia
+      ? window.matchMedia("(pointer: fine)").matches ?? true
+      : true;
+
+  const allowWebgl = finePointer || fallbackFine; // ensure desktop always allowed
+  const interactive = allowWebgl && !reducedMotion;
+
+  const [mounted, setMounted] = useState<boolean>(allowWebgl);
 
   useEffect(() => {
+    // Mount immediately when allowed; still allow inView to trigger on touch fallback.
+    if (allowWebgl) {
+      setMounted(true);
+      return;
+    }
     if (inView) setMounted(true);
-  }, [inView]);
+  }, [allowWebgl, inView]);
 
   useEffect(() => {
     if (reducedMotion) progressRef.current = 1;
   }, [reducedMotion]);
 
   const [dockOpen, setDockOpen] = useState(false);
-
-  const allowWebgl = finePointer;         // same approach as Exhibit 001
-  const interactive = finePointer && !reducedMotion;
 
   return (
     <section

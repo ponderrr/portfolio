@@ -1,4 +1,4 @@
-import { motion, useInView, useMotionValueEvent, useScroll } from "framer-motion";
+import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import PrismCoreCanvas from "./PrismCoreCanvas";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
@@ -78,8 +78,6 @@ export function PrismCoreSection() {
     setProgress(v);
   });
 
-  const inView = useInView(scrollTargetRef, { margin: "-30% 0px -30% 0px" });
-
   const fallbackFine =
     typeof window !== "undefined" && window.matchMedia
       ? window.matchMedia("(pointer: fine)").matches ?? true
@@ -88,16 +86,12 @@ export function PrismCoreSection() {
   const allowWebgl = finePointer || fallbackFine; // ensure desktop always allowed
   const interactive = allowWebgl && !reducedMotion;
 
-  const [mounted, setMounted] = useState<boolean>(allowWebgl);
+  const [mounted, setMounted] = useState<boolean>(() => allowWebgl);
 
   useEffect(() => {
-    // Mount immediately when allowed; still allow inView to trigger on touch fallback.
-    if (allowWebgl) {
-      setMounted(true);
-      return;
-    }
-    if (inView) setMounted(true);
-  }, [allowWebgl, inView]);
+    // Desktop mounts immediately; coarse pointer stays on poster.
+    setMounted(allowWebgl);
+  }, [allowWebgl]);
 
   useEffect(() => {
     if (reducedMotion) setProgress(1);

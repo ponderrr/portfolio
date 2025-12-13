@@ -47,11 +47,11 @@ export function EnergyBeam({ ignite, strength, split, lockPulse, a, b, c }: Prop
   const igniteBoost = 0.35 + 0.65 * Math.max(0, Math.min(1, ignite));
 
   // Core beam parameters
-  const coreOpacity = 0.92 * s * igniteBoost * (0.92 + 0.12 * lockPulse);
+  const coreOpacity = Math.min(0.68, 0.58 * s * igniteBoost * (0.9 + 0.1 * lockPulse));
   const coreRadius = 0.024 + 0.012 * s;
   
   // Halo beam parameters - thicker, lower opacity
-  const haloOpacity = 0.42 * s * igniteBoost * (0.88 + 0.2 * lockPulse);
+  const haloOpacity = Math.min(0.26, 0.22 * s * igniteBoost * (0.9 + 0.1 * lockPulse));
   const haloRadius = coreRadius * (2.9 + 0.3 * split) + 0.05 * lockPulse; // Widens during lock/split
 
   const segIn = cylinderBetween(A, B);
@@ -63,7 +63,7 @@ export function EnergyBeam({ ignite, strength, split, lockPulse, a, b, c }: Prop
   const internalEnd = useMemo(() => new THREE.Vector3(), []);
   internalEnd.lerpVectors(B, C, 0.55); // Ends about halfway through
   const segInternal = cylinderBetween(internalMid, internalEnd);
-  const internalOpacity = 0.95 * s * igniteBoost * (0.65 + 0.35 * lockPulse);
+  const internalOpacity = Math.min(0.55, 0.48 * s * igniteBoost * (0.7 + 0.3 * lockPulse));
 
   // Split rays: rotate outgoing direction slightly around Y axis.
   const outDir = tmp0.subVectors(C, B);
@@ -80,12 +80,12 @@ export function EnergyBeam({ ignite, strength, split, lockPulse, a, b, c }: Prop
   C2v.copy(B).add(outDir.clone().multiplyScalar(outLen));
   C3v.copy(B).add(dirR.multiplyScalar(outLen));
 
-  const splitOpacity = coreOpacity * split * 0.85;
+  const splitOpacity = Math.min(0.36, coreOpacity * split * 0.55);
 
   // Lens glint at exit point during lock
   const exitPoint = useMemo(() => new THREE.Vector3(), []);
   exitPoint.lerpVectors(B, C, 0.92);
-  const glintOpacity = (0.65 + 0.25 * split) * lockPulse * ignite;
+  const glintOpacity = Math.min(0.28, (0.42 + 0.12 * split) * lockPulse * ignite);
   const glintScale = 0.14 + 0.1 * lockPulse + 0.06 * split;
 
   return (
@@ -106,7 +106,7 @@ export function EnergyBeam({ ignite, strength, split, lockPulse, a, b, c }: Prop
       <mesh position={segIn.mid} quaternion={segIn.quat}>
         <cylinderGeometry args={[coreRadius, coreRadius, segIn.len, 14, 1, true]} />
         <meshBasicMaterial
-          color={"#e0f7ff"}
+          color={"#c7d2fe"}
           transparent
           opacity={coreOpacity}
           depthWrite={false}
@@ -120,7 +120,7 @@ export function EnergyBeam({ ignite, strength, split, lockPulse, a, b, c }: Prop
           <mesh position={segInternal.mid} quaternion={segInternal.quat}>
             <cylinderGeometry args={[coreRadius * 1.1, coreRadius * 1.1, segInternal.len, 14, 1, true]} />
             <meshBasicMaterial
-              color={"#eef7ff"}
+              color={"#e0e7ff"}
               transparent
               opacity={internalOpacity}
               depthWrite={false}
@@ -170,11 +170,11 @@ export function EnergyBeam({ ignite, strength, split, lockPulse, a, b, c }: Prop
         <group>
           {[
             { end: C1v, coreColor: "#67e8f9", haloColor: "#22D3EE" },
-            { end: C2v, coreColor: "#ffffff", haloColor: "#e0e7ff" },
+            { end: C2v, coreColor: "#e0e7ff", haloColor: "#c7d2fe" },
             { end: C3v, coreColor: "#a5b4fc", haloColor: "#6366F1" },
           ].map((r, idx) => {
             const seg = cylinderBetween(B, r.end);
-            const opacity = splitOpacity * (idx === 1 ? 0.65 : 0.5);
+            const opacity = splitOpacity * (idx === 1 ? 0.55 : 0.42);
             return (
               <group key={idx}>
                 {/* Split halo */}
@@ -211,7 +211,7 @@ export function EnergyBeam({ ignite, strength, split, lockPulse, a, b, c }: Prop
         <meshBasicMaterial
           color={"#22D3EE"}
           transparent
-          opacity={0.28 * ignite * (0.35 + 0.65 * strength)}
+          opacity={Math.min(0.24, 0.18 * ignite * (0.35 + 0.65 * strength))}
           depthWrite={false}
           blending={THREE.AdditiveBlending}
         />
@@ -222,7 +222,7 @@ export function EnergyBeam({ ignite, strength, split, lockPulse, a, b, c }: Prop
         <mesh position={[exitPoint.x, exitPoint.y, exitPoint.z]}>
           <planeGeometry args={[glintScale, glintScale]} />
           <meshBasicMaterial
-            color={"#ffffff"}
+            color={"#e0e7ff"}
             transparent
             opacity={glintOpacity}
             depthWrite={false}

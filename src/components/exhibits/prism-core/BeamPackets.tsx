@@ -57,16 +57,19 @@ export function BeamPackets({ ignite, strength, a, b, c, quality, reducedMotion 
     const inst = meshRef.current;
     if (!inst) return;
 
-    const visible = ignite > 0.15 && !reducedMotion;
-    const baseAlpha = (0.18 + 0.82 * strength) * ignite;
+    const s = Math.max(0, Math.min(1, strength));
+    const i = Math.max(0, Math.min(1, ignite));
+    // Visibility driven by strength; ignite only boosts slightly.
+    const visible = s > 0.12 && !reducedMotion;
+    const baseAlpha = Math.min(0.22, 0.06 + 0.14 * s + 0.04 * i);
 
     inst.visible = visible;
-    (inst.material as THREE.MeshBasicMaterial).opacity = 0.85 * baseAlpha;
+    (inst.material as THREE.MeshBasicMaterial).opacity = baseAlpha;
 
     if (!visible) return;
 
     // light spawn rate: a few per second
-    const spawnRate = (quality === "high" ? 18 : quality === "medium" ? 12 : 8) * strength;
+    const spawnRate = (quality === "high" ? 16 : quality === "medium" ? 11 : 7) * s;
     const want = spawnRate * delta;
 
     // probabilistic spawning

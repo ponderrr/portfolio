@@ -3,7 +3,8 @@ import { useMemo } from "react";
 
 type Props = {
   ignite: number;
-  amount: number; // 0..1
+  amount: number;    // 0..1
+  lockPulse: number; // 0..1 (peak during lock window)
 };
 
 function makeRadialTexture() {
@@ -43,14 +44,17 @@ function makeRadialTexture() {
   return tex;
 }
 
-export function CausticsPlane({ ignite, amount }: Props) {
+export function CausticsPlane({ ignite, amount, lockPulse }: Props) {
   const tex = useMemo(() => (typeof document !== "undefined" ? makeRadialTexture() : null), []);
   if (!tex) return null;
 
-  const opacity = 0.16 * ignite * amount; // More restrained
+  // Base opacity with pulse boost during lock window
+  const opacity = (0.12 * amount + 0.08 * lockPulse) * ignite;
+  // Scale also pulses slightly during lock
+  const scale = 1 + 0.15 * lockPulse;
 
   return (
-    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0.15, -1.65, 0.0]}>
+    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0.15, -1.65, 0.0]} scale={[scale, scale, 1]}>
       <planeGeometry args={[6.5, 4.5, 1, 1]} />
       <meshBasicMaterial
         map={tex}

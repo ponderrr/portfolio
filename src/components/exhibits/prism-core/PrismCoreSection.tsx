@@ -49,7 +49,7 @@ export function PrismCoreSection() {
     <section
       id="prism-core"
       ref={sectionRef}
-      className="relative w-full min-h-[220svh] overflow-hidden bg-black"
+      className="relative w-full min-h-[300svh] overflow-hidden bg-black"
       aria-label="EXHIBIT 002 — Prism Core"
     >
       <div className="absolute inset-0 ap-prism-bg" />

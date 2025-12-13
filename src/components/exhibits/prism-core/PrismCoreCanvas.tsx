@@ -12,7 +12,7 @@ type Props = {
 };
 
 // Safe exposure value - prevents transmission blowout
-const EXPOSURE = 0.68;
+const EXPOSURE = 1.35;
 
 function RendererConfig() {
   const { gl } = useThree();
@@ -37,7 +37,7 @@ export function PrismCoreCanvas({ progressRef, quality, interactive, reducedMoti
   return (
     <Canvas
       dpr={dpr}
-      camera={{ position: [0, 0, 7.4], fov: 50, near: 0.1, far: 60 }}
+      camera={{ position: [0, 0, 5.6], fov: 50, near: 0.1, far: 60 }}
       gl={{ alpha: true, antialias: quality !== "low", powerPreference: "high-performance" }}
       shadows={false}
       frameloop={reducedMotion ? "demand" : "always"}
@@ -49,24 +49,15 @@ export function PrismCoreCanvas({ progressRef, quality, interactive, reducedMoti
       }}
     >
       <RendererConfig />
-      <color attach="background" args={["#050508"]} />
+      {/* Background comes from CSS layers in the section; keep canvas clear alpha */}
 
-      {/* Controlled 3-light studio: dim ambient + soft key + cool rim */}
-      <ambientLight intensity={0.05} color="#ffffff" />
-
-      {/* Key (soft) */}
-      <spotLight
-        position={[4.5, 4.8, 6.5]}
-        intensity={0.55}
-        angle={0.55}
-        penumbra={0.85}
-        decay={2}
-        distance={40}
-        color="#fff6ee"
-      />
-
-      {/* Rim (cool indigo) for silhouette */}
-      <directionalLight position={[-2.0, 1.6, -6.5]} intensity={0.18} color="#4f46e5" />
+      {/* Baseline lights: strong enough to read through scanlines/noise */}
+      <hemisphereLight args={["#c7d2fe", "#020207", 0.28]} />
+      <ambientLight intensity={0.22} color="#ffffff" />
+      {/* Slightly more frontal key so facets read during rotation */}
+      <directionalLight position={[2.8, 2.6, 6.2]} intensity={1.9} color="#fff6ee" />
+      <directionalLight position={[-3.2, 1.9, -6.5]} intensity={1.15} color="#4f46e5" />
+      <directionalLight position={[0.0, -3.4, 3.5]} intensity={0.65} color="#22d3ee" />
 
       <PrismRig
         progressRef={progressRef}

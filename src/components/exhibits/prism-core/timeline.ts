@@ -51,10 +51,11 @@ export function prismParamsFromProgress(p: number): PrismParams {
   const lock = easeInOutCubic(smoothstep(0.58, 0.85, p));
   const settle = smoothstep(0.85, 1.00, p);
 
-  // Rotation: start slightly off, end in "hero angle"
-  const rotX = (0.32 * align) + (0.05 * lock);
-  const rotY = (-0.80 * align) + (-0.06 * lock);
-  const rotZ = (0.08 * align) + (0.04 * lock);
+  // Rotation: keep within a readable range throughout the scrub.
+  // (The baseline scene must never rotate into a near-black silhouette.)
+  const rotX = (0.18 * align) + (0.03 * lock);
+  const rotY = (-0.45 * align) + (-0.03 * lock);
+  const rotZ = (0.05 * align) + (0.02 * lock);
 
   // Beam appears during alignment and persists
   const beamStrength = smoothstep(0.18, 0.34, p) * (0.9 + 0.14 * lock);
@@ -69,8 +70,9 @@ export function prismParamsFromProgress(p: number): PrismParams {
   const causticBase = pulse(0.58, 0.75, p) * 0.85;
   const caustic = Math.min(1, causticBase + split * 0.3);
 
-  // Camera micro-dolly (very subtle), mostly during ignition/alignment
-  const camZ = 7.4 - 0.18 * ignite - 0.10 * align + 0.04 * settle;
+  // Camera micro-dolly (very subtle), mostly during ignition/alignment.
+  // Baseline needs to read at p=0 even through CSS overlays → start closer.
+  const camZ = 5.6 - 0.12 * ignite - 0.07 * align + 0.03 * settle;
 
   return {
     ignite,

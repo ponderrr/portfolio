@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { useFrame, useThree } from "@react-three/fiber";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import type { MutableRefObject } from "react";
 import Crystal, { type CrystalQuality } from "./Crystal";
 import { prismParamsFromProgress } from "./timeline";
@@ -18,6 +18,9 @@ export function PrismRig({ progressRef, quality, interactive, reducedMotion }: P
   const { camera } = useThree();
 
   const safe = (v: number, fallback: number) => (Number.isFinite(v) ? v : fallback);
+
+  const lastP = useRef<number>(-1);
+  const [p, setP] = useState(() => prismParamsFromProgress(safe(progressRef.current, 0)));
 
   useFrame((state, delta) => {
     const g = groupRef.current;
@@ -60,13 +63,19 @@ export function PrismRig({ progressRef, quality, interactive, reducedMotion }: P
     if (!Number.isFinite(g.rotation.x)) g.rotation.x = 0;
     if (!Number.isFinite(g.rotation.y)) g.rotation.y = 0;
     if (!Number.isFinite(g.rotation.z)) g.rotation.z = 0;
+
+    // Update child-driven params only when scroll progress changes meaningfully
+    if (Math.abs(prog - lastP.current) > 0.0005) {
+      lastP.current = prog;
+      setP(params);
+    }
   });
 
   const crystalQuality: CrystalQuality = quality;
 
   return (
     <group ref={groupRef}>
-      <Crystal quality={crystalQuality} />
+      <Crystal quality={crystalQuality} ignite={p.ignite} lock={p.lock} split={p.split} lockPulse={p.lockPulse} />
     </group>
   );
 }

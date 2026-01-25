@@ -6,6 +6,7 @@ import type { VisualQuality } from "@/hooks/useVisualQuality";
 import { LatticePointsMaterial } from "./materials/LatticePointsMaterial";
 import ProbabilityHUD3D from "./ProbabilityHUD3D";
 import { buildNetworkModel, loadExhibit001Weights, type NetworkModel, type WeightsFile } from "./neuralLattice";
+import { useLatticeControls, activationFunctions } from "./LatticeControls";
 
 type Props = {
   quality: VisualQuality;
@@ -15,9 +16,6 @@ type Props = {
   ignite: number;
 };
 
-function relu(x: number) {
-  return x > 0 ? x : 0;
-}
 
 function softmax(logits: Float32Array, out: Float32Array) {
   let max = -Infinity;
@@ -33,6 +31,9 @@ function softmax(logits: Float32Array, out: Float32Array) {
 }
 
 export function LatticeField({ quality, pointerOnInputPlaneRef, interactive, reducedMotion, ignite }: Props) {
+  const { activationFunction, inputPattern, weightScale } = useLatticeControls();
+  const activate = activationFunctions[activationFunction];
+
   const [weights, setWeights] = useState<WeightsFile | null>(null);
   const [model, setModel] = useState<NetworkModel | null>(null);
 
@@ -215,29 +216,43 @@ export function LatticeField({ quality, pointerOnInputPlaneRef, interactive, red
       activity[i] = THREE.MathUtils.damp(activity[i], 0.035 * igniteNodes, 3.0, delta);
     }
 
-    // Input drawing (pointer influences input layer only)
-    if (interactive && igniteSim) {
-      simRef.current.pointerAcc += delta;
-      if (simRef.current.pointerAcc > 0.016) {
-        // ~60Hz sampling
-        simRef.current.pointerAcc = 0;
-        const p = pointerOnInputPlaneRef.current;
+    // Input drawing (pointer influences input layer only OR preset pattern)
+    if (igniteSim) {
+      const inputCount = model.layerCounts[0];
 
-        // map pointer (y,z) to input grid indices by distance
-        const inputStart = model.layerStarts[0];
-        const inputCount = model.layerCounts[0];
+      // If we have a preset pattern, blend it in
+      if (inputPattern && inputPattern.length > 0) {
+        for (let i = 0; i < inputCount && i < inputPattern.length; i++) {
+          const target = inputPattern[i];
+          a0.current[i] = THREE.MathUtils.damp(a0.current[i], target, 8.0, delta);
+        }
+      } else if (interactive) {
+        simRef.current.pointerAcc += delta;
+        if (simRef.current.pointerAcc > 0.016) {
+          // ~60Hz sampling
+          simRef.current.pointerAcc = 0;
+          const p = pointerOnInputPlaneRef.current;
 
-        for (let i = 0; i < inputCount; i++) {
-          const idx = inputStart + i;
-          const dy = positions[idx * 3 + 1] - p.y;
-          const dz = positions[idx * 3 + 2] - p.z;
-          const d2 = dy * dy + dz * dz;
-          const target = Math.exp(-d2 / 0.06); // tight brush
-          a0.current[i] = THREE.MathUtils.damp(a0.current[i], target, 10.0, delta);
+          // map pointer (y,z) to input grid indices by distance
+          const inputStart = model.layerStarts[0];
+
+          for (let i = 0; i < inputCount; i++) {
+            const idx = inputStart + i;
+            const dy = positions[idx * 3 + 1] - p.y;
+            const dz = positions[idx * 3 + 2] - p.z;
+            const d2 = dy * dy + dz * dz;
+            const target = Math.exp(-d2 / 0.06); // tight brush
+            a0.current[i] = THREE.MathUtils.damp(a0.current[i], target, 10.0, delta);
+          }
+        }
+      } else {
+        // decay input
+        for (let i = 0; i < a0.current.length; i++) {
+          a0.current[i] = THREE.MathUtils.damp(a0.current[i], 0, 6.0, delta);
         }
       }
     } else {
-      // decay input
+      // decay input when not ignited
       for (let i = 0; i < a0.current.length; i++) {
         a0.current[i] = THREE.MathUtils.damp(a0.current[i], 0, 6.0, delta);
       }
@@ -266,8 +281,8 @@ export function LatticeField({ quality, pointerOnInputPlaneRef, interactive, red
         for (let o = 0; o < outD; o++) {
           let sum = L.b[o];
           const row = o * inD;
-          for (let i = 0; i < inD; i++) sum += L.w[row + i] * a0.current[i];
-          a1.current[o] = relu(sum);
+          for (let i = 0; i < inD; i++) sum += L.w[row + i] * weightScale * a0.current[i];
+          a1.current[o] = activate(sum);
         }
       }
 
@@ -279,8 +294,8 @@ export function LatticeField({ quality, pointerOnInputPlaneRef, interactive, red
         for (let o = 0; o < outD; o++) {
           let sum = L.b[o];
           const row = o * inD;
-          for (let i = 0; i < inD; i++) sum += L.w[row + i] * a1.current[i];
-          a2.current[o] = relu(sum);
+          for (let i = 0; i < inD; i++) sum += L.w[row + i] * weightScale * a1.current[i];
+          a2.current[o] = activate(sum);
         }
       }
 
